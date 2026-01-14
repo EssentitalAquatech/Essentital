@@ -16,26 +16,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await axios.post("http://localhost:2008/api/user/login", {
-  //       email,
-  //       password,
-  //     });
-
-  //     alert(res.data.message);
-
-  //     localStorage.setItem("userId", res.data.user._id);
-  //     localStorage.setItem("username", res.data.user.name);
-  //     localStorage.setItem("photo", res.data.user.photo || "/profile.png");
-  //     localStorage.setItem("isFirstLogin", "true");
-
-  //     navigate("/maindashboard");
-  //   } catch (error) {
-  //     alert(error.response?.data?.message || "Login failed");
-  //   }
-  // };
+ 
 
 
 const handleLogin = async (e) => {
@@ -62,10 +43,6 @@ const handleLogin = async (e) => {
     setLoading(false);
   }
 };
-
-
-
-
 
 
 
@@ -160,7 +137,7 @@ const handleLogin = async (e) => {
         role="status"
         aria-hidden="true"
       ></span>
-      Signing In...
+      Login In...
     </>
   ) : (
     "Log In"
@@ -180,16 +157,7 @@ const handleLogin = async (e) => {
           Login as Admin
         </button>
 
-        {/* Uncomment for Google login if needed */}
-        {/* 
-        <button
-          className="login-google-btn"
-          onClick={handleGoogleLogin}
-        >
-          <img src="/googleLogo.png" alt="Google Logo" className="login-google-icon" />
-          Continue with Google
-        </button>
-        */}
+        
 
         <p className="login-bottom-text">
           Don't have an account yet? <Link to="/signup" className="login-bottom-link">Sign up</Link>
