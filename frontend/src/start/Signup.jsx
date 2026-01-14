@@ -267,41 +267,44 @@ function Signup() {
     setFiles({ ...files, [e.target.name]: e.target.files[0] });
   };
 
+
+
   const handleSignup = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (formData.accountNumber !== formData.confirmAccountNumber) {
-      alert("Account numbers do not match");
-      return;
-    }
+  if (formData.accountNumber !== formData.confirmAccountNumber) {
+    alert("Account numbers do not match");
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const form = new FormData();
+  try {
+    const form = new FormData();
 
-      Object.entries(formData).forEach(([key, value]) =>
-        form.append(key, value)
-      );
+    Object.entries(formData).forEach(([key, value]) =>
+      form.append(key, value)
+    );
 
-      Object.entries(files).forEach(([key, value]) =>
-        form.append(key, value)
-      );
+    Object.entries(files).forEach(([key, value]) =>
+      form.append(key, value)
+    );
 
-      const res = await api.post(
-        "/api/user/signup",
-        form,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+    await api.post(
+      "/api/user/signup",
+      form,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
 
-      alert(res.data.message);
-      navigate("/login");
-    } catch (error) {
-      alert(error.response?.data?.message || "Signup failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+    // ✅ NO alert here
+    navigate("/login"); // direct redirect
+  } catch (error) {
+    alert(error.response?.data?.message || "Signup failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="signup-page-body">
