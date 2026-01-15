@@ -693,32 +693,6 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Dark mode support (optional) */
-@media (prefers-color-scheme: dark) {
-  .profile-content-area {
-    background-color: #0f172a;
-  }
-  
-  .profile-form-group {
-    background: #1e293b;
-    border-color: #334155;
-  }
-  
-  .profile-form-input {
-    background-color: #1e293b;
-    border-color: #475569;
-    color: #e2e8f0;
-  }
-  
-  .profile-form-input:focus {
-    background-color: #1e293b;
-  }
-  
-  .profile-header {
-    background: #1e293b;
-    border-color: #334155;
-  }
-}
 
 
 
