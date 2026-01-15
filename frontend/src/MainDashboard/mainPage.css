@@ -1359,10 +1359,6 @@ textarea:valid {
 
 
 
-.page-content {
-  padding-top: 60px; /* navbar height */
-}
-
 
 
 /* MainPage.css - Existing code ke end mein yeh add karein */
@@ -1370,7 +1366,7 @@ textarea:valid {
 /* ===============================
    MOBILE NAVBAR STYLES
 ================================ */
-/* .mobile-navbar {
+.mobile-navbar {
   display: none;
   position: fixed;
   top: 0;
@@ -1383,31 +1379,13 @@ textarea:valid {
   align-items: center;
   justify-content: space-between;
   height: 60px;
-} */
-
-/* =========================
-   MOBILE NAVBAR
-========================= */
-.mobile-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-
-  height: 60px;
-  background: #ffffff;
-  padding: 12px 16px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  z-index: 1200;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 
-/* .mobile-menu-toggle {
+
+
+
+.mobile-menu-toggle {
   background: none;
   border: none;
   color: var(--primary-color);
@@ -1422,26 +1400,8 @@ textarea:valid {
   height: 50px;
   margin-top: -80px;
   margin-left: -30px;
-} */
-.mobile-menu-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-
-  width: 44px;
-  height: 44px;
-  padding: 8px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: var(--primary-color);
-
-  position: relative;
-  z-index: 1300;        /* 🔥 highest */
-  pointer-events: auto;
 }
+
 
 
 
@@ -1508,7 +1468,7 @@ textarea:valid {
 /* ===============================
    OVERLAY FOR MOBILE
 ================================ */
-/* .sidebar-overlay {
+.sidebar-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -1517,20 +1477,9 @@ textarea:valid {
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
   animation: fadeIn 0.3s ease;
-} */
-
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-
-  background: rgba(0, 0, 0, 0.5);
-
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-
-  z-index: 1100;
 }
+
+
 
 
 
@@ -1547,7 +1496,7 @@ textarea:valid {
     display: flex;
   }
 
-  /* .sidebar {
+  .sidebar {
     position: fixed;
     left: 0;
     top: 0;
@@ -1559,23 +1508,9 @@ textarea:valid {
     z-index: 1000;
     overflow-y: auto;
     padding-top: 20px;
-  } */
+  }
 
-  .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 260px;
-  height: 100vh;
-  background: #ffffff;
-
-  transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out;
-
-  z-index: 1150;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
-}
+  
 
   .right-section.mobile-view {
     margin-left: 0;
@@ -1684,14 +1619,7 @@ textarea:valid {
 .sidebar.open {
   transform: translateX(0);
 }
-.sidebar-overlay.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-button,
-.mobile-menu-toggle {
-  -webkit-tap-highlight-color: transparent;
-}
+
 
 
 
