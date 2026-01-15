@@ -278,8 +278,8 @@ function Privacy() {
           <p className="privacy-contact-text">
             {t('contactForQueries') || "For privacy-related questions, contact us at:"}
             <br />
-            <a href="mailto:privacy@company.com" className="privacy-email">
-              privacy@company.com
+            <a href="mailto:24x7@essentiapaquatech.com" className="privacy-email">
+              24x7@essentiapaquatech.com
             </a>
           </p>
           <p className="privacy-copyright">

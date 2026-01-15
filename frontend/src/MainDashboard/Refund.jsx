@@ -88,7 +88,7 @@ function Refund() {
 
         {/* Footer */}
         <footer className="refund-footer">
-          <p>For refund requests, contact: support@company.com</p>
+          <p>For refund requests, contact:24x7@essentiapaquatech.com</p>
           <p>© 2024 Company Name. All rights reserved.</p>
         </footer>
       </div>

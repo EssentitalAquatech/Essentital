@@ -73,8 +73,8 @@ function Cancellation() {
             <p className="cancel-contact-text">
               For cancellation requests, contact us at:
             </p>
-            <a href="mailto:support@company.com" className="cancel-email">
-              support@company.com
+            <a href="mailto:24x7@essentiapaquatech.com" className="cancel-email">
+              24x7@essentiapaquatech.com
             </a>
             <p className="cancel-copyright">
               © 2024 Company Name. All rights reserved.

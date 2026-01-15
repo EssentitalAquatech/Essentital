@@ -212,7 +212,7 @@ function Terms() {
           </section>
 
           {/* Footer */}
-          <footer className="terms-content-footer">
+          {/* <footer className="terms-content-footer">
             <p className="terms-contact-text">
               {t('contactForQueries')} 
               <strong className="terms-email">{t('companyEmail')}</strong>
@@ -220,7 +220,21 @@ function Terms() {
             <p className="terms-copyright">
               © 2024 Your Company Name. All rights reserved.
             </p>
-          </footer>
+          </footer> */}
+
+<footer className="terms-content-footer">
+  <p className="terms-contact-text">
+    {t('contactForQueries')} 
+    <strong className="terms-email">
+      24x7@essentiapaquatech.com
+    </strong>
+  </p>
+  <p className="terms-copyright">
+    © 2024 Essentia Paquatech. All rights reserved.
+  </p>
+</footer>
+
+
         </div>
       </div>
     </div>
