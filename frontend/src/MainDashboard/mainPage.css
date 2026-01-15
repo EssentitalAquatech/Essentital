@@ -1598,3 +1598,80 @@ textarea:valid {
 .right-section {
   transition: all 0.3s ease;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Add these styles to your mainPage.css */
+
+/* Spinning loader */
+.spin-loader {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Search loader position */
+.search-loader {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Button loader styles */
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn .spin-loader {
+  margin-right: 5px;
+}
+
+/* Center align loader in cards */
+.card .display-6 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+
+/* Loading state for farmers list */
+.farmers-list > .text-center {
+  grid-column: 1 / -1;
+  padding: 40px 0;
+}
+
+.farmers-list > .text-center p {
+  margin-top: 10px;
+  color: #666;
+}
