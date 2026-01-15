@@ -453,76 +453,9 @@
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  .signup-page-body {
-    background: linear-gradient(135deg, #3730a3 0%, #5b21b6 100%);
-  }
+
   
-  .signup-main-wrapper {
-    background: rgba(31, 41, 55, 0.98);
-    border-color: rgba(107, 114, 128, 0.3);
-    color: #e5e7eb;
-  }
-  
-  .signup-company-title {
-    background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
-    /* -webkit-background-clip: text; */
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .signup-form-label {
-    color: #d1d5db;
-  }
-  
-  .signup-input-field {
-    background: #374151;
-    border-color: #4b5563;
-    color: #e5e7eb;
-  }
-  
-  .signup-input-field:focus {
-    border-color: #8b5cf6;
-    background: #1f2937;
-  }
-  
-  .signup-input-field[type="file"] {
-    background: #374151;
-    border-color: #4b5563;
-  }
-  
-  .signup-input-field[type="file"]::-webkit-file-upload-button {
-    background: #7c3aed;
-  }
-  
-  .signup-input-field[type="file"]::-webkit-file-upload-button:hover {
-    background: #6d28d9;
-  }
-  
-  .signup-tabs-container {
-    background: #374151;
-    border-color: #4b5563;
-  }
-  
-  .signup-tab-button {
-    color: #9ca3af;
-  }
-  
-  .signup-tab-active {
-    background: #4b5563;
-    color: #a78bfa;
-  }
-  
-  .signup-input-field:valid:not(:placeholder-shown) {
-    border-color: #34d399;
-    background: #064e3b;
-  }
-  
-  .signup-input-field:invalid:not(:placeholder-shown) {
-    border-color: #f87171;
-    background: #7f1d1d;
-  }
-}
+
 
 /* Focus States for Accessibility */
 .signup-input-field:focus-visible,
