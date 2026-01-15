@@ -1,15 +1,689 @@
 
 
 
+// import i18n from "i18next";
+// import { initReactI18next } from "react-i18next";
+
+// const resources = {
+//   en: {
+//     translation: {
+//       greeting: "Hello {{name}}!",
+//       welcome: "Welcome {{name}}",
+// welcomeBack: "Welcome Back {{name}}",
+//       helloUser: "Hello, {{name}}",
+//       addFarmer: "Add Farmer",
+//       farmerName: "Farmer Name",
+//       contactNumber: "Contact Number",
+//       age: "Age",
+//       gender: "Gender",
+//       adhar: "Aadhar Number",
+//       village: "Village",
+//       pondCount: "Number of Ponds",
+//       totalFarmers: "Total Farmers",
+//       totalPonds: "Total Ponds",
+//       farmersList: "Farmers List",
+//  farmerId: "Farmer ID",
+//       profile: "Profile",
+//       dashboard: "Dashboard",
+//       helpCenter: "Help Center",
+//       dealers: "Dealers",
+//       agents: "Agents",
+//       chooseLanguage: "Choose Language",
+
+//       familyMembers: "Number of Family Members",
+//       familyOccupation: "Family Occupation",
+//       submit: "Submit",
+//       cancel: "Cancel",
+
+//       addNewDealer: "+ Add New Dealer",
+//       dealerName: "Dealer Name",
+//       addDealer: "Add Dealer",
+//       dealersCount: "Dealers ({{count}})",
+//       profileimage: "Image",
+//       fillAllFields: "Fill all fields",
+//       errorAddingDealer: "Error adding dealer",
+
+//       allUsers: "All Users",
+//       email: "Email",
+
+//       // PROFILE PAGE
+//       myProfile: "My Profile",
+//       profileImage: "Profile Image",
+//       changePhoto: "Change Photo",
+//       username: "Username",
+//       updateUsername: "Update Username",
+//       changePassword: "Change Password",
+//       currentPassword: "Current Password",
+//       newPassword: "New Password",
+//       updatePassword: "Update Password",
+
+//       // HELP CENTER
+//       helpCenterTitle: "Help Center",
+//       emailSupport: "Email Support",
+//       emailSupportDesc: "Get in touch via email.",
+//       emailUs: "Email Us",
+//       responseTime: "Response time: 24–48 hours",
+//       phoneSupport: "Phone Support",
+//       callUsDirectly: "Call us directly:",
+//       workHours: "Mon to Friday — 9 AM to 6 PM",
+//       terms: "Terms & Conditions",
+// privacy: "Privacy Policy",
+// cancellation: "Cancellation Policy",
+// refund: "Refund Policy",
+// // COMMON
+// update: "Update",
+// close: "Close",
+// updated: "Updated",
+
+// // TIME AGO
+// today: "Today",
+// oneDayAgo: "1 day ago",
+// daysAgo: "{{count}} days ago",
+
+// // FORM TITLES
+// updateFarmer: "Update Farmer",
+// farmerDetails: "Farmer Details",
+
+// gstNumber: "GST Number",
+// shopAddress: "Shop Address",
+
+// farmerSearchById: "Search Farmer by ID",
+
+// searchDealer: " Search Dealer by Name",
+// legalDocuments:"Legal Document",
+// noDealersFound:" No Dealers Found"
+
+
+
+
+
+
+
+
+
+
+//     }
+//   },
+
+//   hi: {
+//     translation: {
+//       greeting: "नमस्ते {{name}}!",
+//       welcome: "स्वागत है {{name}}",
+// welcomeBack: "वापसी पर स्वागत है {{name}}",
+//       helloUser: "नमस्ते, {{name}}",
+//       addFarmer: "नया किसान जोड़ें",
+//       farmerName: "किसान का नाम",
+//       contactNumber: "संपर्क नंबर",
+//       age: "उम्र",
+//       gender: "लिंग",
+//       adhar: "आधार नंबर",
+//       village: "गाँव",
+//       pondCount: "तालाबों की संख्या",
+//       totalFarmers: "कुल किसान",
+//       totalPonds: "कुल तालाब",
+//       farmersList: "किसानों की सूची",
+//   farmerId: "किसान आईडी",
+//       profile: "प्रोफ़ाइल",
+//       dashboard: "डैशबोर्ड",
+//       helpCenter: "सहायक केंद्र",
+//       dealers: "डीलर सूची",
+//       agents: "अन्य फील्ड एजेंट",
+//       chooseLanguage: "भाषा चुनें",
+
+//       familyMembers: "किसान के परिवार में सदस्यों की संख्या",
+//       familyOccupation: "परिवार में अन्य सदस्य का पेशा",
+//       submit: "सबमिट करें",
+//       cancel: "रद्द करें",
+
+//       addNewDealer: "+ नया डीलर जोड़ें",
+//       dealerName: "डीलर का नाम",
+//       addDealer: "डीलर जोड़ें",
+//       dealersCount: "डीलर ({{count}})",
+//       profileimage: "प्रोफ़ाइल फोटो",
+//       fillAllFields: "सभी फ़ील्ड भरें",
+//       errorAddingDealer: "डीलर जोड़ने में त्रुटि",
+
+//       allUsers: "सभी उपयोगकर्ता",
+//       email: "ईमेल",
+
+//       // PROFILE PAGE
+//       myProfile: "मेरी प्रोफ़ाइल",
+//       profileImage: "प्रोफ़ाइल फोटो",
+//       changePhoto: "फोटो बदलें",
+//       username: "उपयोगकर्ता नाम",
+//       updateUsername: "नाम अपडेट करें",
+//       changePassword: "पासवर्ड बदलें",
+//       currentPassword: "मौजूदा पासवर्ड",
+//       newPassword: "नया पासवर्ड",
+//       updatePassword: "पासवर्ड अपडेट करें",
+
+//       // HELP CENTER
+//       helpCenterTitle: "सहायता केंद्र",
+//       emailSupport: "ईमेल सहायता",
+//       emailSupportDesc: "ईमेल के माध्यम से हमसे संपर्क करें।",
+//       emailUs: "ईमेल भेजें",
+//       responseTime: "प्रतिक्रिया समय: 24–48 घंटे",
+//       phoneSupport: "फोन सहायता",
+//       callUsDirectly: "सीधे कॉल करें:",
+//       terms: "नियम और शर्तें",
+// privacy: "गोपनीयता नीति",
+// cancellation: "रद्द करने की नीति",
+// refund: "रिफंड नीति",
+
+//       workHours: "सोमवार से शुक्रवार — सुबह 9 बजे से शाम 6 बजे तक",
+
+//       update: "अपडेट करें",
+// close: "बंद करें",
+// updated: "अपडेट किया गया",
+
+// today: "आज",
+// oneDayAgo: "1 दिन पहले",
+// daysAgo: "{{count}} दिन पहले",
+
+// updateFarmer: "किसान अपडेट करें",
+// farmerDetails: "किसान विवरण",
+
+
+
+//   gstNumber: "जीएसटी नंबर",
+// shopAddress: "दुकान का पता",
+// farmerSearchById: "किसान आईडी से खोजें",
+// searchDealer: "डीलर का नाम खोजें",
+// legalDocuments:"कानूनी दस्तावेज़",
+//  noDealersFound: "कोई डीलर नहीं मिला",
+
+//     }
+//   },
+  
+
+
+//   bn: {
+//     translation: {
+//       greeting: "হ্যালো {{name}}!",
+//       welcome: "স্বাগতম {{name}}",
+// welcomeBack: "উভতি অহাতে স্বাগতম {{name}}",
+//       helloUser: "হ্যালো, {{name}}",
+//       addFarmer: "কৃষক যোগ করুন",
+//       farmerName: "কৃষকের নাম",
+//       contactNumber: "যোগাযোগ নম্বর",
+//       age: "বয়স",
+//       gender: "লিঙ্গ",
+//       adhar: "আধার নম্বর",
+//       village: "গ্রাম",
+//       pondCount: "পুকুরের সংখ্যা",
+//       totalFarmers: "মোট কৃষক",
+//       totalPonds: "মোট পুকুর",
+//       farmersList: "কৃষকের তালিকা",
+// farmerId: "কৃষক আইডি",
+//       profile: "প্রোফাইল",
+//       dashboard: "ড্যাশবোর্ড",
+//       helpCenter: "সহায়তা কেন্দ্র",
+//       dealers: "ডিলারগণ",
+//       agents: "অন্যান্য এজেন্ট",
+//       chooseLanguage: "ভাষা নির্বাচন করুন",
+
+//       familyMembers: "পরিবারের সদস্য সংখ্যা",
+//       familyOccupation: "পরিবারের পেশা",
+//       submit: "সাবমিট করুন",
+//       cancel: "বাতিল করুন",
+
+//       addNewDealer: "+ নতুন ডিলার যোগ করুন",
+//       dealerName: "ডিলারের নাম",
+//       addDealer: "ডিলার যোগ করুন",
+//       dealersCount: "ডিলার ({{count}})",
+//       profileimage: "প্রোফাইল ছবি",
+//       fillAllFields: "সব ফিল্ড পূরণ করুন",
+//       errorAddingDealer: "ডিলার যোগ করতে ত্রুটি",
+
+//       allUsers: "সব ব্যবহারকারী",
+//       email: "ইমেইল",
+
+//       // PROFILE PAGE
+//       myProfile: "আমার প্রোফাইল",
+//       profileImage: "প্রোফাইল ছবি",
+//       changePhoto: "ছবি পরিবর্তন করুন",
+//       username: "ব্যবহারকারীর নাম",
+//       updateUsername: "নাম আপডেট করুন",
+//       changePassword: "পাসওয়ার্ড পরিবর্তন করুন",
+//       currentPassword: "বর্তমান পাসওয়ার্ড",
+//       newPassword: "নতুন পাসওয়ার্ড",
+//       updatePassword: "পাসওয়ার্ড আপডেট করুন",
+
+//       // HELP CENTER
+//       helpCenterTitle: "সহায়তা কেন্দ্র",
+//       emailSupport: "ইমেইল সাপোর্ট",
+//       emailSupportDesc: "ইমেইলের মাধ্যমে আমাদের সাথে যোগাযোগ করুন।",
+//       emailUs: "ইমেইল করুন",
+//       responseTime: "প্রতিক্রিয়া সময়: ২৪–৪৮ ঘণ্টা",
+//       phoneSupport: "ফোন সাপোর্ট",
+//       callUsDirectly: "সরাসরি কল করুন:",
+//       terms: "শর্তাবলী",
+// privacy: "গোপনীয়তা নীতি",
+// cancellation: "বাতিলকরণ নীতি",
+// refund: "রিফান্ড নীতি",
+//       workHours: "সোম থেকে শুক্রবার — সকাল ৯টা থেকে সন্ধ্যা ৬টা",
+//       update: "আপডেট",
+// close: "বন্ধ করুন",
+// updated: "আপডেট হয়েছে",
+
+// today: "আজ",
+// oneDayAgo: "১ দিন আগে",
+// daysAgo: "{{count}} দিন আগে",
+
+// updateFarmer: "কৃষক আপডেট করুন",
+// farmerDetails: "কৃষকের বিবরণ",
+
+// shopNumber: "দোকান নম্বর",
+// isdnNumber: "আইএসডিএন নম্বর",
+// shopAddress: "দোকানের ঠিকানা",
+
+// farmerSearchById: "কৃষক আইডি দিয়ে খুঁজুন",
+//     searchDealer: "নাম দ্বারা ডিলার খুঁজুন",
+//     legalDocuments:"আইনি নথি",
+//     noDealersFound:"কোনো ডিলার পাওয়া যায়নি",
+
+
+
+//     }
+//   },
+
+// as: {
+//   translation: {
+//     greeting: "নমস্কাৰ {{name}}!",
+//     helloUser: "নমস্কাৰ, {{name}}",
+// welcome: "স্বাগতম {{name}}",
+// welcomeBack: "উভতি অহাতে স্বাগতম {{name}}",
+//     addFarmer: "চাষী যোগ কৰক",
+//     farmerName: "চাষীৰ নাম",
+//     contactNumber: "যোগাযোগ নম্বৰ",
+//     age: "বয়স",
+//     gender: "লিংগ",
+//     adhar: "আধাৰ নম্বৰ",
+//     village: "গাঁও",
+//     pondCount: "পোখৰীৰ সংখ্যা",
+//  farmerId: "চাষী আইডি",
+//     totalFarmers: "মুঠ চাষী",
+//     totalPonds: "মুঠ পাছুলি/পোখৰি",
+//     farmersList: "চাষীৰ তালিকা",
+
+//     profile: "প্ৰফাইল",
+//     dashboard: "ডেশ্ববোর্ড",
+//     helpCenter: "সহায়তা কেন্দ্ৰ",
+//     dealers: "ডিলাৰ",
+//     agents: "এজেণ্টস",
+//     chooseLanguage: "ভাষা বাছক",
+
+//     familyMembers: "পৰিয়ালৰ সদস্যৰ সংখ্যা",
+//     familyOccupation: "পৰিয়ালৰ পেচা",
+//     submit: "দাখিল কৰক",
+//     cancel: "বাতিল কৰক",
+
+//     addNewDealer: "+ নতুন ডিলাৰ যোগ কৰক",
+//     dealerName: "ডিলাৰৰ নাম",
+//     addDealer: "ডিলাৰ যোগ কৰক",
+//     dealersCount: "ডিলাৰ ({{count}})",
+//     profileimage: "প্ৰফাইল ছবি",
+//     fillAllFields: "সকলো ঘৰ পূৰণ কৰক",
+//     errorAddingDealer: "ডিলাৰ যোগ কৰোঁতে ত্ৰুটি",
+
+//     allUsers: "সকল ব্যৱহাৰকাৰী",
+//     email: "ইমেইল",
+
+//     // PROFILE PAGE
+//     myProfile: "মোৰ প্ৰফাইল",
+//     profileImage: "প্ৰফাইল ছবি",
+//     changePhoto: "ছবি সলনি কৰক",
+//     username: "ব্যৱহাৰকাৰীৰ নাম",
+//     updateUsername: "নাম আপডেট কৰক",
+//     changePassword: "পাছৱাৰ্ড সলনি কৰক",
+//     currentPassword: "এই মুহূর্তৰ পাছৱাৰ্ড",
+//     newPassword: "নতুন পাছৱাৰ্ড",
+//     updatePassword: "পাছৱাৰ্ড আপডেট কৰক",
+
+//     // HELP CENTER
+//     helpCenterTitle: "সহায়তা কেন্দ্ৰ",
+//     emailSupport: "ইমেইল সহায়তা",
+//     emailSupportDesc: "ইমেইলৰ জৰিয়তে আমাক সংযোগ কৰক।",
+//     emailUs: "আমাক ইমেইল কৰক",
+//     responseTime: "উত্তৰ সময়: ২৪–৪৮ ঘণ্টা",
+//     phoneSupport: "ফোন সহায়তা",
+//     callUsDirectly: "সরাসৰি কল কৰক:",
+//     workHours: "সোম–শুক্ৰ —ৰাতিপুৱা ৯ বজাৰ পৰা সন্ধিয়া ৬ বজালৈ",
+
+//     terms: "নিয়ম আৰু চৰ্তাবলী",
+//     privacy: "গোপনীয়তা নীতি",
+//     cancellation: "বাতিল নীতি",
+//     refund: "ৰিফান্ড নীতি",
+
+//     // COMMON
+//     update: "আপডেট কৰক",
+//     close: "বন্ধ কৰক",
+//     updated: "আপডেট কৰা হৈছে",
+
+//     // TIME AGO
+//     today: "আজি",
+//     oneDayAgo: "১ দিন আগতে",
+//     daysAgo: "{{count}} দিন আগতে",
+
+//     // FORM TITLES
+//     updateFarmer: "চাষী আপডেট কৰক",
+//     farmerDetails: "চাষীৰ বিৱৰণ",
+
+//     shopNumber: "দোকান নম্বৰ",
+//     isdnNumber: "আই.এছ.ডি.এন নম্বৰ",
+//     shopAddress: "দোকানৰ ঠিকনা",
+//     farmerSearchById: "চাষী আইডি অনুসৰি সন্ধান কৰক",
+//     searchDealer: "নামৰ দ্বাৰা ডিলাৰ বিচৰা",
+//     legalDocuments:" আইনী নথিপত্ৰ ",
+//     noDealersFound: "কোনো ডিলাৰ পোৱা নগ'ল",
+
+//   }
+// },
+// ta: {
+//   translation: {
+//     greeting: "வணக்கம் {{name}}!",
+//     welcome: "வரவேற்கிறோம் {{name}}",
+// welcomeBack: "மீண்டும் வரவேற்கிறோம் {{name}}",
+//     helloUser: "வணக்கம், {{name}}",
+//     addFarmer: "விவசாயியை சேர்க்கவும்",
+//     farmerName: "விவசாயி பெயர்",
+//     contactNumber: "தொடர்பு எண்",
+//     age: "வயது",
+//     gender: "பாலினம்",
+//     adhar: "ஆதார் எண்",
+//     village: "கிராமம்",
+//     pondCount: "குளங்களின் எண்ணிக்கை",
+//     totalFarmers: "மொத்த விவசாயிகள்",
+//     totalPonds: "மொத்த குளங்கள்",
+//     farmersList: "விவசாயிகள் பட்டியல்",
+//  farmerId: "விவசாயி ஐடி", 
+//     profile: "சுயவிவரம்",
+//     dashboard: "டாஷ்போர்ட்",
+//     helpCenter: "உதவி மையம்",
+//     dealers: "டீலர்கள்",
+//     agents: "ஏஜென்ட்கள்",
+//     chooseLanguage: "மொழியை தேர்ந்தெடுக்கவும்",
+
+//     familyMembers: "குடும்ப உறுப்பினர்கள் எண்ணிக்கை",
+//     familyOccupation: "குடும்ப தொழில்",
+//     submit: "சமர்ப்பிக்கவும்",
+//     cancel: "ரத்து செய்யவும்",
+
+//     addNewDealer: "+ புதிய டீலரை சேர்க்கவும்",
+//     dealerName: "டீலர் பெயர்",
+//     addDealer: "டீலரை சேர்க்கவும்",
+//     dealersCount: "டீலர்கள் ({{count}})",
+//     profileimage: "சுயவிவர படம்",
+//     fillAllFields: "அனைத்து புலங்களையும் நிரப்பவும்",
+//     errorAddingDealer: "டீலரைச் சேர்க்கும் போது பிழை",
+
+//     allUsers: "அனைத்து பயனர்கள்",
+//     email: "மின்னஞ்சல்",
+
+//     // PROFILE PAGE
+//     myProfile: "என் சுயவிவரம்",
+//     profileImage: "சுயவிவர படம்",
+//     changePhoto: "புகைப்படத்தை மாற்றவும்",
+//     username: "பயனர் பெயர்",
+//     updateUsername: "பயனர் பெயரை புதுப்பிக்கவும்",
+//     changePassword: "கடவுச்சொல்லை மாற்றவும்",
+//     currentPassword: "தற்போதைய கடவுச்சொல்",
+//     newPassword: "புதிய கடவுச்சொல்",
+//     updatePassword: "கடவுச்சொல்லை புதுப்பிக்கவும்",
+
+//     // HELP CENTER
+//     helpCenterTitle: "உதவி மையம்",
+//     emailSupport: "மின்னஞ்சல் உதவி",
+//     emailSupportDesc: "மின்னஞ்சல் மூலம் எங்களை தொடர்பு கொள்ளுங்கள்.",
+//     emailUs: "எங்களுக்கு மின்னஞ்சல் செய்யவும்",
+//     responseTime: "பதில் நேரம்: 24–48 மணி நேரம்",
+//     phoneSupport: "தொலைபேசி உதவி",
+//     callUsDirectly: "எங்களை நேரடியாக அழைக்க:",
+//     workHours: "திங்கள் முதல் வெள்ளி — காலை 9 முதல் மாலை 6 வரை",
+//     terms: "விதிமுறைகள் & நிபந்தனைகள்",
+//     privacy: "தனியுரிமை கொள்கை",
+//     cancellation: "ரத்து கொள்கை",
+//     refund: "பணத்தை திருப்பி வழங்கும் கொள்கை",
+
+//     // COMMON
+//     update: "புதுப்பிக்கவும்",
+//     close: "மூடுக",
+//     updated: "புதுப்பிக்கப்பட்டது",
+
+//     // TIME AGO
+//     today: "இன்று",
+//     oneDayAgo: "1 நாள் முன்பு",
+//     daysAgo: "{{count}} நாட்களுக்கு முன்பு",
+
+//     // FORM TITLES
+//     updateFarmer: "விவசாயியை புதுப்பிக்கவும்",
+//     farmerDetails: "விவசாயியின் விவரங்கள்",
+
+//     shopNumber: "கடை எண்",
+//     isdnNumber: "ISDN எண்",
+//     shopAddress: "கடை முகவரி",
+
+//     farmerSearchById: "விவசாயியை ஐடி மூலம் தேடவும்",
+//     searchDealer: "பெயரின் மூலம் டீலரை தேடுக",
+//     legalDocuments:" சட்ட ஆவணங்கள்",
+//     noDealersFound: "எந்த டீலர்களும் கிடைக்கவில்லை",
+
+
+//   }
+// },
+
+// mr: {
+//   translation: {
+//     greeting: "नमस्कार {{name}}!",
+//     welcome: "स्वागत आहे {{name}}",
+// welcomeBack: "परत स्वागत आहे {{name}}",
+//     helloUser: "नमस्कार, {{name}}",
+//     addFarmer: "शेतकरी जोडा",
+//     farmerName: "शेतकऱ्याचे नाव",
+//     contactNumber: "संपर्क क्रमांक",
+//     age: "वय",
+//     gender: "लिंग",
+//     adhar: "आधार क्रमांक",
+//     village: "गाव",
+//     pondCount: "तळ्यांची संख्या",
+//     totalFarmers: "एकूण शेतकरी",
+//     totalPonds: "एकूण तळी",
+//     farmersList: "शेतकऱ्यांची यादी",
+//  farmerId: "शेतकरी आयडी",
+//     profile: "प्रोफाइल",
+//     dashboard: "डॅशबोर्ड",
+//     helpCenter: "मदत केंद्र",
+//     dealers: "डीलर्स",
+//     agents: "एजंट्स",
+//     chooseLanguage: "भाषा निवडा",
+
+//     familyMembers: "कुटुंबातील सदस्यांची संख्या",
+//     familyOccupation: "कुटुंबाचा व्यवसाय",
+//     submit: "सबमिट करा",
+//     cancel: "रद्द करा",
+
+//     addNewDealer: "+ नवीन डीलर जोडा",
+//     dealerName: "डीलरचे नाव",
+//     addDealer: "डीलर जोडा",
+//     dealersCount: "डीलर्स ({{count}})",
+//     profileimage: "प्रोफाइल फोटो",
+//     fillAllFields: "सर्व फील्ड भरा",
+//     errorAddingDealer: "डीलर जोडताना त्रुटी आली",
+
+//     allUsers: "सर्व वापरकर्ते",
+//     email: "ईमेल",
+
+//     // PROFILE PAGE
+//     myProfile: "माझे प्रोफाइल",
+//     profileImage: "प्रोफाइल फोटो",
+//     changePhoto: "फोटो बदला",
+//     username: "वापरकर्तानाव",
+//     updateUsername: "वापरकर्तानाव अपडेट करा",
+//     changePassword: "पासवर्ड बदला",
+//     currentPassword: "सध्याचा पासवर्ड",
+//     newPassword: "नवीन पासवर्ड",
+//     updatePassword: "पासवर्ड अपडेट करा",
+
+//     // HELP CENTER
+//     helpCenterTitle: "मदत केंद्र",
+//     emailSupport: "ईमेल सहायता",
+//     emailSupportDesc: "ईमेलद्वारे आमच्याशी संपर्क साधा.",
+//     emailUs: "आम्हाला ईमेल करा",
+//     responseTime: "प्रतिसाद वेळ: 24–48 तास",
+//     phoneSupport: "फोन सहायता",
+//     callUsDirectly: "थेट आम्हाला कॉल करा:",
+//     workHours: "सोमवार ते शुक्रवार — सकाळी 9 ते संध्याकाळी 6",
+//     terms: "अटी आणि शर्ती",
+//     privacy: "गोपनीयता धोरण",
+//     cancellation: "रद्द करण्याचे धोरण",
+//     refund: "परतावा धोरण",
+
+//     // COMMON
+//     update: "अपडेट करा",
+//     close: "बंद करा",
+//     updated: "अपडेट केले",
+
+//     // TIME AGO
+//     today: "आज",
+//     oneDayAgo: "1 दिवसापूर्वी",
+//     daysAgo: "{{count}} दिवसांपूर्वी",
+
+//     // FORM TITLES
+//     updateFarmer: "शेतकरी अपडेट करा",
+//     farmerDetails: "शेतकऱ्याची माहिती",
+
+//     shopNumber: "दुकान क्रमांक",
+//     isdnNumber: "ISDN क्रमांक",
+//     shopAddress: "दुकान पत्ता",
+
+//     farmerSearchById: "शेतकरी आयडीने शोधा",
+//     searchDealer: "डीलरचे नाव शोधा",
+//     legalDocuments:"कायदेशीर दस्तऐवज",
+//     noDealersFound:"कोणतेही डीलर आढळले नाहीत",
+
+//   }
+// },
+
+// kn: {
+//   translation: {
+//     greeting: "ಹಲೋ {{name}}!",
+//     helloUser: "ಹಲೋ, {{name}}",
+//     addFarmer: "ಕೃಷಕರನ್ನು ಸೇರಿಸಿ",
+//     farmerName: "ಕೃಷಕನ ಹೆಸರು",
+//     contactNumber: "ಸಂಪರ್ಕ ಸಂಖ್ಯೆ",
+//     age: "ವಯಸ್ಸು",
+//     gender: "ಲಿಂಗ",
+//     adhar: "ಆಧಾರ್ ಸಂಖ್ಯೆ",
+//     village: "ಗ್ರಾಮ",
+//     pondCount: "ಕೊಳಗಳ ಸಂಖ್ಯೆ",
+//     totalFarmers: "ಒಟ್ಟು ರೈತರು",
+//     totalPonds: "ಒಟ್ಟು ಕೊಳಗಳು",
+//     farmersList: "ರೈತರಿಗೆ ಪಟ್ಟಿಗೆ",
+//    farmerId: "ಕೃಷಕ ಐಡಿ",
+//     profile: "ಪ್ರೊಫೈಲ್",
+//     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+//     helpCenter: "ಸಹಾಯ ಕೇಂದ್ರ",
+//     dealers: "ಡೀಲರ್ಸ್",
+//     agents: "ಏಜೆಂಟ್ಸ್",
+//     chooseLanguage: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+
+//     familyMembers: "ಕುಟುಂಬದ ಸದಸ್ಯರ ಸಂಖ್ಯೆ",
+//     familyOccupation: "ಕುಟುಂಬದ ಉದ್ಯೋಗ",
+//     submit: "ಸಲ್ಲಿಸು",
+//     cancel: "ರದ್ದುಮಾಡಿ",
+
+//     addNewDealer: "+ ಹೊಸ ಡೀಲರ್ ಸೇರಿಸಿ",
+//     dealerName: "ಡೀಲರ್ ಹೆಸರು",
+//     addDealer: "ಡೀಲರ್ ಸೇರಿಸಿ",
+//     dealersCount: "ಡೀಲರ್ಸ್ ({{count}})",
+//     image: "ಚಿತ್ರ",
+//     fillAllFields: "ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ",
+//     errorAddingDealer: "ಡೀಲರ್ ಸೇರಿಸಲು ದೋಷವಾಗಿದೆ",
+
+//     allUsers: "ಎಲ್ಲಾ ಬಳಕೆದಾರರು",
+//     email: "ಇಮೇಲ್",
+
+//     // PROFILE PAGE
+//     myProfile: "ನನ್ನ ಪ್ರೊಫೈಲ್",
+//     profileImage: "ಪ್ರೊಫೈಲ್ ಚಿತ್ರ",
+//     changePhoto: "ಚಿತ್ರವನ್ನು ಬದಲಿಸಿ",
+//     username: "ಬಳಕೆದಾರ ಹೆಸರು",
+//     updateUsername: "ಬಳಕೆದಾರ ಹೆಸರು ನವೀಕರಿಸಿ",
+//     changePassword: "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಿಸಿ",
+//     currentPassword: "ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್",
+//     newPassword: "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್",
+//     updatePassword: "ಪಾಸ್‌ವರ್ಡ್ ನವೀಕರಿಸಿ",
+
+//     // HELP CENTER
+//     helpCenterTitle: "ಸಹಾಯ ಕೇಂದ್ರ",
+//     emailSupport: "ಇಮೇಲ್ ಸಹಾಯ",
+//     emailSupportDesc: "ಇಮೇಲ್ ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ.",
+//     emailUs: "ನಮಗೆ ಇಮೇಲ್ ಮಾಡಿ",
+//     responseTime: "ಪ್ರತಿಕ್ರಿಯೆ ಸಮಯ: 24–48 ಗಂಟೆಗಳು",
+//     phoneSupport: "ಫೋನ್ ಸಹಾಯ",
+//     callUsDirectly: "ನೇರವಾಗಿ ಕರೆಮಾಡಿ:",
+//     workHours: "ಸೋಮವಾರದಿಂದ ಶುಕ್ರವಾರ — ಬೆಳಿಗ್ಗೆ 9 ರಿಂದ ಸಂಜೆ 6",
+//     terms: "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು",
+//     privacy: "ಗೌಪ್ಯತಾ ನೀತಿ",
+//     cancellation: "ರದ್ದುಪಡಿಸುವ ನೀತಿ",
+//     refund: "ಹಣ ಹಿಂತಿರುಗಿಸುವ ನೀತಿ",
+
+//     // COMMON
+//     update: "ನವೀಕರಿಸಿ",
+//     close: "ಮುಚ್ಚು",
+//     updated: "ನವೀಕರಿಸಲಾಗಿದೆ",
+
+//     // TIME AGO
+//     today: "ಇಂದು",
+//     oneDayAgo: "1 ದಿನದ ಹಿಂದೆ",
+//     daysAgo: "{{count}} ದಿನಗಳ ಹಿಂದೆ",
+
+//     // FORM TITLES
+//     updateFarmer: "ಕೃಷಕ ನವೀಕರಿಸಿ",
+//     farmerDetails: "ಕೃಷಕ ವಿವರಗಳು",
+
+//     shopNumber: "ಅಂಗಡಿಯ ಸಂಖ್ಯೆ",
+//     isdnNumber: "ISDN ಸಂಖ್ಯೆ",
+//     shopAddress: "ಅಂಗಡಿ ವಿಳಾಸ",
+
+//     farmerSearchById: "ಕೃಷಕ ಐಡಿ ಮೂಲಕ ಹುಡುಕಿ",
+//     searchDealer: "ಹೆಸರಿನಿಂದ ಡೀಲರ್ ಹುಡುಕಿ",
+// legalDocuments:"ಕಾನೂನು ದಾಖಲೆಗಳು",
+// noDealersFound:"ಯಾವುದೇ ಡೀಲರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+//   }
+// }
+
+
+
+// };
+
+// i18n.use(initReactI18next).init({
+//   resources,
+//   lng: localStorage.getItem("lang") || "en",
+//   fallbackLng: "en",
+//   interpolation: { escapeValue: false }
+// });
+
+// export default i18n;
+
+
+
+
+
+
+
+
+
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 const resources = {
   en: {
     translation: {
+      // EXISTING TRANSLATIONS
       greeting: "Hello {{name}}!",
       welcome: "Welcome {{name}}",
-welcomeBack: "Welcome Back {{name}}",
+      welcomeBack: "Welcome Back {{name}}",
       helloUser: "Hello, {{name}}",
       addFarmer: "Add Farmer",
       farmerName: "Farmer Name",
@@ -22,7 +696,7 @@ welcomeBack: "Welcome Back {{name}}",
       totalFarmers: "Total Farmers",
       totalPonds: "Total Ponds",
       farmersList: "Farmers List",
- farmerId: "Farmer ID",
+      farmerId: "Farmer ID",
       profile: "Profile",
       dashboard: "Dashboard",
       helpCenter: "Help Center",
@@ -67,49 +741,122 @@ welcomeBack: "Welcome Back {{name}}",
       callUsDirectly: "Call us directly:",
       workHours: "Mon to Friday — 9 AM to 6 PM",
       terms: "Terms & Conditions",
-privacy: "Privacy Policy",
-cancellation: "Cancellation Policy",
-refund: "Refund Policy",
-// COMMON
-update: "Update",
-close: "Close",
-updated: "Updated",
+      privacy: "Privacy Policy",
+      cancellation: "Cancellation Policy",
+      refund: "Refund Policy",
+      
+      // COMMON
+      update: "Update",
+      close: "Close",
+      updated: "Updated",
 
-// TIME AGO
-today: "Today",
-oneDayAgo: "1 day ago",
-daysAgo: "{{count}} days ago",
+      // TIME AGO
+      today: "Today",
+      oneDayAgo: "1 day ago",
+      daysAgo: "{{count}} days ago",
 
-// FORM TITLES
-updateFarmer: "Update Farmer",
-farmerDetails: "Farmer Details",
+      // FORM TITLES
+      updateFarmer: "Update Farmer",
+      farmerDetails: "Farmer Details",
 
-gstNumber: "GST Number",
-shopAddress: "Shop Address",
+      gstNumber: "GST Number",
+      shopAddress: "Shop Address",
+      farmerSearchById: "Search Farmer by ID",
+      searchDealer: "Search Dealer by Name",
+      legalDocuments: "Legal Document",
+      noDealersFound: "No Dealers Found",
 
-farmerSearchById: "Search Farmer by ID",
+      // NEW TERMS & CONDITIONS TRANSLATIONS
+      termsAndConditions: "Terms & Conditions",
+      definitions: "Definitions",
+      company: "Company",
+      companyDefinition: "refers to Essential Aquatech.",
+      user: "User",
+      userDefinition: "refers to anyone using our services.",
+      services: "Services",
+      servicesDefinition: "include fish medicines, feed supplements, fingerlings, market connections, technical support and field services.",
+      userResponsibility: "Responsibility of Users",
+      userResponsibility1: "Users must provide accurate information.",
+      userResponsibility2: "Users are responsible for keeping login details safe.",
+      userResponsibility3: "Users must follow all relevant laws.",
+      userResponsibility4: "Users should implement our products as directed.",
+      ordersPaymentsRefunds: "Orders, Payments & Refunds",
+      orderRequirement: "Orders must be placed from the official website.",
+      paymentRequirement: "Payments must be through official channels.",
+      refundCondition: "Refunds only for damaged or defective products.",
+      refundTimeframe: "Refunds must be requested within 7 days.",
+      priceVariation: "Prices may vary anytime.",
+      serviceAvailability: "Availability of services",
+      serviceAvailability1: "We aim to keep services always available.",
+      serviceAvailability2: "We are not responsible for delays due to unexpected situations.",
+      liabilityLimitation: "Limitation of Liability",
+      liabilityLimitationText: "We are not responsible for losses or damages resulting from use of our products or services.",
+      intellectualProperty: "Intellectual Property",
+      intellectualPropertyText: "The brand name, logo and content belong to Essential Aquatech. Unauthorized use or sharing is prohibited.",
+      privacyDataProtection: "Privacy and Data Protection",
+      privacyDataProtectionText: "We respect user privacy and protect data. Information will not be shared without permission.",
+      serviceTermination: "Service Termination",
+      serviceTerminationText: "We may suspend services if terms are violated. Users may request account closure.",
+      governingLawDisputes: "Governing Law & Disputes",
+      governingLawText: "All terms follow applicable jurisdiction laws.",
+      disputeResolution: "Any disputes will be settled through arbitration or legal action.",
+      termsChanges: "Changes to Terms",
+      termsChangesText: "We may update terms anytime. Continued use means acceptance.",
+      contactForQueries: "For queries, contact us at:",
+      companyEmail: "3ai.essentialaquatech@gmail.com",
 
-searchDealer: " Search Dealer by Name",
-legalDocuments:"Legal Document",
-noDealersFound:" No Dealers Found"
+      // NEW PRIVACY POLICY TRANSLATIONS
+      privacyPolicy: "Privacy Policy",
+      informationWeCollect: "Information We Collect",
+      collectPersonalInfo: "Personal Information (name, contact, address, payment details)",
+      collectUsageData: "Usage data of website/app",
+      collectTransactionData: "Transaction data (order history, payment history)",
+      collectCommunicationData: "Communication data (emails, messages)",
+      howWeUseInfo: "How We Use Your Information",
+      useForService: "To provide and improve services",
+      useForProcessing: "Process orders, payments & deliveries",
+      useForSupport: "Customer support",
+      useForUpdates: "Send updates & promotions",
+      useForSecurity: "Fraud prevention & legal compliance",
+      dataSharingSecurity: "Data Sharing & Security",
+      noDataSelling: "No selling or renting user data",
+      dataSharingPartners: "Shared only with trusted payment/logistic partners",
+      dataSecurity: "Strong security protection",
+      cookiesTracking: "Cookies & Tracking",
+      cookiesText: "We use cookies to enhance experience. You can disable cookies in browser settings.",
+      userRights: "User Rights",
+      rightAccessData: "Access, update or delete your data anytime",
+      rightOptOut: "Opt-out of marketing emails anytime",
+      dataRetention: "Retention of Data",
+      dataRetentionText: "Data is kept only as long as needed for operations or legal reasons.",
+      policyUpdates: "Updates to Policy",
+      policyUpdatesText: "We may update this policy anytime.",
 
+      // NEW CANCELLATION POLICY TRANSLATIONS
+      cancellationPolicy: "Cancellation Policy",
+      cancellationWindow: "Orders can be cancelled within 24 hours if not shipped.",
+      cancellationContact: "Contact support via email or phone for cancellation.",
+      noCancellationShipped: "Shipped orders cannot be cancelled.",
 
-
-
-
-
-
-
-
-
+      // NEW REFUND POLICY TRANSLATIONS
+      refundPolicy: "Refund Policy",
+      refundAvailable: "Refunds Available When:",
+      refundDamaged: "Product is damaged/defective (report within 48 hours)",
+      refundWrongProduct: "Wrong product delivered",
+      refundStockIssue: "Order cannot be fulfilled due to stock issues",
+      refundServiceIssue: "Booked service unavailable due to unforeseen issues (refund/reschedule)",
+      nonRefundable: "Non-Refundable:",
+      nonRefundableUsed: "Used/opened products",
+      nonRefundableDigital: "Digital services already delivered",
+      nonRefundableCustom: "Custom or bulk processed orders"
     }
   },
-
   hi: {
     translation: {
+      // EXISTING TRANSLATIONS
       greeting: "नमस्ते {{name}}!",
       welcome: "स्वागत है {{name}}",
-welcomeBack: "वापसी पर स्वागत है {{name}}",
+      welcomeBack: "वापसी पर स्वागत है {{name}}",
       helloUser: "नमस्ते, {{name}}",
       addFarmer: "नया किसान जोड़ें",
       farmerName: "किसान का नाम",
@@ -122,7 +869,7 @@ welcomeBack: "वापसी पर स्वागत है {{name}}",
       totalFarmers: "कुल किसान",
       totalPonds: "कुल तालाब",
       farmersList: "किसानों की सूची",
-  farmerId: "किसान आईडी",
+      farmerId: "किसान आईडी",
       profile: "प्रोफ़ाइल",
       dashboard: "डैशबोर्ड",
       helpCenter: "सहायक केंद्र",
@@ -165,43 +912,122 @@ welcomeBack: "वापसी पर स्वागत है {{name}}",
       responseTime: "प्रतिक्रिया समय: 24–48 घंटे",
       phoneSupport: "फोन सहायता",
       callUsDirectly: "सीधे कॉल करें:",
-      terms: "नियम और शर्तें",
-privacy: "गोपनीयता नीति",
-cancellation: "रद्द करने की नीति",
-refund: "रिफंड नीति",
-
       workHours: "सोमवार से शुक्रवार — सुबह 9 बजे से शाम 6 बजे तक",
 
+      terms: "नियम और शर्तें",
+      privacy: "गोपनीयता नीति",
+      cancellation: "रद्द करने की नीति",
+      refund: "रिफंड नीति",
+
       update: "अपडेट करें",
-close: "बंद करें",
-updated: "अपडेट किया गया",
+      close: "बंद करें",
+      updated: "अपडेट किया गया",
 
-today: "आज",
-oneDayAgo: "1 दिन पहले",
-daysAgo: "{{count}} दिन पहले",
+      today: "आज",
+      oneDayAgo: "1 दिन पहले",
+      daysAgo: "{{count}} दिन पहले",
 
-updateFarmer: "किसान अपडेट करें",
-farmerDetails: "किसान विवरण",
+      updateFarmer: "किसान अपडेट करें",
+      farmerDetails: "किसान विवरण",
 
+      gstNumber: "जीएसटी नंबर",
+      shopAddress: "दुकान का पता",
+      farmerSearchById: "किसान आईडी से खोजें",
+      searchDealer: "डीलर का नाम खोजें",
+      legalDocuments: "कानूनी दस्तावेज़",
+      noDealersFound: "कोई डीलर नहीं मिला",
 
+      // NEW TERMS & CONDITIONS TRANSLATIONS
+      termsAndConditions: "नियम और शर्तें",
+      definitions: "परिभाषाएं",
+      company: "कंपनी",
+      companyDefinition: "एसेंशियल एक्वाटेक को संदर्भित करता है।",
+      user: "उपयोगकर्ता",
+      userDefinition: "हमारी सेवाओं का उपयोग करने वाले किसी भी व्यक्ति को संदर्भित करता है।",
+      services: "सेवाएं",
+      servicesDefinition: "मछली दवाएं, फ़ीड सप्लीमेंट, फिंगरलिंग्स, मार्केट कनेक्शन, तकनीकी सहायता और फील्ड सेवाएं शामिल हैं।",
+      userResponsibility: "उपयोगकर्ताओं की जिम्मेदारी",
+      userResponsibility1: "उपयोगकर्ताओं को सटीक जानकारी प्रदान करनी चाहिए।",
+      userResponsibility2: "उपयोगकर्ता लॉगिन विवरण सुरक्षित रखने के लिए जिम्मेदार हैं।",
+      userResponsibility3: "उपयोगकर्ताओं को सभी प्रासंगिक कानूनों का पालन करना चाहिए।",
+      userResponsibility4: "उपयोगकर्ताओं को हमारे उत्पादों को निर्देशानुसार लागू करना चाहिए।",
+      ordersPaymentsRefunds: "आदेश, भुगतान और धनवापसी",
+      orderRequirement: "आदेश आधिकारिक वेबसाइट से दिए जाने चाहिए।",
+      paymentRequirement: "भुगतान आधिकारिक चैनलों के माध्यम से होने चाहिए।",
+      refundCondition: "केवल क्षतिग्रस्त या दोषपूर्ण उत्पादों के लिए धनवापसी।",
+      refundTimeframe: "धनवापसी 7 दिनों के भीतर अनुरोधित की जानी चाहिए।",
+      priceVariation: "कीमतें किसी भी समय बदल सकती हैं।",
+      serviceAvailability: "सेवाओं की उपलब्धता",
+      serviceAvailability1: "हम सेवाओं को हमेशा उपलब्ध रखने का लक्ष्य रखते हैं।",
+      serviceAvailability2: "अप्रत्याशित स्थितियों के कारण होने वाली देरी के लिए हम जिम्मेदार नहीं हैं।",
+      liabilityLimitation: "दायित्व सीमा",
+      liabilityLimitationText: "हमारे उत्पादों या सेवाओं के उपयोग से होने वाले नुकसान या क्षति के लिए हम जिम्मेदार नहीं हैं।",
+      intellectualProperty: "बौद्धिक संपदा",
+      intellectualPropertyText: "ब्रांड नाम, लोगो और सामग्री एसेंशियल एक्वाटेक की संपत्ति है। अनधिकृत उपयोग या साझाकरण प्रतिबंधित है।",
+      privacyDataProtection: "गोपनीयता और डेटा संरक्षण",
+      privacyDataProtectionText: "हम उपयोगकर्ता की गोपनीयता का सम्मान करते हैं और डेटा की सुरक्षा करते हैं। बिना अनुमति के जानकारी साझा नहीं की जाएगी।",
+      serviceTermination: "सेवा समाप्ति",
+      serviceTerminationText: "यदि नियमों का उल्लंघन किया जाता है तो हम सेवाएं निलंबित कर सकते हैं। उपयोगकर्ता खाता समाप्ति का अनुरोध कर सकते हैं।",
+      governingLawDisputes: "शासी कानून और विवाद",
+      governingLawText: "सभी नियम लागू अधिकार क्षेत्र के कानूनों का पालन करते हैं।",
+      disputeResolution: "किसी भी विवाद का समाधान मध्यस्थता या कानूनी कार्रवाई के माध्यम से किया जाएगा।",
+      termsChanges: "नियमों में परिवर्तन",
+      termsChangesText: "हम किसी भी समय नियम अपडेट कर सकते हैं। निरंतर उपयोग स्वीकृति का प्रतीक है।",
+      contactForQueries: "प्रश्नों के लिए, हमसे संपर्क करें:",
+      companyEmail: "3ai.essentialaquatech@gmail.com",
 
-  gstNumber: "जीएसटी नंबर",
-shopAddress: "दुकान का पता",
-farmerSearchById: "किसान आईडी से खोजें",
-searchDealer: "डीलर का नाम खोजें",
-legalDocuments:"कानूनी दस्तावेज़",
- noDealersFound: "कोई डीलर नहीं मिला",
+      // NEW PRIVACY POLICY TRANSLATIONS
+      privacyPolicy: "गोपनीयता नीति",
+      informationWeCollect: "जानकारी जो हम एकत्र करते हैं",
+      collectPersonalInfo: "व्यक्तिगत जानकारी (नाम, संपर्क, पता, भुगतान विवरण)",
+      collectUsageData: "वेबसाइट/ऐप का उपयोग डेटा",
+      collectTransactionData: "लेन-देन डेटा (आदेश इतिहास, भुगतान इतिहास)",
+      collectCommunicationData: "संचार डेटा (ईमेल, संदेश)",
+      howWeUseInfo: "हम आपकी जानकारी का उपयोग कैसे करते हैं",
+      useForService: "सेवाएं प्रदान करने और सुधारने के लिए",
+      useForProcessing: "आदेश, भुगतान और डिलीवरी प्रसंस्करण",
+      useForSupport: "ग्राहक सहायता",
+      useForUpdates: "अपडेट और प्रचार भेजना",
+      useForSecurity: "धोखाधड़ी रोकथाम और कानूनी अनुपालन",
+      dataSharingSecurity: "डेटा साझाकरण और सुरक्षा",
+      noDataSelling: "उपयोगकर्ता डेटा बेचना या किराए पर देना नहीं",
+      dataSharingPartners: "केवल विश्वसनीय भुगतान/लॉजिस्टिक पार्टनर्स के साथ साझा किया जाता है",
+      dataSecurity: "मजबूत सुरक्षा संरक्षण",
+      cookiesTracking: "कुकीज़ और ट्रैकिंग",
+      cookiesText: "हम अनुभव बढ़ाने के लिए कुकीज़ का उपयोग करते हैं। आप ब्राउज़र सेटिंग्स में कुकीज़ अक्षम कर सकते हैं।",
+      userRights: "उपयोगकर्ता अधिकार",
+      rightAccessData: "किसी भी समय अपना डेटा एक्सेस, अपडेट या डिलीट करें",
+      rightOptOut: "किसी भी समय मार्केटिंग ईमेल से ऑप्ट-आउट करें",
+      dataRetention: "डेटा प्रतिधारण",
+      dataRetentionText: "डेटा केवल तब तक रखा जाता है जब तक संचालन या कानूनी कारणों के लिए आवश्यक हो।",
+      policyUpdates: "नीति अपडेट",
+      policyUpdatesText: "हम इस नीति को किसी भी समय अपडेट कर सकते हैं।",
 
+      // NEW CANCELLATION POLICY TRANSLATIONS
+      cancellationPolicy: "रद्द करने की नीति",
+      cancellationWindow: "यदि शिप नहीं किया गया है तो आदेश 24 घंटे के भीतर रद्द किए जा सकते हैं।",
+      cancellationContact: "रद्दीकरण के लिए ईमेल या फोन के माध्यम से समर्थन से संपर्क करें।",
+      noCancellationShipped: "शिप किए गए आदेश रद्द नहीं किए जा सकते।",
+
+      // NEW REFUND POLICY TRANSLATIONS
+      refundPolicy: "रिफंड नीति",
+      refundAvailable: "धनवापसी कब उपलब्ध है:",
+      refundDamaged: "उत्पाद क्षतिग्रस्त/दोषपूर्ण है (48 घंटे के भीतर रिपोर्ट करें)",
+      refundWrongProduct: "गलत उत्पाद वितरित किया गया",
+      refundStockIssue: "स्टॉक समस्याओं के कारण आदेश पूरा नहीं किया जा सकता",
+      refundServiceIssue: "अप्रत्याशित मुद्दों के कारण बुक की गई सेवा उपलब्ध नहीं है (धनवापसी/पुनर्निर्धारण)",
+      nonRefundable: "गैर-वापसी योग्य:",
+      nonRefundableUsed: "प्रयुक्त/खुले उत्पाद",
+      nonRefundableDigital: "पहले से ही वितरित डिजिटल सेवाएं",
+      nonRefundableCustom: "कस्टम या बल्क प्रोसेस्ड ऑर्डर"
     }
   },
-  
-
-
   bn: {
     translation: {
+      // EXISTING TRANSLATIONS
       greeting: "হ্যালো {{name}}!",
       welcome: "স্বাগতম {{name}}",
-welcomeBack: "উভতি অহাতে স্বাগতম {{name}}",
+      welcomeBack: "উভতি অহাতে স্বাগতম {{name}}",
       helloUser: "হ্যালো, {{name}}",
       addFarmer: "কৃষক যোগ করুন",
       farmerName: "কৃষকের নাম",
@@ -214,7 +1040,7 @@ welcomeBack: "উভতি অহাতে স্বাগতম {{name}}",
       totalFarmers: "মোট কৃষক",
       totalPonds: "মোট পুকুর",
       farmersList: "কৃষকের তালিকা",
-farmerId: "কৃষক আইডি",
+      farmerId: "কৃষক আইডি",
       profile: "প্রোফাইল",
       dashboard: "ড্যাশবোর্ড",
       helpCenter: "সহায়তা কেন্দ্র",
@@ -257,404 +1083,802 @@ farmerId: "কৃষক আইডি",
       responseTime: "প্রতিক্রিয়া সময়: ২৪–৪৮ ঘণ্টা",
       phoneSupport: "ফোন সাপোর্ট",
       callUsDirectly: "সরাসরি কল করুন:",
-      terms: "শর্তাবলী",
-privacy: "গোপনীয়তা নীতি",
-cancellation: "বাতিলকরণ নীতি",
-refund: "রিফান্ড নীতি",
       workHours: "সোম থেকে শুক্রবার — সকাল ৯টা থেকে সন্ধ্যা ৬টা",
+      terms: "শর্তাবলী",
+      privacy: "গোপনীয়তা নীতি",
+      cancellation: "বাতিলকরণ নীতি",
+      refund: "রিফান্ড নীতি",
+
       update: "আপডেট",
-close: "বন্ধ করুন",
-updated: "আপডেট হয়েছে",
+      close: "বন্ধ করুন",
+      updated: "আপডেট হয়েছে",
 
-today: "আজ",
-oneDayAgo: "১ দিন আগে",
-daysAgo: "{{count}} দিন আগে",
+      today: "আজ",
+      oneDayAgo: "১ দিন আগে",
+      daysAgo: "{{count}} দিন আগে",
 
-updateFarmer: "কৃষক আপডেট করুন",
-farmerDetails: "কৃষকের বিবরণ",
+      updateFarmer: "কৃষক আপডেট করুন",
+      farmerDetails: "কৃষকের বিবরণ",
 
-shopNumber: "দোকান নম্বর",
-isdnNumber: "আইএসডিএন নম্বর",
-shopAddress: "দোকানের ঠিকানা",
+      shopAddress: "দোকানের ঠিকানা",
+      farmerSearchById: "কৃষক আইডি দিয়ে খুঁজুন",
+      searchDealer: "নাম দ্বারা ডিলার খুঁজুন",
+      legalDocuments: "আইনি নথি",
+      noDealersFound: "কোনো ডিলার পাওয়া যায়নি",
 
-farmerSearchById: "কৃষক আইডি দিয়ে খুঁজুন",
-    searchDealer: "নাম দ্বারা ডিলার খুঁজুন",
-    legalDocuments:"আইনি নথি",
-    noDealersFound:"কোনো ডিলার পাওয়া যায়নি",
+      // NEW TERMS & CONDITIONS TRANSLATIONS
+      termsAndConditions: "শর্তাবলী",
+      definitions: "সংজ্ঞা",
+      company: "কোম্পানি",
+      companyDefinition: "এসেনশিয়াল অ্যাকোয়াটেককে বোঝায়।",
+      user: "ব্যবহারকারী",
+      userDefinition: "আমাদের পরিষেবা ব্যবহার করা যে কাউকে বোঝায়।",
+      services: "পরিষেবা",
+      servicesDefinition: "মাছের ওষুধ, ফিড সাপ্লিমেন্ট, আঙুলের ছোট মাছ, বাজার সংযোগ, প্রযুক্তিগত সহায়তা এবং ফিল্ড সার্ভিস অন্তর্ভুক্ত।",
+      userResponsibility: "ব্যবহারকারীদের দায়িত্ব",
+      userResponsibility1: "ব্যবহারকারীদের অবশ্যই সঠিক তথ্য প্রদান করতে হবে।",
+      userResponsibility2: "ব্যবহারকারীরা লগইন বিশদ নিরাপদ রাখার জন্য দায়ী।",
+      userResponsibility3: "ব্যবহারকারীদের অবশ্যই সমস্ত প্রাসঙ্গিক আইন মেনে চলতে হবে।",
+      userResponsibility4: "ব্যবহারকারীদের নির্দেশ অনুসারে আমাদের পণ্য বাস্তবায়ন করা উচিত।",
+      ordersPaymentsRefunds: "অর্ডার, পেমেন্ট এবং রিফান্ড",
+      orderRequirement: "অফিসিয়াল ওয়েবসাইট থেকে অর্ডার দিতে হবে।",
+      paymentRequirement: "পেমেন্ট অবশ্যই অফিসিয়াল চ্যানেলের মাধ্যমে হতে হবে।",
+      refundCondition: "শুধুমাত্র ক্ষতিগ্রস্ত বা ত্রুটিপূর্ণ পণ্যের জন্য রিফান্ড।",
+      refundTimeframe: "রিফান্ড ৭ দিনের মধ্যে অনুরোধ করতে হবে।",
+      priceVariation: "দাম যে কোনো সময় পরিবর্তন হতে পারে।",
+      serviceAvailability: "পরিষেবার প্রাপ্যতা",
+      serviceAvailability1: "আমরা পরিষেবা সর্বদা উপলব্ধ রাখার লক্ষ্য রাখি।",
+      serviceAvailability2: "অপ্রত্যাশিত পরিস্থিতির কারণে বিলম্বের জন্য আমরা দায়ী নই।",
+      liabilityLimitation: "দায় সীমাবদ্ধতা",
+      liabilityLimitationText: "আমাদের পণ্য বা পরিষেবা ব্যবহারের ফলে ক্ষতি বা ক্ষতির জন্য আমরা দায়ী নই।",
+      intellectualProperty: "বুদ্ধিভিত্তিক সম্পত্তি",
+      intellectualPropertyText: "ব্র্যান্ড নাম, লোগো এবং কন্টেন্ট এসেনশিয়াল অ্যাকোয়াটেকের অন্তর্ভুক্ত। অননুমোদিত ব্যবহার বা শেয়ারিং নিষিদ্ধ।",
+      privacyDataProtection: "গোপনীয়তা এবং ডেটা সুরক্ষা",
+      privacyDataProtectionText: "আমরা ব্যবহারকারীর গোপনীয়তা সম্মান করি এবং ডেটা সুরক্ষা করি। অনুমতি ছাড়া তথ্য শেয়ার করা হবে না।",
+      serviceTermination: "পরিষেবা সমাপ্তি",
+      serviceTerminationText: "শর্ত লঙ্ঘন করা হলে আমরা পরিষেবা স্থগিত করতে পারি। ব্যবহারকারীরা অ্যাকাউন্ট বন্ধ করার অনুরোধ করতে পারেন।",
+      governingLawDisputes: "আইন এবং বিরোধ",
+      governingLawText: "সমস্ত শর্ত প্রযোজ্য এখতিয়ারের আইন অনুসরণ করে।",
+      disputeResolution: "কোনো বিরোধ সালিশ বা আইনি ব্যবস্থার মাধ্যমে নিষ্পত্তি করা হবে।",
+      termsChanges: "শর্তাবলীতে পরিবর্তন",
+      termsChangesText: "আমরা যে কোনো সময় শর্তাবলী আপডেট করতে পারি। অবিরত ব্যবহার মানে গ্রহণ।",
+      contactForQueries: "প্রশ্নের জন্য, আমাদের সাথে যোগাযোগ করুন:",
+      companyEmail: "3ai.essentialaquatech@gmail.com",
 
+      // NEW PRIVACY POLICY TRANSLATIONS
+      privacyPolicy: "গোপনীয়তা নীতি",
+      informationWeCollect: "আমরা যে তথ্য সংগ্রহ করি",
+      collectPersonalInfo: "ব্যক্তিগত তথ্য (নাম, যোগাযোগ, ঠিকানা, পেমেন্ট বিশদ)",
+      collectUsageData: "ওয়েবসাইট/অ্যাপের ব্যবহার ডেটা",
+      collectTransactionData: "লেনদেন ডেটা (অর্ডার ইতিহাস, পেমেন্ট ইতিহাস)",
+      collectCommunicationData: "যোগাযোগ ডেটা (ইমেল, বার্তা)",
+      howWeUseInfo: "আমরা আপনার তথ্য কীভাবে ব্যবহার করি",
+      useForService: "পরিষেবা প্রদান এবং উন্নত করার জন্য",
+      useForProcessing: "অর্ডার, পেমেন্ট এবং ডেলিভারি প্রক্রিয়াকরণ",
+      useForSupport: "গ্রাহক সহায়তা",
+      useForUpdates: "আপডেট এবং প্রচার পাঠান",
+      useForSecurity: "জালিয়াতি প্রতিরোধ এবং আইনি সম্মতি",
+      dataSharingSecurity: "ডেটা শেয়ারিং এবং নিরাপত্তা",
+      noDataSelling: "ব্যবহারকারীর ডেটা বিক্রি বা ভাড়া দেওয়া হয় না",
+      dataSharingPartners: "শুধুমাত্র বিশ্বস্ত পেমেন্ট/লজিস্টিক পার্টনারদের সাথে শেয়ার করা হয়",
+      dataSecurity: "শক্তিশালী নিরাপত্তা সুরক্ষা",
+      cookiesTracking: "কুকিজ এবং ট্র্যাকিং",
+      cookiesText: "আমরা অভিজ্ঞতা বাড়ানোর জন্য কুকিজ ব্যবহার করি। আপনি ব্রাউজার সেটিংসে কুকিজ নিষ্ক্রিয় করতে পারেন।",
+      userRights: "ব্যবহারকারীর অধিকার",
+      rightAccessData: "যেকোনো সময় আপনার ডেটা অ্যাক্সেস, আপডেট বা মুছুন",
+      rightOptOut: "যেকোনো সময় মার্কেটিং ইমেল থেকে অপ্ট-আউট করুন",
+      dataRetention: "ডেটা ধরে রাখা",
+      dataRetentionText: "ডেটা শুধুমাত্র অপারেশন বা আইনি কারণে প্রয়োজনীয় সময়ের জন্য রাখা হয়।",
+      policyUpdates: "নীতি আপডেট",
+      policyUpdatesText: "আমরা যে কোনো সময় এই নীতি আপডেট করতে পারি।",
 
+      // NEW CANCELLATION POLICY TRANSLATIONS
+      cancellationPolicy: "বাতিলকরণ নীতি",
+      cancellationWindow: "অর্ডারগুলি 24 ঘন্টার মধ্যে বাতিল করা যেতে পারে যদি শিপ না করা হয়।",
+      cancellationContact: "বাতিল করার জন্য ইমেল বা ফোনের মাধ্যমে সমর্থনে যোগাযোগ করুন।",
+      noCancellationShipped: "শিপ করা অর্ডার বাতিল করা যাবে না।",
 
+      // NEW REFUND POLICY TRANSLATIONS
+      refundPolicy: "রিফান্ড নীতি",
+      refundAvailable: "রিফান্ড কখন উপলব্ধ:",
+      refundDamaged: "পণ্য ক্ষতিগ্রস্ত/ত্রুটিপূর্ণ (48 ঘন্টার মধ্যে রিপোর্ট করুন)",
+      refundWrongProduct: "ভুল পণ্য বিতরণ করা হয়েছে",
+      refundStockIssue: "স্টক সমস্যার কারণে অর্ডার পূর্ণ করা যাবে না",
+      refundServiceIssue: "অপ্রত্যাশিত সমস্যার কারণে বুক করা পরিষেবা উপলব্ধ নয় (রিফান্ড/পুনঃনির্ধারণ)",
+      nonRefundable: "অ-রিফান্ডযোগ্য:",
+      nonRefundableUsed: "ব্যবহৃত/খোলা পণ্য",
+      nonRefundableDigital: "ইতিমধ্যে ডেলিভারি করা ডিজিটাল পরিষেবা",
+      nonRefundableCustom: "কাস্টম বা বাল্ক প্রক্রিয়াকৃত অর্ডার"
     }
   },
+  as: {
+    translation: {
+      // EXISTING TRANSLATIONS
+      greeting: "নমস্কাৰ {{name}}!",
+      helloUser: "নমস্কাৰ, {{name}}",
+      welcome: "স্বাগতম {{name}}",
+      welcomeBack: "উভতি অহাতে স্বাগতম {{name}}",
+      addFarmer: "চাষী যোগ কৰক",
+      farmerName: "চাষীৰ নাম",
+      contactNumber: "যোগাযোগ নম্বৰ",
+      age: "বয়স",
+      gender: "লিংগ",
+      adhar: "আধাৰ নম্বৰ",
+      village: "গাঁও",
+      pondCount: "পোখৰীৰ সংখ্যা",
+      farmerId: "চাষী আইডি",
+      totalFarmers: "মুঠ চাষী",
+      totalPonds: "মুঠ পাছুলি/পোখৰি",
+      farmersList: "চাষীৰ তালিকা",
 
-as: {
-  translation: {
-    greeting: "নমস্কাৰ {{name}}!",
-    helloUser: "নমস্কাৰ, {{name}}",
-welcome: "স্বাগতম {{name}}",
-welcomeBack: "উভতি অহাতে স্বাগতম {{name}}",
-    addFarmer: "চাষী যোগ কৰক",
-    farmerName: "চাষীৰ নাম",
-    contactNumber: "যোগাযোগ নম্বৰ",
-    age: "বয়স",
-    gender: "লিংগ",
-    adhar: "আধাৰ নম্বৰ",
-    village: "গাঁও",
-    pondCount: "পোখৰীৰ সংখ্যা",
- farmerId: "চাষী আইডি",
-    totalFarmers: "মুঠ চাষী",
-    totalPonds: "মুঠ পাছুলি/পোখৰি",
-    farmersList: "চাষীৰ তালিকা",
+      profile: "প্ৰফাইল",
+      dashboard: "ডেশ্ববোর্ড",
+      helpCenter: "সহায়তা কেন্দ্ৰ",
+      dealers: "ডিলাৰ",
+      agents: "এজেণ্টস",
+      chooseLanguage: "ভাষা বাছক",
 
-    profile: "প্ৰফাইল",
-    dashboard: "ডেশ্ববোর্ড",
-    helpCenter: "সহায়তা কেন্দ্ৰ",
-    dealers: "ডিলাৰ",
-    agents: "এজেণ্টস",
-    chooseLanguage: "ভাষা বাছক",
+      familyMembers: "পৰিয়ালৰ সদস্যৰ সংখ্যা",
+      familyOccupation: "পৰিয়ালৰ পেচা",
+      submit: "দাখিল কৰক",
+      cancel: "বাতিল কৰক",
 
-    familyMembers: "পৰিয়ালৰ সদস্যৰ সংখ্যা",
-    familyOccupation: "পৰিয়ালৰ পেচা",
-    submit: "দাখিল কৰক",
-    cancel: "বাতিল কৰক",
+      addNewDealer: "+ নতুন ডিলাৰ যোগ কৰক",
+      dealerName: "ডিলাৰৰ নাম",
+      addDealer: "ডিলাৰ যোগ কৰক",
+      dealersCount: "ডিলাৰ ({{count}})",
+      profileimage: "প্ৰফাইল ছবি",
+      fillAllFields: "সকলো ঘৰ পূৰণ কৰক",
+      errorAddingDealer: "ডিলাৰ যোগ কৰোঁতে ত্ৰুটি",
 
-    addNewDealer: "+ নতুন ডিলাৰ যোগ কৰক",
-    dealerName: "ডিলাৰৰ নাম",
-    addDealer: "ডিলাৰ যোগ কৰক",
-    dealersCount: "ডিলাৰ ({{count}})",
-    profileimage: "প্ৰফাইল ছবি",
-    fillAllFields: "সকলো ঘৰ পূৰণ কৰক",
-    errorAddingDealer: "ডিলাৰ যোগ কৰোঁতে ত্ৰুটি",
+      allUsers: "সকল ব্যৱহাৰকাৰী",
+      email: "ইমেইল",
 
-    allUsers: "সকল ব্যৱহাৰকাৰী",
-    email: "ইমেইল",
+      // PROFILE PAGE
+      myProfile: "মোৰ প্ৰফাইল",
+      profileImage: "প্ৰফাইল ছবি",
+      changePhoto: "ছবি সলনি কৰক",
+      username: "ব্যৱহাৰকাৰীৰ নাম",
+      updateUsername: "নাম আপডেট কৰক",
+      changePassword: "পাছৱাৰ্ড সলনি কৰক",
+      currentPassword: "এই মুহূর্তৰ পাছৱাৰ্ড",
+      newPassword: "নতুন পাছৱাৰ্ড",
+      updatePassword: "পাছৱাৰ্ড আপডেট কৰক",
 
-    // PROFILE PAGE
-    myProfile: "মোৰ প্ৰফাইল",
-    profileImage: "প্ৰফাইল ছবি",
-    changePhoto: "ছবি সলনি কৰক",
-    username: "ব্যৱহাৰকাৰীৰ নাম",
-    updateUsername: "নাম আপডেট কৰক",
-    changePassword: "পাছৱাৰ্ড সলনি কৰক",
-    currentPassword: "এই মুহূর্তৰ পাছৱাৰ্ড",
-    newPassword: "নতুন পাছৱাৰ্ড",
-    updatePassword: "পাছৱাৰ্ড আপডেট কৰক",
+      // HELP CENTER
+      helpCenterTitle: "সহায়তা কেন্দ্ৰ",
+      emailSupport: "ইমেইল সহায়তা",
+      emailSupportDesc: "ইমেইলৰ জৰিয়তে আমাক সংযোগ কৰক।",
+      emailUs: "আমাক ইমেইল কৰক",
+      responseTime: "উত্তৰ সময়: ২৪–৪৮ ঘণ্টা",
+      phoneSupport: "ফোন সহায়তা",
+      callUsDirectly: "সরাসৰি কল কৰক:",
+      workHours: "সোম–শুক্ৰ —ৰাতিপুৱা ৯ বজাৰ পৰা সন্ধিয়া ৬ বজালৈ",
 
-    // HELP CENTER
-    helpCenterTitle: "সহায়তা কেন্দ্ৰ",
-    emailSupport: "ইমেইল সহায়তা",
-    emailSupportDesc: "ইমেইলৰ জৰিয়তে আমাক সংযোগ কৰক।",
-    emailUs: "আমাক ইমেইল কৰক",
-    responseTime: "উত্তৰ সময়: ২৪–৪৮ ঘণ্টা",
-    phoneSupport: "ফোন সহায়তা",
-    callUsDirectly: "সরাসৰি কল কৰক:",
-    workHours: "সোম–শুক্ৰ —ৰাতিপুৱা ৯ বজাৰ পৰা সন্ধিয়া ৬ বজালৈ",
+      terms: "নিয়ম আৰু চৰ্তাবলী",
+      privacy: "গোপনীয়তা নীতি",
+      cancellation: "বাতিল নীতি",
+      refund: "ৰিফান্ড নীতি",
 
-    terms: "নিয়ম আৰু চৰ্তাবলী",
-    privacy: "গোপনীয়তা নীতি",
-    cancellation: "বাতিল নীতি",
-    refund: "ৰিফান্ড নীতি",
+      // COMMON
+      update: "আপডেট কৰক",
+      close: "বন্ধ কৰক",
+      updated: "আপডেট কৰা হৈছে",
 
-    // COMMON
-    update: "আপডেট কৰক",
-    close: "বন্ধ কৰক",
-    updated: "আপডেট কৰা হৈছে",
+      // TIME AGO
+      today: "আজি",
+      oneDayAgo: "১ দিন আগতে",
+      daysAgo: "{{count}} দিন আগতে",
 
-    // TIME AGO
-    today: "আজি",
-    oneDayAgo: "১ দিন আগতে",
-    daysAgo: "{{count}} দিন আগতে",
+      // FORM TITLES
+      updateFarmer: "চাষী আপডেট কৰক",
+      farmerDetails: "চাষীৰ বিৱৰণ",
 
-    // FORM TITLES
-    updateFarmer: "চাষী আপডেট কৰক",
-    farmerDetails: "চাষীৰ বিৱৰণ",
+      shopAddress: "দোকানৰ ঠিকনা",
+      farmerSearchById: "চাষী আইডি অনুসৰি সন্ধান কৰক",
+      searchDealer: "নামৰ দ্বাৰা ডিলাৰ বিচৰা",
+      legalDocuments: "আইনী নথিপত্ৰ",
+      noDealersFound: "কোনো ডিলাৰ পোৱা নগ'ল",
 
-    shopNumber: "দোকান নম্বৰ",
-    isdnNumber: "আই.এছ.ডি.এন নম্বৰ",
-    shopAddress: "দোকানৰ ঠিকনা",
-    farmerSearchById: "চাষী আইডি অনুসৰি সন্ধান কৰক",
-    searchDealer: "নামৰ দ্বাৰা ডিলাৰ বিচৰা",
-    legalDocuments:" আইনী নথিপত্ৰ ",
-    noDealersFound: "কোনো ডিলাৰ পোৱা নগ'ল",
+      // NEW TERMS & CONDITIONS TRANSLATIONS
+      termsAndConditions: "চৰ্তাৱলী",
+      definitions: "সংজ্ঞা",
+      company: "প্ৰতিষ্ঠান",
+      companyDefinition: "এচেনচিয়েল একুৱাটেকক বুজায়।",
+      user: "ব্যৱহাৰকাৰী",
+      userDefinition: "আমাৰ সেৱা ব্যৱহাৰ কৰা যিকোনো ব্যক্তিক বুজায়।",
+      services: "সেৱা",
+      servicesDefinition: "মাছৰ ঔষধ, খাদ্য পূৰক, আঙুলিৰ সৰু মাছ, বজাৰ সংযোগ, প্ৰযুক্তিগত সহায় আৰু ফিল্ড সেৱা অন্তৰ্ভুক্ত কৰে।",
+      userResponsibility: "ব্যৱহাৰকাৰীৰ দায়িত্ব",
+      userResponsibility1: "ব্যৱহাৰকাৰীয়ে সঠিক তথ্য প্ৰদান কৰিব লাগিব।",
+      userResponsibility2: "লগইন তথ্য সুৰক্ষিত ৰখাৰ বাবে ব্যৱহাৰকাৰী দায়বদ্ধ।",
+      userResponsibility3: "ব্যৱহাৰকাৰীয়ে সমস্ত প্ৰাসংগিক আইন মানি চলিব লাগিব।",
+      userResponsibility4: "নিৰ্দেশনা অনুসৰি আমাৰ পণ্য কাৰ্যকৰী কৰিব লাগিব।",
+      ordersPaymentsRefunds: "অৰ্ডাৰ, পেমেন্ট আৰু ৰিফান্ড",
+      orderRequirement: "অৰ্ডাৰ আনুষ্ঠানিক ৱেবছাইটৰ পৰা দিব লাগিব।",
+      paymentRequirement: "পেমেন্ট আনুষ্ঠানিক চেনেলৰ মাজেৰে হ'ব লাগিব।",
+      refundCondition: "কেৱল ক্ষতিগ্ৰস্ত বা ত্ৰুটিপূৰ্ণ পণ্যৰ বাবেহে ৰিফান্ড।",
+      refundTimeframe: "ৰিফান্ড ৭ দিনৰ ভিতৰত অনুৰোধ কৰিব লাগিব।",
+      priceVariation: "দাম যিকোনো সময়ত সলনি হ'ব পাৰে।",
+      serviceAvailability: "সেৱাৰ উপলব্ধতা",
+      serviceAvailability1: "আমি সেৱা সদায় উপলব্ধ ৰখাৰ লক্ষ্য ৰাখোঁ।",
+      serviceAvailability2: "অপ্ৰত্যাশিত পৰিস্থিতিৰ বাবে হোৱা পলমৰ বাবে আমি দায়বদ্ধ নহওঁ।",
+      liabilityLimitation: "দায়িত্ব সীমাবদ্ধতা",
+      liabilityLimitationText: "আমাৰ পণ্য বা সেৱা ব্যৱহাৰৰ ফলত হোৱা ক্ষতি বা হানিৰ বাবে আমি দায়বদ্ধ নহওঁ।",
+      intellectualProperty: "বৌদ্ধিক সম্পত্তি",
+      intellectualPropertyText: "ব্ৰেণ্ড নাম, ল'গ' আৰু বিষয়বস্তু এচেনচিয়েল একুৱাটেকৰ অন্তৰ্ভুক্ত। অননুমোদিত ব্যৱহাৰ বা শ্বেয়াৰিং নিষিদ্ধ।",
+      privacyDataProtection: "গোপনীয়তা আৰু ডেটা সুৰক্ষা",
+      privacyDataProtectionText: "আমি ব্যৱহাৰকাৰীৰ গোপনীয়তা সন্মান কৰোঁ আৰু ডেটা সুৰক্ষিত কৰোঁ। অনুমতি নোহোৱাকৈ তথ্য শ্বেয়াৰ কৰা নহ'ব।",
+      serviceTermination: "সেৱা সমাপ্তি",
+      serviceTerminationText: "চৰ্তাৱলী ভংগ কৰিলে আমি সেৱা স্থগিত কৰিব পাৰোঁ। ব্যৱহাৰকাৰীয়ে একাউণ্ট বন্ধ কৰিবলৈ অনুৰোধ কৰিব পাৰে।",
+      governingLawDisputes: "আইন আৰু বিবাদ",
+      governingLawText: "সকলো চৰ্ত প্ৰযোজ্য এখতিয়াৰৰ আইন অনুসৰণ কৰে।",
+      disputeResolution: "যিকোনো বিবাদ সালিসী বা আইনী কাৰ্য্যৰ মাজেৰে সমাধান কৰা হ'ব।",
+      termsChanges: "চৰ্তাৱলীত পৰিৱৰ্তন",
+      termsChangesText: "আমি যিকোনো সময়ত চৰ্তাৱলী আপডেট কৰিব পাৰোঁ। অবিৰত ব্যৱহাৰ মানে স্বীকৃতি।",
+      contactForQueries: "প্ৰশ্নৰ বাবে, আমাক যোগাযোগ কৰক:",
+      companyEmail: "3ai.essentialaquatech@gmail.com",
 
+      // NEW PRIVACY POLICY TRANSLATIONS
+      privacyPolicy: "গোপনীয়তা নীতি",
+      informationWeCollect: "আমি যি তথ্য সংগ্ৰহ কৰোঁ",
+      collectPersonalInfo: "ব্যক্তিগত তথ্য (নাম, যোগাযোগ, ঠিকনা, পেমেন্ট বিৱৰণ)",
+      collectUsageData: "ৱেবছাইট/এপৰ ব্যৱহাৰ ডেটা",
+      collectTransactionData: "লেনদেন ডেটা (অৰ্ডাৰ ইতিহাস, পেমেন্ট ইতিহাস)",
+      collectCommunicationData: "যোগাযোগ ডেটা (ইমেইল, বাৰ্তা)",
+      howWeUseInfo: "আমি আপোনাৰ তথ্য কেনেকৈ ব্যৱহাৰ কৰোঁ",
+      useForService: "সেৱা প্ৰদান আৰু উন্নত কৰাৰ বাবে",
+      useForProcessing: "অৰ্ডাৰ, পেমেন্ট আৰু ডেলিভাৰী প্ৰক্ৰিয়াকৰণ",
+      useForSupport: "গ্ৰাহক সহায়",
+      useForUpdates: "আপডেট আৰু প্ৰচাৰ পঠাওক",
+      useForSecurity: "প্ৰৱঞ্চনা প্ৰতিৰোধ আৰু আইনী আনুগত্য",
+      dataSharingSecurity: "ডেটা শ্বেয়াৰিং আৰু সুৰক্ষা",
+      noDataSelling: "ব্যৱহাৰকাৰী ডেটা বিক্ৰী বা ভাড়া দিয়া নহয়",
+      dataSharingPartners: "কেৱল বিশ্বাসযোগ্য পেমেন্ট/লজিস্টিক অংশীদাৰৰ সৈতে শ্বেয়াৰ কৰা হয়",
+      dataSecurity: "শক্তিশালী সুৰক্ষা সুৰক্ষা",
+      cookiesTracking: "কুকিজ আৰু ট্ৰেকিং",
+      cookiesText: "আমি অভিজ্ঞতা উন্নত কৰিবলৈ কুকিজ ব্যৱহাৰ কৰোঁ। আপুনি ব্ৰাউজাৰ ছেটিংছত কুকিজ নিষ্ক্ৰিয় কৰিব পাৰে।",
+      userRights: "ব্যৱহাৰকাৰীৰ অধিকাৰ",
+      rightAccessData: "যিকোনো সময়ত আপোনাৰ ডেটা এক্সেচ, আপডেট বা ডিলিট কৰক",
+      rightOptOut: "যিকোনো সময়ত বিপণন ইমেইলৰ পৰা অপ্ট-আউট কৰক",
+      dataRetention: "ডেটা ৰিটেনচন",
+      dataRetentionText: "ডেটা কেৱল অপাৰেচন বা আইনী কাৰণৰ বাবে প্ৰয়োজনীয় সময়লৈকে ৰখা হয়।",
+      policyUpdates: "নীতি আপডেট",
+      policyUpdatesText: "আমি যিকোনো সময়ত এই নীতি আপডেট কৰিব পাৰোঁ।",
+
+      // NEW CANCELLATION POLICY TRANSLATIONS
+      cancellationPolicy: "বাতিল নীতি",
+      cancellationWindow: "অৰ্ডাৰবোৰ ২৪ ঘণ্টাৰ ভিতৰত বাতিল কৰিব পাৰি যদি শ্বিপ নকৰা হয়।",
+      cancellationContact: "বাতিল কৰাৰ বাবে ইমেইল বা ফোনৰ দ্বাৰা সহায়ত যোগাযোগ কৰক।",
+      noCancellationShipped: "শ্বিপ কৰা অৰ্ডাৰবোৰ বাতিল কৰিব নোৱাৰি।",
+
+      // NEW REFUND POLICY TRANSLATIONS
+      refundPolicy: "ৰিফান্ড নীতি",
+      refundAvailable: "ৰিফান্ড কেতিয়া উপলব্ধ:",
+      refundDamaged: "পণ্যটি ক্ষতিগ্ৰস্ত/ত্ৰুটিপূৰ্ণ (৪৮ ঘণ্টাৰ ভিতৰত ৰিপোৰ্ট কৰক)",
+      refundWrongProduct: "ভুল পণ্য ডেলিভাৰী কৰা হৈছে",
+      refundStockIssue: "ষ্টক সমস্যাৰ বাবে অৰ্ডাৰ পূৰণ কৰিব নোৱাৰি",
+      refundServiceIssue: "অপ্ৰত্যাশিত সমস্যাৰ বাবে বুক কৰা সেৱা উপলব্ধ নহয় (ৰিফান্ড/পুনৰ্শিডিউল)",
+      nonRefundable: "অ-ৰিফান্ডযোগ্য:",
+      nonRefundableUsed: "ব্যৱহাৰ কৰা/খোলা পণ্য",
+      nonRefundableDigital: "ইতিমধ্যে ডেলিভাৰী কৰা ডিজিটেল সেৱা",
+      nonRefundableCustom: "কাষ্টম বা বাল্ক প্ৰচেছড অৰ্ডাৰ"
+    }
+  },
+  ta: {
+    translation: {
+      // EXISTING TRANSLATIONS
+      greeting: "வணக்கம் {{name}}!",
+      welcome: "வரவேற்கிறோம் {{name}}",
+      welcomeBack: "மீண்டும் வரவேற்கிறோம் {{name}}",
+      helloUser: "வணக்கம், {{name}}",
+      addFarmer: "விவசாயியை சேர்க்கவும்",
+      farmerName: "விவசாயி பெயர்",
+      contactNumber: "தொடர்பு எண்",
+      age: "வயது",
+      gender: "பாலினம்",
+      adhar: "ஆதார் எண்",
+      village: "கிராமம்",
+      pondCount: "குளங்களின் எண்ணிக்கை",
+      totalFarmers: "மொத்த விவசாயிகள்",
+      totalPonds: "மொத்த குளங்கள்",
+      farmersList: "விவசாயிகள் பட்டியல்",
+      farmerId: "விவசாயி ஐடி",
+      profile: "சுயவிவரம்",
+      dashboard: "டாஷ்போர்ட்",
+      helpCenter: "உதவி மையம்",
+      dealers: "டீலர்கள்",
+      agents: "ஏஜென்ட்கள்",
+      chooseLanguage: "மொழியை தேர்ந்தெடுக்கவும்",
+
+      familyMembers: "குடும்ப உறுப்பினர்கள் எண்ணிக்கை",
+      familyOccupation: "குடும்ப தொழில்",
+      submit: "சமர்ப்பிக்கவும்",
+      cancel: "ரத்து செய்யவும்",
+
+      addNewDealer: "+ புதிய டீலரை சேர்க்கவும்",
+      dealerName: "டீலர் பெயர்",
+      addDealer: "டீலரை சேர்க்கவும்",
+      dealersCount: "டீலர்கள் ({{count}})",
+      profileimage: "சுயவிவர படம்",
+      fillAllFields: "அனைத்து புலங்களையும் நிரப்பவும்",
+      errorAddingDealer: "டீலரைச் சேர்க்கும் போது பிழை",
+
+      allUsers: "அனைத்து பயனர்கள்",
+      email: "மின்னஞ்சல்",
+
+      // PROFILE PAGE
+      myProfile: "என் சுயவிவரம்",
+      profileImage: "சுயவிவர படம்",
+      changePhoto: "புகைப்படத்தை மாற்றவும்",
+      username: "பயனர் பெயர்",
+      updateUsername: "பயனர் பெயரை புதுப்பிக்கவும்",
+      changePassword: "கடவுச்சொல்லை மாற்றவும்",
+      currentPassword: "தற்போதைய கடவுச்சொல்",
+      newPassword: "புதிய கடவுச்சொல்",
+      updatePassword: "கடவுச்சொல்லை புதுப்பிக்கவும்",
+
+      // HELP CENTER
+      helpCenterTitle: "உதவி மையம்",
+      emailSupport: "மின்னஞ்சல் உதவி",
+      emailSupportDesc: "மின்னஞ்சல் மூலம் எங்களை தொடர்பு கொள்ளுங்கள்.",
+      emailUs: "எங்களுக்கு மின்னஞ்சல் செய்யவும்",
+      responseTime: "பதில் நேரம்: 24–48 மணி நேரம்",
+      phoneSupport: "தொலைபேசி உதவி",
+      callUsDirectly: "எங்களை நேரடியாக அழைக்க:",
+      workHours: "திங்கள் முதல் வெள்ளி — காலை 9 முதல் மாலை 6 வரை",
+      terms: "விதிமுறைகள் & நிபந்தனைகள்",
+      privacy: "தனியுரிமை கொள்கை",
+      cancellation: "ரத்து கொள்கை",
+      refund: "பணத்தை திருப்பி வழங்கும் கொள்கை",
+
+      // COMMON
+      update: "புதுப்பிக்கவும்",
+      close: "மூடுக",
+      updated: "புதுப்பிக்கப்பட்டது",
+
+      // TIME AGO
+      today: "இன்று",
+      oneDayAgo: "1 நாள் முன்பு",
+      daysAgo: "{{count}} நாட்களுக்கு முன்பு",
+
+      // FORM TITLES
+      updateFarmer: "விவசாயியை புதுப்பிக்கவும்",
+      farmerDetails: "விவசாயியின் விவரங்கள்",
+
+      shopAddress: "கடை முகவரி",
+      farmerSearchById: "விவசாயியை ஐடி மூலம் தேடவும்",
+      searchDealer: "பெயரின் மூலம் டீலரை தேடுக",
+      legalDocuments: "சட்ட ஆவணங்கள்",
+      noDealersFound: "எந்த டீலர்களும் கிடைக்கவில்லை",
+
+      // NEW TERMS & CONDITIONS TRANSLATIONS
+      termsAndConditions: "விதிமுறைகள் & நிபந்தனைகள்",
+      definitions: "வரையறைகள்",
+      company: "நிறுவனம்",
+      companyDefinition: "எசென்ஷியல் அக்வாடெக்கைக் குறிக்கிறது.",
+      user: "பயனர்",
+      userDefinition: "எங்கள் சேவைகளைப் பயன்படுத்தும் எவரையும் குறிக்கிறது.",
+      services: "சேவைகள்",
+      servicesDefinition: "மீன் மருந்துகள், தீவன சப்ளிமெண்ட்ஸ், விரல்கள், சந்தை இணைப்புகள், தொழில்நுட்ப ஆதரவு மற்றும் புல சேவைகள் ஆகியவை அடங்கும்.",
+      userResponsibility: "பயனர்களின் பொறுப்பு",
+      userResponsibility1: "பயனர்கள் துல்லியமான தகவலை வழங்க வேண்டும்.",
+      userResponsibility2: "பயனர்கள் உள்நுழைவு விவரங்களைப் பாதுகாப்பாக வைத்திருப்பதற்கு பொறுப்பு.",
+      userResponsibility3: "பயனர்கள் அனைத்து தொடர்புடைய சட்டங்களையும் பின்பற்ற வேண்டும்.",
+      userResponsibility4: "பயனர்கள் எங்கள் பொருட்களை வழிநடத்தப்படுவது போல் செயல்படுத்த வேண்டும்.",
+      ordersPaymentsRefunds: "ஆர்டர்கள், பேமெண்ட்கள் மற்றும் ரீஃபண்ட்கள்",
+      orderRequirement: "ஆர்டர்கள் அதிகாரப்பூர்வ வலைத்தளத்திலிருந்து வைக்கப்பட வேண்டும்.",
+      paymentRequirement: "பேமெண்ட்கள் அதிகாரப்பூர்வ சேனல்கள் மூலம் இருக்க வேண்டும்.",
+      refundCondition: "சேதமடைந்த அல்லது குறைபாடுள்ள தயாரிப்புகளுக்கு மட்டுமே பணத்தை திருப்பி வழங்குதல்.",
+      refundTimeframe: "ரீஃபண்ட்கள் 7 நாட்களுக்குள் கோரப்பட வேண்டும்.",
+      priceVariation: "விலைகள் எந்த நேரத்திலும் மாறலாம்.",
+      serviceAvailability: "சேவைகளின் கிடைக்கும் தன்மை",
+      serviceAvailability1: "சேவைகளை எப்போதும் கிடைக்க வைக்க நாங்கள் நோக்கமாகக் கொண்டுள்ளோம்.",
+      serviceAvailability2: "எதிர்பாராத சூழ்நிலைகளால் ஏற்படும் தாமதங்களுக்கு நாங்கள் பொறுப்பல்ல.",
+      liabilityLimitation: "பொறுப்பு வரம்பு",
+      liabilityLimitationText: "எங்கள் தயாரிப்புகள் அல்லது சேவைகளைப் பயன்படுத்துவதால் ஏற்படும் இழப்புகள் அல்லது சேதங்களுக்கு நாங்கள் பொறுப்பல்ல.",
+      intellectualProperty: "அறிவுசார் சொத்துரிமை",
+      intellectualPropertyText: "பிராண்ட் பெயர், லோகோ மற்றும் உள்ளடக்கம் எசென்ஷியல் அக்வாடெக்குக்கு சொந்தமானது. அங்கீகரிக்கப்படாத பயன்பாடு அல்லது பகிர்வு தடைசெய்யப்பட்டுள்ளது.",
+      privacyDataProtection: "தனியுரிமை மற்றும் தரவு பாதுகாப்பு",
+      privacyDataProtectionText: "பயனர் தனியுரிமையை நாங்கள் மதிக்கிறோம் மற்றும் தரவைப் பாதுகாக்கிறோம். அனுமதி இல்லாமல் தகவல்கள் பகிரப்படாது.",
+      serviceTermination: "சேவை முடிப்பு",
+      serviceTerminationText: "விதிமுறைகள் மீறப்பட்டால் நாங்கள் சேவைகளை நிறுத்திவைக்கலாம். பயனர்கள் கணக்கு மூடுதலைக் கோரலாம்.",
+      governingLawDisputes: "கட்டுப்பாட்டு சட்டம் & தகராறுகள்",
+      governingLawText: "அனைத்து விதிமுறைகளும் பொருந்தும் அதிகார வரம்பு சட்டங்களைப் பின்பற்றுகின்றன.",
+      disputeResolution: "எந்தவொரு தகராறுகளும் நடுவர் மூலமாக அல்லது சட்ட நடவடிக்கை மூலம் தீர்க்கப்படும்.",
+      termsChanges: "விதிமுறைகளில் மாற்றங்கள்",
+      termsChangesText: "எந்த நேரத்திலும் விதிமுறைகளைப் புதுப்பிக்கலாம். தொடர்ந்து பயன்படுத்துவது ஏற்றுக்கொள்வதைக் குறிக்கிறது.",
+      contactForQueries: "வினவல்களுக்கு, எங்களை தொடர்பு கொள்ளவும்:",
+      companyEmail: "3ai.essentialaquatech@gmail.com",
+
+      // NEW PRIVACY POLICY TRANSLATIONS
+      privacyPolicy: "தனியுரிமை கொள்கை",
+      informationWeCollect: "நாங்கள் சேகரிக்கும் தகவல்",
+      collectPersonalInfo: "தனிப்பட்ட தகவல் (பெயர், தொடர்பு, முகவரி, பேமெண்ட் விவரங்கள்)",
+      collectUsageData: "வலைத்தளம்/பயன்பாட்டின் பயன்பாடு தரவு",
+      collectTransactionData: "பரிவர்த்தனை தரவு (ஆர்டர் வரலாறு, பேமெண்ட் வரலாறு)",
+      collectCommunicationData: "தொடர்புத் தரவு (மின்னஞ்சல்கள், செய்திகள்)",
+      howWeUseInfo: "உங்கள் தகவலை நாங்கள் எவ்வாறு பயன்படுத்துகிறோம்",
+      useForService: "சேவைகளை வழங்குவதற்கும் மேம்படுத்துவதற்கும்",
+      useForProcessing: "ஆர்டர்கள், பேமெண்ட்கள் மற்றும் டெலிவரிகளைச் செயலாக்கவும்",
+      useForSupport: "வாடிக்கையாளர் ஆதரவு",
+      useForUpdates: "புதுப்பிப்புகள் மற்றும் விளம்பரங்களை அனுப்பவும்",
+      useForSecurity: "மோசடி தடுப்பு & சட்டத்தொடர்பு இணக்கம்",
+      dataSharingSecurity: "டேட்டா பகிர்வு & பாதுகாப்பு",
+      noDataSelling: "பயனர் தரவை விற்கவோ வாடகைக்கு விடவோ இல்லை",
+      dataSharingPartners: "நம்பிக்கையான பேமெண்ட்/லாஜிஸ்டிக் பங்குதாரர்களுடன் மட்டுமே பகிரப்படுகிறது",
+      dataSecurity: "வலுவான பாதுகாப்பு பாதுகாப்பு",
+      cookiesTracking: "குக்கீகள் & கண்காணிப்பு",
+      cookiesText: "அனுபவத்தை மேம்படுத்த நாங்கள் குக்கீகளைப் பயன்படுத்துகிறோம். உலாவி அமைப்புகளில் குக்கீகளை முடக்கலாம்.",
+      userRights: "பயனர் உரிமைகள்",
+      rightAccessData: "எந்த நேரத்திலும் உங்கள் தரவை அணுகவும், புதுப்பிக்கவும் அல்லது நீக்கவும்",
+      rightOptOut: "எந்த நேரத்திலும் மார்க்கெட்டிங் மின்னஞ்சல்களிலிருந்து விலகவும்",
+      dataRetention: "டேட்டா தக்கவைப்பு",
+      dataRetentionText: "டேட்டா செயல்பாடுகள் அல்லது சட்ட காரணங்களுக்குத் தேவையான காலம் வரை மட்டுமே வைக்கப்படுகிறது.",
+      policyUpdates: "கொள்கை புதுப்பிப்புகள்",
+      policyUpdatesText: "எந்த நேரத்திலும் இந்த கொள்கையைப் புதுப்பிக்கலாம்.",
+
+      // NEW CANCELLATION POLICY TRANSLATIONS
+      cancellationPolicy: "ரத்து கொள்கை",
+      cancellationWindow: "அனுப்பப்படாத ஆர்டர்களை 24 மணி நேரத்திற்குள் ரத்து செய்யலாம்.",
+      cancellationContact: "ரத்து செய்வதற்கு மின்னஞ்சல் அல்லது தொலைபேசி மூலம் ஆதரவைத் தொடர்பு கொள்ளவும்.",
+      noCancellationShipped: "அனுப்பப்பட்ட ஆர்டர்களை ரத்து செய்ய முடியாது.",
+
+      // NEW REFUND POLICY TRANSLATIONS
+      refundPolicy: "பணத்தை திருப்பி வழங்கும் கொள்கை",
+      refundAvailable: "ரீஃபண்ட் எப்போது கிடைக்கும்:",
+      refundDamaged: "தயாரிப்பு சேதமடைந்தது/குறைபாடுள்ளது (48 மணி நேரத்திற்குள் புகாரளிக்கவும்)",
+      refundWrongProduct: "தவறான தயாரிப்பு வழங்கப்பட்டது",
+      refundStockIssue: "பங்கு சிக்கல்கள் காரணமாக ஆர்டர் நிறைவேற்ற முடியாது",
+      refundServiceIssue: "எதிர்பாராத சிக்கல்கள் காரணமாக பதிவு செய்யப்பட்ட சேவை கிடைக்கவில்லை (ரீஃபண்ட்/மீண்டும் திட்டமிடவும்)",
+      nonRefundable: "ரீஃபண்ட் செய்ய முடியாதது:",
+      nonRefundableUsed: "பயன்படுத்தப்பட்ட/திறந்த தயாரிப்புகள்",
+      nonRefundableDigital: "ஏற்கனவே வழங்கப்பட்ட டிஜிட்டல் சேவைகள்",
+      nonRefundableCustom: "தனிப்பயன் அல்லது மொத்தமாக பதப்படுத்தப்பட்ட ஆர்டர்கள்"
+    }
+  },
+  mr: {
+    translation: {
+      // EXISTING TRANSLATIONS
+      greeting: "नमस्कार {{name}}!",
+      welcome: "स्वागत आहे {{name}}",
+      welcomeBack: "परत स्वागत आहे {{name}}",
+      helloUser: "नमस्कार, {{name}}",
+      addFarmer: "शेतकरी जोडा",
+      farmerName: "शेतकऱ्याचे नाव",
+      contactNumber: "संपर्क क्रमांक",
+      age: "वय",
+      gender: "लिंग",
+      adhar: "आधार क्रमांक",
+      village: "गाव",
+      pondCount: "तळ्यांची संख्या",
+      totalFarmers: "एकूण शेतकरी",
+      totalPonds: "एकूण तळी",
+      farmersList: "शेतकऱ्यांची यादी",
+      farmerId: "शेतकरी आयडी",
+      profile: "प्रोफाइल",
+      dashboard: "डॅशबोर्ड",
+      helpCenter: "मदत केंद्र",
+      dealers: "डीलर्स",
+      agents: "एजंट्स",
+      chooseLanguage: "भाषा निवडा",
+
+      familyMembers: "कुटुंबातील सदस्यांची संख्या",
+      familyOccupation: "कुटुंबाचा व्यवसाय",
+      submit: "सबमिट करा",
+      cancel: "रद्द करा",
+
+      addNewDealer: "+ नवीन डीलर जोडा",
+      dealerName: "डीलरचे नाव",
+      addDealer: "डीलर जोडा",
+      dealersCount: "डीलर्स ({{count}})",
+      profileimage: "प्रोफाइल फोटो",
+      fillAllFields: "सर्व फील्ड भरा",
+      errorAddingDealer: "डीलर जोडताना त्रुटी आली",
+
+      allUsers: "सर्व वापरकर्ते",
+      email: "ईमेल",
+
+      // PROFILE PAGE
+      myProfile: "माझे प्रोफाइल",
+      profileImage: "प्रोफाइल फोटो",
+      changePhoto: "फोटो बदला",
+      username: "वापरकर्तानाव",
+      updateUsername: "वापरकर्तानाव अपडेट करा",
+      changePassword: "पासवर्ड बदला",
+      currentPassword: "सध्याचा पासवर्ड",
+      newPassword: "नवीन पासवर्ड",
+      updatePassword: "पासवर्ड अपडेट करा",
+
+      // HELP CENTER
+      helpCenterTitle: "मदत केंद्र",
+      emailSupport: "ईमेल सहायता",
+      emailSupportDesc: "ईमेलद्वारे आमच्याशी संपर्क साधा.",
+      emailUs: "आम्हाला ईमेल करा",
+      responseTime: "प्रतिसाद वेळ: 24–48 तास",
+      phoneSupport: "फोन सहायता",
+      callUsDirectly: "थेट आम्हाला कॉल करा:",
+      workHours: "सोमवार ते शुक्रवार — सकाळी 9 ते संध्याकाळी 6",
+      terms: "अटी आणि शर्ती",
+      privacy: "गोपनीयता धोरण",
+      cancellation: "रद्द करण्याचे धोरण",
+      refund: "परतावा धोरण",
+
+      // COMMON
+      update: "अपडेट करा",
+      close: "बंद करा",
+      updated: "अपडेट केले",
+
+      // TIME AGO
+      today: "आज",
+      oneDayAgo: "1 दिवसापूर्वी",
+      daysAgo: "{{count}} दिवसांपूर्वी",
+
+      // FORM TITLES
+      updateFarmer: "शेतकरी अपडेट करा",
+      farmerDetails: "शेतकऱ्याची माहिती",
+
+      shopAddress: "दुकान पत्ता",
+      farmerSearchById: "शेतकरी आयडीने शोधा",
+      searchDealer: "डीलरचे नाव शोधा",
+      legalDocuments: "कायदेशीर दस्तऐवज",
+      noDealersFound: "कोणतेही डीलर आढळले नाहीत",
+
+      // NEW TERMS & CONDITIONS TRANSLATIONS
+      termsAndConditions: "अटी आणि शर्ती",
+      definitions: "व्याख्या",
+      company: "कंपनी",
+      companyDefinition: "एसेन्शियल एक्वाटेकचा संदर्भ देते.",
+      user: "वापरकर्ता",
+      userDefinition: "आमच्या सेवा वापरणार्या कोणालाही संदर्भित करते.",
+      services: "सेवा",
+      servicesDefinition: "मासे औषधे, फीड पूरक, फिंगरलिंग्स, बाजार कनेक्शन, तांत्रिक समर्थन आणि फील्ड सेवा यांचा समावेश आहे.",
+      userResponsibility: "वापरकर्त्यांची जबाबदारी",
+      userResponsibility1: "वापरकर्त्यांनी अचूक माहिती प्रदान करणे आवश्यक आहे.",
+      userResponsibility2: "लॉगिन तपशील सुरक्षित ठेवण्यासाठी वापरकर्ते जबाबदार आहेत.",
+      userResponsibility3: "वापरकर्त्यांनी सर्व संबंधित कायद्यांचे पालन करणे आवश्यक आहे.",
+      userResponsibility4: "वापरकर्त्यांनी आमची उत्पादने निर्देशित केल्याप्रमाणे अंमलात आणली पाहिजेत.",
+      ordersPaymentsRefunds: "ऑर्डर, पेमेंट आणि रीफंड",
+      orderRequirement: "ऑर्डर अधिकृत वेबसाइटवरून दिले जाणे आवश्यक आहे.",
+      paymentRequirement: "पेमेंट अधिकृत चॅनेलद्वारे असणे आवश्यक आहे.",
+      refundCondition: "फक्त खराब किंवा दोषपूर्ण उत्पादनांसाठी रीफंड.",
+      refundTimeframe: "रीफंड 7 दिवसांच्या आत विनंती करणे आवश्यक आहे.",
+      priceVariation: "किंमत कोणत्याही वेळी बदलू शकतात.",
+      serviceAvailability: "सेवांची उपलब्धता",
+      serviceAvailability1: "आम्ही सेवा नेहमी उपलब्ध ठेवण्याचे उद्दिष्ट ठेवतो.",
+      serviceAvailability2: "अनपेक्षित परिस्थितीमुळे होणाऱ्या उशीरसाठी आम्ही जिम्मेदार नाही.",
+      liabilityLimitation: "जबाबदारी मर्यादा",
+      liabilityLimitationText: "आमच्या उत्पादनांचा किंवा सेवांचा वापर केल्यामुळे होणाऱ्या नुकसानी किंवा हानीसाठी आम्ही जिम्मेदार नाही.",
+      intellectualProperty: "बौद्धिक संपत्ती",
+      intellectualPropertyText: "ब्रँड नाव, लोगो आणि सामग्री एसेन्शियल एक्वाटेकची मालमत्ता आहे. अनधिकृत वापर किंवा शेअरिंग प्रतिबंधित आहे.",
+      privacyDataProtection: "गोपनीयता आणि डेटा संरक्षण",
+      privacyDataProtectionText: "आम्ही वापरकर्त्याच्या गोपनीयतेचा आदर करतो आणि डेटाचे संरक्षण करतो. परवानगीशिवाय माहिती शेअर केली जाणार नाही.",
+      serviceTermination: "सेवा समाप्ती",
+      serviceTerminationText: "अटी भंग झाल्यास आम्ही सेवा निलंबित करू शकतो. वापरकर्ते खाते बंद करण्याची विनंती करू शकतात.",
+      governingLawDisputes: "शासकीय कायदा आणि वाद",
+      governingLawText: "सर्व अटी लागू अधिकार क्षेत्राच्या कायद्यांचे पालन करतात.",
+      disputeResolution: "कोणतेही वाद मध्यस्थी किंवा कायदेशीर कारवाईद्वारे सोडवले जातील.",
+      termsChanges: "अटीत बदल",
+      termsChangesText: "आम्ही कोणत्याही वेळी अटी अद्यतनित करू शकतो. सतत वापर म्हणजे स्वीकृती.",
+      contactForQueries: "प्रश्नांसाठी, आमच्याशी संपर्क साधा:",
+      companyEmail: "3ai.essentialaquatech@gmail.com",
+
+      // NEW PRIVACY POLICY TRANSLATIONS
+      privacyPolicy: "गोपनीयता धोरण",
+      informationWeCollect: "आम्ही कोणती माहिती गोळा करतो",
+      collectPersonalInfo: "वैयक्तिक माहिती (नाव, संपर्क, पत्ता, पेमेंट तपशील)",
+      collectUsageData: "वेबसाइट/अ‍ॅपचा वापर डेटा",
+      collectTransactionData: "व्यवहार डेटा (ऑर्डर इतिहास, पेमेंट इतिहास)",
+      collectCommunicationData: "संप्रेषण डेटा (ईमेल, संदेश)",
+      howWeUseInfo: "आम्ही आपली माहिती कशी वापरतो",
+      useForService: "सेवा प्रदान आणि सुधारण्यासाठी",
+      useForProcessing: "ऑर्डर, पेमेंट आणि डिलिव्हरी प्रक्रिया करा",
+      useForSupport: "ग्राहक समर्थन",
+      useForUpdates: "अपडेट आणि प्रचार पाठवा",
+      useForSecurity: "फसवणूक प्रतिबंध आणि कायदेशीर अनुपालन",
+      dataSharingSecurity: "डेटा शेअरिंग आणि सुरक्षा",
+      noDataSelling: "वापरकर्ता डेटा विक्री किंवा भाड्याने दिला जात नाही",
+      dataSharingPartners: "फक्त विश्वसनीय पेमेंट/लॉजिस्टिक पार्टनर्ससोबत शेअर केले जाते",
+      dataSecurity: "मजबूत सुरक्षा संरक्षण",
+      cookiesTracking: "कुकीज आणि ट्रॅकिंग",
+      cookiesText: "आम्ही अनुभव वाढवण्यासाठी कुकीज वापरतो. आपण ब्राउझर सेटिंग्जमध्ये कुकीज अक्षम करू शकता.",
+      userRights: "वापरकर्ता हक्क",
+      rightAccessData: "कोणत्याही वेळी आपला डेटा ऍक्सेस, अद्यतनित किंवा हटवा",
+      rightOptOut: "कोणत्याही वेळी मार्केटिंग ईमेलमधून ऑप्ट-आउट करा",
+      dataRetention: "डेटा रिटेनशन",
+      dataRetentionText: "ऑपरेशन किंवा कायदेशीर कारणांसाठी आवश्यक तेवढ्या काळापर्यंत डेटा ठेवला जातो.",
+      policyUpdates: "धोरण अद्यतने",
+      policyUpdatesText: "आम्ही कोणत्याही वेळी हे धोरण अद्यतनित करू शकतो.",
+
+      // NEW CANCELLATION POLICY TRANSLATIONS
+      cancellationPolicy: "रद्द करण्याचे धोरण",
+      cancellationWindow: "ऑर्डर 24 तासांच्या आत रद्द केली जाऊ शकतात जर शिप केलेली नसतील.",
+      cancellationContact: "रद्द करण्यासाठी ईमेल किंवा फोनद्वारे समर्थनाशी संपर्क साधा.",
+      noCancellationShipped: "शिप केलेल्या ऑर्डर रद्द करता येणार नाहीत.",
+
+      // NEW REFUND POLICY TRANSLATIONS
+      refundPolicy: "परतावा धोरण",
+      refundAvailable: "रीफंड कधी उपलब्ध आहे:",
+      refundDamaged: "उत्पादन खराब/दोषपूर्ण आहे (48 तासांत अहवाल द्या)",
+      refundWrongProduct: "चुकीचे उत्पादन वितरित केले गेले",
+      refundStockIssue: "स्टॉक समस्यांमुळे ऑर्डर पूर्ण करता येत नाही",
+      refundServiceIssue: "अनपेक्षित समस्यांमुळे बुक केलेली सेवा उपलब्ध नह (रीफंड/पुन्हा शेड्यूल)",
+      nonRefundable: "नॉन-रिफंडेबल:",
+      nonRefundableUsed: "वापरलेली/उघडलेली उत्पादने",
+      nonRefundableDigital: "आधीच वितरित डिजिटल सेवा",
+      nonRefundableCustom: "सानुकूल किंवा बल्क प्रक्रिया ऑर्डर"
+    }
+  },
+  kn: {
+    translation: {
+      // EXISTING TRANSLATIONS
+      greeting: "ಹಲೋ {{name}}!",
+      helloUser: "ಹಲೋ, {{name}}",
+      addFarmer: "ಕೃಷಕರನ್ನು ಸೇರಿಸಿ",
+      farmerName: "ಕೃಷಕನ ಹೆಸರು",
+      contactNumber: "ಸಂಪರ್ಕ ಸಂಖ್ಯೆ",
+      age: "ವಯಸ್ಸು",
+      gender: "ಲಿಂಗ",
+      adhar: "ಆಧಾರ್ ಸಂಖ್ಯೆ",
+      village: "ಗ್ರಾಮ",
+      pondCount: "ಕೊಳಗಳ ಸಂಖ್ಯೆ",
+      totalFarmers: "ಒಟ್ಟು ರೈತರು",
+      totalPonds: "ಒಟ್ಟು ಕೊಳಗಳು",
+      farmersList: "ರೈತರಿಗೆ ಪಟ್ಟಿಗೆ",
+      farmerId: "ಕೃಷಕ ಐಡಿ",
+      profile: "ಪ್ರೊಫೈಲ್",
+      dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+      helpCenter: "ಸಹಾಯ ಕೇಂದ್ರ",
+      dealers: "ಡೀಲರ್ಸ್",
+      agents: "ಏಜೆಂಟ್ಸ್",
+      chooseLanguage: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+
+      familyMembers: "ಕುಟುಂಬದ ಸದಸ್ಯರ ಸಂಖ್ಯೆ",
+      familyOccupation: "ಕುಟುಂಬದ ಉದ್ಯೋಗ",
+      submit: "ಸಲ್ಲಿಸು",
+      cancel: "ರದ್ದುಮಾಡಿ",
+
+      addNewDealer: "+ ಹೊಸ ಡೀಲರ್ ಸೇರಿಸಿ",
+      dealerName: "ಡೀಲರ್ ಹೆಸರು",
+      addDealer: "ಡೀಲರ್ ಸೇರಿಸಿ",
+      dealersCount: "ಡೀಲರ್ಸ್ ({{count}})",
+      image: "ಚಿತ್ರ",
+      fillAllFields: "ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ",
+      errorAddingDealer: "ಡೀಲರ್ ಸೇರಿಸಲು ದೋಷವಾಗಿದೆ",
+
+      allUsers: "ಎಲ್ಲಾ ಬಳಕೆದಾರರು",
+      email: "ಇಮೇಲ್",
+
+      // PROFILE PAGE
+      myProfile: "ನನ್ನ ಪ್ರೊಫೈಲ್",
+      profileImage: "ಪ್ರೊಫೈಲ್ ಚಿತ್ರ",
+      changePhoto: "ಚಿತ್ರವನ್ನು ಬದಲಿಸಿ",
+      username: "ಬಳಕೆದಾರ ಹೆಸರು",
+      updateUsername: "ಬಳಕೆದಾರ ಹೆಸರು ನವೀಕರಿಸಿ",
+      changePassword: "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಿಸಿ",
+      currentPassword: "ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್",
+      newPassword: "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್",
+      updatePassword: "ಪಾಸ್‌ವರ್ಡ್ ನವೀಕರಿಸಿ",
+
+      // HELP CENTER
+      helpCenterTitle: "ಸಹಾಯ ಕೇಂದ್ರ",
+      emailSupport: "ಇಮೇಲ್ ಸಹಾಯ",
+      emailSupportDesc: "ಇಮೇಲ್ ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ.",
+      emailUs: "ನಮಗೆ ಇಮೇಲ್ ಮಾಡಿ",
+      responseTime: "ಪ್ರತಿಕ್ರಿಯೆ ಸಮಯ: 24–48 ಗಂಟೆಗಳು",
+      phoneSupport: "ಫೋನ್ ಸಹಾಯ",
+      callUsDirectly: "ನೇರವಾಗಿ ಕರೆಮಾಡಿ:",
+      workHours: "ಸೋಮವಾರದಿಂದ ಶುಕ್ರವಾರ — ಬೆಳಿಗ್ಗೆ 9 ರಿಂದ ಸಂಜೆ 6",
+      terms: "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು",
+      privacy: "ಗೌಪ್ಯತಾ ನೀತಿ",
+      cancellation: "ರದ್ದುಪಡಿಸುವ ನೀತಿ",
+      refund: "ಹಣ ಹಿಂತಿರುಗಿಸುವ ನೀತಿ",
+
+      // COMMON
+      update: "ನವೀಕರಿಸಿ",
+      close: "ಮುಚ್ಚು",
+      updated: "ನವೀಕರಿಸಲಾಗಿದೆ",
+
+      // TIME AGO
+      today: "ಇಂದು",
+      oneDayAgo: "1 ದಿನದ ಹಿಂದೆ",
+      daysAgo: "{{count}} ದಿನಗಳ ಹಿಂದೆ",
+
+      // FORM TITLES
+      updateFarmer: "ಕೃಷಕ ನವೀಕರಿಸಿ",
+      farmerDetails: "ಕೃಷಕ ವಿವರಗಳು",
+
+      shopAddress: "ಅಂಗಡಿ ವಿಳಾಸ",
+      farmerSearchById: "ಕೃಷಕ ಐಡಿ ಮೂಲಕ ಹುಡುಕಿ",
+      searchDealer: "ಹೆಸರಿನಿಂದ ಡೀಲರ್ ಹುಡುಕಿ",
+      legalDocuments: "ಕಾನೂನು ದಾಖಲೆಗಳು",
+      noDealersFound: "ಯಾವುದೇ ಡೀಲರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+
+      // NEW TERMS & CONDITIONS TRANSLATIONS
+      termsAndConditions: "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು",
+      definitions: "ವ್ಯಾಖ್ಯಾನಗಳು",
+      company: "ಕಂಪನಿ",
+      companyDefinition: "ಎಸೆನ್ಷಿಯಲ್ ಅಕ್ವಾಟೆಕ್ ಅನ್ನು ಸೂಚಿಸುತ್ತದೆ.",
+      user: "ಬಳಕೆದಾರ",
+      userDefinition: "ನಮ್ಮ ಸೇವೆಗಳನ್ನು ಬಳಸುವ ಯಾರನ್ನೂ ಸೂಚಿಸುತ್ತದೆ.",
+      services: "ಸೇವೆಗಳು",
+      servicesDefinition: "ಮೀನು ಔಷಧಿಗಳು, ಫೀಡ್ ಪೂರಕಗಳು, ಫಿಂಗರ್ಲಿಂಗ್ಗಳು, ಮಾರುಕಟ್ಟೆ ಸಂಪರ್ಕಗಳು, ತಾಂತ್ರಿಕ ಬೆಂಬಲ ಮತ್ತು ಕ್ಷೇತ್ರ ಸೇವೆಗಳನ್ನು ಒಳಗೊಂಡಿದೆ.",
+      userResponsibility: "ಬಳಕೆದಾರರ ಜವಾಬ್ದಾರಿ",
+      userResponsibility1: "ಬಳಕೆದಾರರು ನಿಖರವಾದ ಮಾಹಿತಿಯನ್ನು ಒದಗಿಸಬೇಕು.",
+      userResponsibility2: "ಲಾಗಿನ್ ವಿವರಗಳು ಸುರಕ್ಷಿತವಾಗಿ ಇರಿಸಿಕೊಳ್ಳಲು ಬಳಕೆದಾರರು ಜವಾಬ್ದಾರರಾಗಿರುತ್ತಾರೆ.",
+      userResponsibility3: "ಬಳಕೆದಾರರು ಎಲ್ಲಾ ಸಂಬಂಧಿತ ಕಾನೂನುಗಳನ್ನು ಪಾಲಿಸಬೇಕು.",
+      userResponsibility4: "ಬಳಕೆದಾರರು ನಮ್ಮ ಉತ್ಪನ್ನಗಳನ್ನು ಸೂಚಿಸಿದಂತೆ ಕಾರ್ಯಗತಗೊಳಿಸಬೇಕು.",
+      ordersPaymentsRefunds: "ಆರ್ಡರ್ಗಳು, ಪಾವತಿಗಳು ಮತ್ತು ಮರುಪಾವತಿ",
+      orderRequirement: "ಆರ್ಡರ್ಗಳನ್ನು ಅಧಿಕೃತ ವೆಬ್ಸೈಟ್ನಿಂದ ಮಾಡಬೇಕು.",
+      paymentRequirement: "ಪಾವತಿಗಳು ಅಧಿಕೃತ ಚಾನಲ್ಗಳ ಮೂಲಕ ಇರಬೇಕು.",
+      refundCondition: "ಹಾನಿಗೊಂಡ ಅಥವಾ ದೋಷಯುಕ್ತ ಉತ್ಪನ್ನಗಳಿಗೆ ಮಾತ್ರ ಮರುಪಾವತಿ.",
+      refundTimeframe: "ಮರುಪಾವತಿಗಳನ್ನು 7 ದಿನಗಳೊಳಗೆ ವಿನಂತಿಸಬೇಕು.",
+      priceVariation: "ಬೆಲೆಗಳು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಬದಲಾಗಬಹುದು.",
+      serviceAvailability: "ಸೇವೆಗಳ ಲಭ್ಯತೆ",
+      serviceAvailability1: "ಸೇವೆಗಳನ್ನು ಯಾವಾಗಲೂ ಲಭ್ಯವಿರುವಂತೆ ನಾವು ಗುರಿಯನ್ನು ಹೊಂದಿದ್ದೇವೆ.",
+      serviceAvailability2: "ಅನಿರೀಕ್ಷಿತ ಪರಿಸ್ಥಿತಿಗಳಿಂದಾದ ವಿಳಂಬಕ್ಕೆ ನಾವು ಜವಾಬ್ದಾರರಲ್ಲ.",
+      liabilityLimitation: "ದಾಯಿತ್ವ ಮಿತಿ",
+      liabilityLimitationText: "ನಮ್ಮ ಉತ್ಪನ್ನಗಳು ಅಥವಾ ಸೇವೆಗಳ ಬಳಕೆಯಿಂದ ಉಂಟಾದ ನಷ್ಟ ಅಥವಾ ಹಾನಿಗೆ ನಾವು ಜವಾಬ್ದಾರರಲ್ಲ.",
+      intellectualProperty: "ಬೌದ್ಧಿಕ ಆಸ್ತಿ",
+      intellectualPropertyText: "ಬ್ರ್ಯಾಂಡ್ ಹೆಸರು, ಲೋಗೋ ಮತ್ತು ವಿಷಯವು ಎಸೆನ್ಷಿಯಲ್ ಅಕ್ವಾಟೆಕ್ನಿಗೆ ಸೇರಿದೆ. ಅನಧಿಕೃತ ಬಳಕೆ ಅಥವಾ ಹಂಚಿಕೆ ನಿಷೇಧಿಸಲಾಗಿದೆ.",
+      privacyDataProtection: "ಗೌಪ್ಯತೆ ಮತ್ತು ಡೇಟಾ ರಕ್ಷಣೆ",
+      privacyDataProtectionText: "ನಾವು ಬಳಕೆದಾರರ ಗೌಪ್ಯತೆಯನ್ನು ಗೌರವಿಸುತ್ತೇವೆ ಮತ್ತು ಡೇಟಾವನ್ನು ರಕ್ಷಿಸುತ್ತೇವೆ. ಅನುಮತಿ ಇಲ್ಲದೆ ಮಾಹಿತಿಯನ್ನು ಹಂಚಿಕೊಳ್ಳಲಾಗುವುದಿಲ್ಲ.",
+      serviceTermination: "ಸೇವೆ ಕೊನೆಗೊಳಿಸುವಿಕೆ",
+      serviceTerminationText: "ನಿಯಮಗಳನ್ನು ಉಲ್ಲಂಘಿಸಿದರೆ ನಾವು ಸೇವೆಗಳನ್ನು ಸ್ಥಗಿತಗೊಳಿಸಬಹುದು. ಬಳಕೆದಾರರು ಖಾತೆಯನ್ನು ಮುಚ್ಚುವಂತೆ ವಿನಂತಿಸಬಹುದು.",
+      governingLawDisputes: "ಶಾಸನಾಧಿಕಾರದ ಕಾನೂನು ಮತ್ತು ವಿವಾದಗಳು",
+      governingLawText: "ಎಲ್ಲಾ ನಿಯಮಗಳು ಅನ್ವಯವಾಗುವ ಕಾನೂನುಬದ್ಧ ನ್ಯಾಯಕ್ಷೇತ್ರದ ಕಾನೂನುಗಳನ್ನು ಅನುಸರಿಸುತ್ತವೆ.",
+      disputeResolution: "ಯಾವುದೇ ವಿವಾದಗಳನ್ನು ಮಧ್ಯಸ್ಥಿಕೆ ಅಥವಾ ಕಾನೂನು ಕ್ರಮದ ಮೂಲಕ ಪರಿಹರಿಸಲಾಗುತ್ತದೆ.",
+      termsChanges: "ನಿಯಮಗಳಲ್ಲಿ ಬದಲಾವಣೆಗಳು",
+      termsChangesText: "ನಾವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ನಿಯಮಗಳನ್ನು ನವೀಕರಿಸಬಹುದು. ಮುಂದುವರಿದ ಬಳಕೆ ಎಂದರೆ ಸ್ವೀಕಾರ.",
+      contactForQueries: "ಪ್ರಶ್ನೆಗಳಿಗಾಗಿ, ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ:",
+      companyEmail: "3ai.essentialaquatech@gmail.com",
+
+      // NEW PRIVACY POLICY TRANSLATIONS
+      privacyPolicy: "ಗೌಪ್ಯತಾ ನೀತಿ",
+      informationWeCollect: "ನಾವು ಸಂಗ್ರಹಿಸುವ ಮಾಹಿತಿ",
+      collectPersonalInfo: "ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ (ಹೆಸರು, ಸಂಪರ್ಕ, ವಿಳಾಸ, ಪಾವತಿ ವಿವರಗಳು)",
+      collectUsageData: "ವೆಬ್ಸೈಟ್/ಅಪ್ಲಿಕೇಶನ್ನ ಬಳಕೆ ಡೇಟಾ",
+      collectTransactionData: "ಲಾವಾದೇಯಿ ಡೇಟಾ (ಆರ್ಡರ್ ಇತಿಹಾಸ, ಪಾವತಿ ಇತಿಹಾಸ)",
+      collectCommunicationData: "ಸಂವಹನ ಡೇಟಾ (ಇಮೇಲ್ಗಳು, ಸಂದೇಶಗಳು)",
+      howWeUseInfo: "ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ನಾವು ಹೇಗೆ ಬಳಸುತ್ತೇವೆ",
+      useForService: "ಸೇವೆಗಳನ್ನು ಒದಗಿಸಲು ಮತ್ತು ಸುಧಾರಿಸಲು",
+      useForProcessing: "ಆರ್ಡರ್ಗಳು, ಪಾವತಿಗಳು ಮತ್ತು ವಿತರಣೆಗಳನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಿ",
+      useForSupport: "ಗ್ರಾಹಕ ಬೆಂಬಲ",
+      useForUpdates: "ನವೀಕರಣಗಳು ಮತ್ತು ಪ್ರಚಾರಗಳನ್ನು ಕಳುಹಿಸಿ",
+      useForSecurity: "ಮೋಸದ ತಡೆಗಟ್ಟುವಿಕೆ ಮತ್ತು ಕಾನೂನುಬದ್ಧ ಅನುಸರಣೆ",
+      dataSharingSecurity: "ಡೇಟಾ ಹಂಚಿಕೆ ಮತ್ತು ಭದ್ರತೆ",
+      noDataSelling: "ಬಳಕೆದಾರ ಡೇಟಾವನ್ನು ಮಾರಾಟ ಅಥವಾ ಬಾಡಿಗೆಗೆ ನೀಡುವುದಿಲ್ಲ",
+      dataSharingPartners: "ವಿಶ್ವಾಸಾರ್ಹ ಪಾವತಿ/ಲಾಜಿಸ್ಟಿಕ್ ಪಾಲುದಾರರೊಂದಿಗೆ ಮಾತ್ರ ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ",
+      dataSecurity: "ಪ್ರಬಲ ಭದ್ರತಾ ರಕ್ಷಣೆ",
+      cookiesTracking: "ಕುಕೀಗಳು ಮತ್ತು ಟ್ರ್ಯಾಕಿಂಗ್",
+      cookiesText: "ಅನುಭವವನ್ನು ಹೆಚ್ಚಿಸಲು ನಾವು ಕುಕೀಗಳನ್ನು ಬಳಸುತ್ತೇವೆ. ನೀವು ಬ್ರೌಸರ್ ಸೆಟ್ಟಿಂಗ್ಗಳಲ್ಲಿ ಕುಕೀಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಬಹುದು.",
+      userRights: "ಬಳಕೆದಾರ ಹಕ್ಕುಗಳು",
+      rightAccessData: "ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ನಿಮ್ಮ ಡೇಟಾವನ್ನು ಪ್ರವೇಶಿಸಿ, ನವೀಕರಿಸಿ ಅಥವಾ ಅಳಿಸಿ",
+      rightOptOut: "ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಮಾರ್ಕೆಟಿಂಗ್ ಇಮೇಲ್ಗಳಿಂದ ನಿರ್ಗಮಿಸಿ",
+      dataRetention: "ಡೇಟಾ ಧಾರಣ",
+      dataRetentionText: "ಡೇಟಾವನ್ನು ಕಾರ್ಯಾಚರಣೆ ಅಥವಾ ಕಾನೂನು ಕಾರಣಗಳಿಗಾಗಿ ಅಗತ್ಯವಿರುವಷ್ಟು ಕಾಲ ಮಾತ್ರ ಇರಿಸಲಾಗುತ್ತದೆ.",
+      policyUpdates: "ನೀತಿ ನವೀಕರಣಗಳು",
+      policyUpdatesText: "ನಾವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಈ ನೀತಿಯನ್ನು ನವೀಕರಿಸಬಹುದು.",
+
+      // NEW CANCELLATION POLICY TRANSLATIONS
+      cancellationPolicy: "ರದ್ದುಪಡಿಸುವ ನೀತಿ",
+      cancellationWindow: "ಶಿಪ್ಪಿಂಗ್ ಮಾಡದಿದ್ದರೆ ಆರ್ಡರ್ಗಳನ್ನು 24 ಗಂಟೆಗಳೊಳಗೆ ರದ್ದು ಮಾಡಬಹುದು.",
+      cancellationContact: "ರದ್ದು ಮಾಡಲು ಇಮೇಲ್ ಅಥವಾ ಫೋನ್ ಮೂಲಕ ಬೆಂಬಲವನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+      noCancellationShipped: "ಶಿಪ್ ಮಾಡಿದ ಆರ್ಡರ್ಗಳನ್ನು ರದ್ದು ಮಾಡಲಾಗುವುದಿಲ್ಲ.",
+
+      // NEW REFUND POLICY TRANSLATIONS
+      refundPolicy: "ಹಣ ಹಿಂತಿರುಗಿಸುವ ನೀತಿ",
+      refundAvailable: "ಮರುಪಾವತಿ ಯಾವಾಗ ಲಭ್ಯವಿದೆ:",
+      refundDamaged: "ಉತ್ಪನ್ನ ಹಾನಿಯಾಗಿದೆ/ದೋಷಯುಕ್ತವಾಗಿದೆ (48 ಗಂಟೆಗಳಲ್ಲಿ ವರದಿ ಮಾಡಿ)",
+      refundWrongProduct: "ತಪ್ಪಾದ ಉತ್ಪನ್ನವನ್ನು ತಲುಪಿಸಲಾಗಿದೆ",
+      refundStockIssue: "ಸ್ಟಾಕ್ ಸಮಸ್ಯೆಗಳಿಂದಾಗಿ ಆರ್ಡರ್ ಪೂರೈಸಲು ಸಾಧ್ಯವಿಲ್ಲ",
+      refundServiceIssue: "ಅನಿರೀಕ್ಷಿತ ಸಮಸ್ಯೆಗಳಿಂದಾಗಿ ಬುಕ್ ಮಾಡಿದ ಸೇವೆ ಲಭ್ಯವಿಲ್ಲ (ಮರುಪಾವತಿ/ಮರುಗಳಿಗೆ)",
+      nonRefundable: "ಮರುಪಾವತಿ ಅಲ್ಲದ:",
+      nonRefundableUsed: "ಬಳಸಿದ/ತೆರೆದ ಉತ್ಪನ್ನಗಳು",
+      nonRefundableDigital: "ಈಗಾಗಲೇ ತಲುಪಿಸಿದ ಡಿಜಿಟಲ್ ಸೇವೆಗಳು",
+      nonRefundableCustom: "ಕಸ್ಟಮ್ ಅಥವಾ ಬಲ್ಕ್ ಪ್ರೊಸೆಸ್ಡ್ ಆರ್ಡರ್ಗಳು"
+    }
   }
-},
-ta: {
-  translation: {
-    greeting: "வணக்கம் {{name}}!",
-    welcome: "வரவேற்கிறோம் {{name}}",
-welcomeBack: "மீண்டும் வரவேற்கிறோம் {{name}}",
-    helloUser: "வணக்கம், {{name}}",
-    addFarmer: "விவசாயியை சேர்க்கவும்",
-    farmerName: "விவசாயி பெயர்",
-    contactNumber: "தொடர்பு எண்",
-    age: "வயது",
-    gender: "பாலினம்",
-    adhar: "ஆதார் எண்",
-    village: "கிராமம்",
-    pondCount: "குளங்களின் எண்ணிக்கை",
-    totalFarmers: "மொத்த விவசாயிகள்",
-    totalPonds: "மொத்த குளங்கள்",
-    farmersList: "விவசாயிகள் பட்டியல்",
- farmerId: "விவசாயி ஐடி", 
-    profile: "சுயவிவரம்",
-    dashboard: "டாஷ்போர்ட்",
-    helpCenter: "உதவி மையம்",
-    dealers: "டீலர்கள்",
-    agents: "ஏஜென்ட்கள்",
-    chooseLanguage: "மொழியை தேர்ந்தெடுக்கவும்",
-
-    familyMembers: "குடும்ப உறுப்பினர்கள் எண்ணிக்கை",
-    familyOccupation: "குடும்ப தொழில்",
-    submit: "சமர்ப்பிக்கவும்",
-    cancel: "ரத்து செய்யவும்",
-
-    addNewDealer: "+ புதிய டீலரை சேர்க்கவும்",
-    dealerName: "டீலர் பெயர்",
-    addDealer: "டீலரை சேர்க்கவும்",
-    dealersCount: "டீலர்கள் ({{count}})",
-    profileimage: "சுயவிவர படம்",
-    fillAllFields: "அனைத்து புலங்களையும் நிரப்பவும்",
-    errorAddingDealer: "டீலரைச் சேர்க்கும் போது பிழை",
-
-    allUsers: "அனைத்து பயனர்கள்",
-    email: "மின்னஞ்சல்",
-
-    // PROFILE PAGE
-    myProfile: "என் சுயவிவரம்",
-    profileImage: "சுயவிவர படம்",
-    changePhoto: "புகைப்படத்தை மாற்றவும்",
-    username: "பயனர் பெயர்",
-    updateUsername: "பயனர் பெயரை புதுப்பிக்கவும்",
-    changePassword: "கடவுச்சொல்லை மாற்றவும்",
-    currentPassword: "தற்போதைய கடவுச்சொல்",
-    newPassword: "புதிய கடவுச்சொல்",
-    updatePassword: "கடவுச்சொல்லை புதுப்பிக்கவும்",
-
-    // HELP CENTER
-    helpCenterTitle: "உதவி மையம்",
-    emailSupport: "மின்னஞ்சல் உதவி",
-    emailSupportDesc: "மின்னஞ்சல் மூலம் எங்களை தொடர்பு கொள்ளுங்கள்.",
-    emailUs: "எங்களுக்கு மின்னஞ்சல் செய்யவும்",
-    responseTime: "பதில் நேரம்: 24–48 மணி நேரம்",
-    phoneSupport: "தொலைபேசி உதவி",
-    callUsDirectly: "எங்களை நேரடியாக அழைக்க:",
-    workHours: "திங்கள் முதல் வெள்ளி — காலை 9 முதல் மாலை 6 வரை",
-    terms: "விதிமுறைகள் & நிபந்தனைகள்",
-    privacy: "தனியுரிமை கொள்கை",
-    cancellation: "ரத்து கொள்கை",
-    refund: "பணத்தை திருப்பி வழங்கும் கொள்கை",
-
-    // COMMON
-    update: "புதுப்பிக்கவும்",
-    close: "மூடுக",
-    updated: "புதுப்பிக்கப்பட்டது",
-
-    // TIME AGO
-    today: "இன்று",
-    oneDayAgo: "1 நாள் முன்பு",
-    daysAgo: "{{count}} நாட்களுக்கு முன்பு",
-
-    // FORM TITLES
-    updateFarmer: "விவசாயியை புதுப்பிக்கவும்",
-    farmerDetails: "விவசாயியின் விவரங்கள்",
-
-    shopNumber: "கடை எண்",
-    isdnNumber: "ISDN எண்",
-    shopAddress: "கடை முகவரி",
-
-    farmerSearchById: "விவசாயியை ஐடி மூலம் தேடவும்",
-    searchDealer: "பெயரின் மூலம் டீலரை தேடுக",
-    legalDocuments:" சட்ட ஆவணங்கள்",
-    noDealersFound: "எந்த டீலர்களும் கிடைக்கவில்லை",
-
-
-  }
-},
-
-mr: {
-  translation: {
-    greeting: "नमस्कार {{name}}!",
-    welcome: "स्वागत आहे {{name}}",
-welcomeBack: "परत स्वागत आहे {{name}}",
-    helloUser: "नमस्कार, {{name}}",
-    addFarmer: "शेतकरी जोडा",
-    farmerName: "शेतकऱ्याचे नाव",
-    contactNumber: "संपर्क क्रमांक",
-    age: "वय",
-    gender: "लिंग",
-    adhar: "आधार क्रमांक",
-    village: "गाव",
-    pondCount: "तळ्यांची संख्या",
-    totalFarmers: "एकूण शेतकरी",
-    totalPonds: "एकूण तळी",
-    farmersList: "शेतकऱ्यांची यादी",
- farmerId: "शेतकरी आयडी",
-    profile: "प्रोफाइल",
-    dashboard: "डॅशबोर्ड",
-    helpCenter: "मदत केंद्र",
-    dealers: "डीलर्स",
-    agents: "एजंट्स",
-    chooseLanguage: "भाषा निवडा",
-
-    familyMembers: "कुटुंबातील सदस्यांची संख्या",
-    familyOccupation: "कुटुंबाचा व्यवसाय",
-    submit: "सबमिट करा",
-    cancel: "रद्द करा",
-
-    addNewDealer: "+ नवीन डीलर जोडा",
-    dealerName: "डीलरचे नाव",
-    addDealer: "डीलर जोडा",
-    dealersCount: "डीलर्स ({{count}})",
-    profileimage: "प्रोफाइल फोटो",
-    fillAllFields: "सर्व फील्ड भरा",
-    errorAddingDealer: "डीलर जोडताना त्रुटी आली",
-
-    allUsers: "सर्व वापरकर्ते",
-    email: "ईमेल",
-
-    // PROFILE PAGE
-    myProfile: "माझे प्रोफाइल",
-    profileImage: "प्रोफाइल फोटो",
-    changePhoto: "फोटो बदला",
-    username: "वापरकर्तानाव",
-    updateUsername: "वापरकर्तानाव अपडेट करा",
-    changePassword: "पासवर्ड बदला",
-    currentPassword: "सध्याचा पासवर्ड",
-    newPassword: "नवीन पासवर्ड",
-    updatePassword: "पासवर्ड अपडेट करा",
-
-    // HELP CENTER
-    helpCenterTitle: "मदत केंद्र",
-    emailSupport: "ईमेल सहायता",
-    emailSupportDesc: "ईमेलद्वारे आमच्याशी संपर्क साधा.",
-    emailUs: "आम्हाला ईमेल करा",
-    responseTime: "प्रतिसाद वेळ: 24–48 तास",
-    phoneSupport: "फोन सहायता",
-    callUsDirectly: "थेट आम्हाला कॉल करा:",
-    workHours: "सोमवार ते शुक्रवार — सकाळी 9 ते संध्याकाळी 6",
-    terms: "अटी आणि शर्ती",
-    privacy: "गोपनीयता धोरण",
-    cancellation: "रद्द करण्याचे धोरण",
-    refund: "परतावा धोरण",
-
-    // COMMON
-    update: "अपडेट करा",
-    close: "बंद करा",
-    updated: "अपडेट केले",
-
-    // TIME AGO
-    today: "आज",
-    oneDayAgo: "1 दिवसापूर्वी",
-    daysAgo: "{{count}} दिवसांपूर्वी",
-
-    // FORM TITLES
-    updateFarmer: "शेतकरी अपडेट करा",
-    farmerDetails: "शेतकऱ्याची माहिती",
-
-    shopNumber: "दुकान क्रमांक",
-    isdnNumber: "ISDN क्रमांक",
-    shopAddress: "दुकान पत्ता",
-
-    farmerSearchById: "शेतकरी आयडीने शोधा",
-    searchDealer: "डीलरचे नाव शोधा",
-    legalDocuments:"कायदेशीर दस्तऐवज",
-    noDealersFound:"कोणतेही डीलर आढळले नाहीत",
-
-  }
-},
-
-kn: {
-  translation: {
-    greeting: "ಹಲೋ {{name}}!",
-    helloUser: "ಹಲೋ, {{name}}",
-    addFarmer: "ಕೃಷಕರನ್ನು ಸೇರಿಸಿ",
-    farmerName: "ಕೃಷಕನ ಹೆಸರು",
-    contactNumber: "ಸಂಪರ್ಕ ಸಂಖ್ಯೆ",
-    age: "ವಯಸ್ಸು",
-    gender: "ಲಿಂಗ",
-    adhar: "ಆಧಾರ್ ಸಂಖ್ಯೆ",
-    village: "ಗ್ರಾಮ",
-    pondCount: "ಕೊಳಗಳ ಸಂಖ್ಯೆ",
-    totalFarmers: "ಒಟ್ಟು ರೈತರು",
-    totalPonds: "ಒಟ್ಟು ಕೊಳಗಳು",
-    farmersList: "ರೈತರಿಗೆ ಪಟ್ಟಿಗೆ",
-   farmerId: "ಕೃಷಕ ಐಡಿ",
-    profile: "ಪ್ರೊಫೈಲ್",
-    dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
-    helpCenter: "ಸಹಾಯ ಕೇಂದ್ರ",
-    dealers: "ಡೀಲರ್ಸ್",
-    agents: "ಏಜೆಂಟ್ಸ್",
-    chooseLanguage: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-
-    familyMembers: "ಕುಟುಂಬದ ಸದಸ್ಯರ ಸಂಖ್ಯೆ",
-    familyOccupation: "ಕುಟುಂಬದ ಉದ್ಯೋಗ",
-    submit: "ಸಲ್ಲಿಸು",
-    cancel: "ರದ್ದುಮಾಡಿ",
-
-    addNewDealer: "+ ಹೊಸ ಡೀಲರ್ ಸೇರಿಸಿ",
-    dealerName: "ಡೀಲರ್ ಹೆಸರು",
-    addDealer: "ಡೀಲರ್ ಸೇರಿಸಿ",
-    dealersCount: "ಡೀಲರ್ಸ್ ({{count}})",
-    image: "ಚಿತ್ರ",
-    fillAllFields: "ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ",
-    errorAddingDealer: "ಡೀಲರ್ ಸೇರಿಸಲು ದೋಷವಾಗಿದೆ",
-
-    allUsers: "ಎಲ್ಲಾ ಬಳಕೆದಾರರು",
-    email: "ಇಮೇಲ್",
-
-    // PROFILE PAGE
-    myProfile: "ನನ್ನ ಪ್ರೊಫೈಲ್",
-    profileImage: "ಪ್ರೊಫೈಲ್ ಚಿತ್ರ",
-    changePhoto: "ಚಿತ್ರವನ್ನು ಬದಲಿಸಿ",
-    username: "ಬಳಕೆದಾರ ಹೆಸರು",
-    updateUsername: "ಬಳಕೆದಾರ ಹೆಸರು ನವೀಕರಿಸಿ",
-    changePassword: "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಿಸಿ",
-    currentPassword: "ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್",
-    newPassword: "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್",
-    updatePassword: "ಪಾಸ್‌ವರ್ಡ್ ನವೀಕರಿಸಿ",
-
-    // HELP CENTER
-    helpCenterTitle: "ಸಹಾಯ ಕೇಂದ್ರ",
-    emailSupport: "ಇಮೇಲ್ ಸಹಾಯ",
-    emailSupportDesc: "ಇಮೇಲ್ ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ.",
-    emailUs: "ನಮಗೆ ಇಮೇಲ್ ಮಾಡಿ",
-    responseTime: "ಪ್ರತಿಕ್ರಿಯೆ ಸಮಯ: 24–48 ಗಂಟೆಗಳು",
-    phoneSupport: "ಫೋನ್ ಸಹಾಯ",
-    callUsDirectly: "ನೇರವಾಗಿ ಕರೆಮಾಡಿ:",
-    workHours: "ಸೋಮವಾರದಿಂದ ಶುಕ್ರವಾರ — ಬೆಳಿಗ್ಗೆ 9 ರಿಂದ ಸಂಜೆ 6",
-    terms: "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು",
-    privacy: "ಗೌಪ್ಯತಾ ನೀತಿ",
-    cancellation: "ರದ್ದುಪಡಿಸುವ ನೀತಿ",
-    refund: "ಹಣ ಹಿಂತಿರುಗಿಸುವ ನೀತಿ",
-
-    // COMMON
-    update: "ನವೀಕರಿಸಿ",
-    close: "ಮುಚ್ಚು",
-    updated: "ನವೀಕರಿಸಲಾಗಿದೆ",
-
-    // TIME AGO
-    today: "ಇಂದು",
-    oneDayAgo: "1 ದಿನದ ಹಿಂದೆ",
-    daysAgo: "{{count}} ದಿನಗಳ ಹಿಂದೆ",
-
-    // FORM TITLES
-    updateFarmer: "ಕೃಷಕ ನವೀಕರಿಸಿ",
-    farmerDetails: "ಕೃಷಕ ವಿವರಗಳು",
-
-    shopNumber: "ಅಂಗಡಿಯ ಸಂಖ್ಯೆ",
-    isdnNumber: "ISDN ಸಂಖ್ಯೆ",
-    shopAddress: "ಅಂಗಡಿ ವಿಳಾಸ",
-
-    farmerSearchById: "ಕೃಷಕ ಐಡಿ ಮೂಲಕ ಹುಡುಕಿ",
-    searchDealer: "ಹೆಸರಿನಿಂದ ಡೀಲರ್ ಹುಡುಕಿ",
-legalDocuments:"ಕಾನೂನು ದಾಖಲೆಗಳು",
-noDealersFound:"ಯಾವುದೇ ಡೀಲರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
-  }
-}
-
-
-
 };
 
 i18n.use(initReactI18next).init({
