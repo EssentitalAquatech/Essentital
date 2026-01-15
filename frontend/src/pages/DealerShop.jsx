@@ -59,14 +59,7 @@ const DealerShop = () => {
   const [ordersRefresh, setOrdersRefresh] = useState(0);
   const [addingId, setAddingId] = useState(null);
 
-  // const addToCart = (p) => {
-  //   const found = cart.find(i => i.id === p.id);
-  //   if (found) {
-  //     setCart(cart.map(i => i.id === p.id ? { ...i, qty: i.qty + 1 } : i));
-  //   } else {
-  //     setCart([...cart, { ...p, qty: 1 }]);
-  //   }
-  // };
+ 
 
 
 const addToCart = (p) => {
