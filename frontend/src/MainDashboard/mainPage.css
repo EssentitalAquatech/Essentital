@@ -1395,7 +1395,7 @@ textarea:valid {
   justify-content: center;
   width: 60px;
   height: 50px;
-  margin-bottom: 45px;
+  margin-top: -36px;
 }
 
 .mobile-menu-toggle:hover {
