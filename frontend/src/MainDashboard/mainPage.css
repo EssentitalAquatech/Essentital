@@ -1408,7 +1408,8 @@ textarea:valid {
   font-size: 1.2rem;
   margin: 0;
   font-weight: 600;
-  padding-left: 65px;
+  /* padding-left: 65px; */
+  text-align: center;
 }
 
 .mobile-profile-pic {
