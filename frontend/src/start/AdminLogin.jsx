@@ -172,12 +172,12 @@ function AdminLogin() {
           </button>
         </form>
 
-        <div className="login-footer">
+        {/* <div className="login-footer">
           <p>Ensure you're accessing from a secure device</p>
           <p>
             Need help? <a href="/admin/support">Contact Support</a>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
