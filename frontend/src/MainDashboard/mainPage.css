@@ -1379,6 +1379,8 @@ textarea:valid {
   align-items: center;
   justify-content: space-between;
   height: 60px;
+  padding-left: 90px;
+
 }
 
 .mobile-menu-toggle {
@@ -1394,6 +1396,7 @@ textarea:valid {
   justify-content: center;
   width: 60px;
   height: 50px;
+  margin-top: -36px;
 }
 
 .mobile-menu-toggle:hover {
