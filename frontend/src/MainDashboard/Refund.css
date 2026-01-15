@@ -1,561 +1,158 @@
-/* Refund.css - ALL CLASSES UNIQUE */
+/* Refund.css */
+:root {
+  --refund-primary: #38bdf8;
+  --refund-secondary: #0ea5e9;
+  --refund-light: #f0f9ff;
+  --refund-text: #1e293b;
+  --refund-border: #bae6fd;
+  --refund-bg: #e0f2fe;
+  --refund-card-bg: #ffffff;
+  --refund-radius: 12px;
+}
 
-/* =============== BASE STYLES =============== */
-* {
+/* Reset for Refund page only */
+.refund-refund-wrap,
+.refund-refund-wrap * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-body {
-  font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  color: #1e293b;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-/* =============== MAIN CONTAINER =============== */
+/* Background - Sky Blue */
 .refund-refund-wrap {
   min-height: 100vh;
+  background-color: #e0f2fe;
+  background-image: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+  padding: 20px;
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  position: relative;
-  overflow: hidden;
 }
 
-/* Background pattern */
-.refund-refund-wrap::before {
+/* Main card */
+.refund-refund-card {
+  max-width: 700px;
+  width: 100%;
+  background-color: white;
+  border-radius: var(--refund-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  position: relative;
+}
+
+/* Blue top border */
+.refund-refund-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(#cbd5e1 1px, transparent 1px),
-    radial-gradient(#e2e8f0 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: 0 0, 20px 20px;
-  opacity: 0.4;
-  z-index: 0;
-}
-
-/* =============== CARD STYLES =============== */
-.refund-refund-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 3rem;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  max-width: 900px;
   width: 100%;
-  position: relative;
-  z-index: 1;
-  animation: refund-cardSlideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  transition: transform 0.3s ease;
+  height: 5px;
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
 }
 
-.refund-refund-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 
-    0 30px 80px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.2);
-}
-
-@keyframes refund-cardSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* =============== HEADER STYLES =============== */
+/* Header */
 .refund-refund-header {
   text-align: center;
-  margin-bottom: 3rem;
-  position: relative;
-  padding-bottom: 2rem;
-}
-
-.refund-refund-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 4px;
-  background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 2px;
+  margin-bottom: 30px;
 }
 
 .refund-refund-title {
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
-  position: relative;
-  display: inline-block;
-}
-
-.refund-refund-title::before {
-  content: '🔄';
-  position: absolute;
-  left: -50px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2rem;
-  opacity: 0.8;
-}
-
-.refund-refund-title::after {
-  content: '💰';
-  position: absolute;
-  right: -50px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2rem;
-  opacity: 0.8;
-}
-
-/* =============== SECTION STYLES =============== */
-.refund-refund-section {
-  margin-bottom: 3rem;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 20px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.refund-refund-section:hover {
-  transform: translateX(5px);
-  border-color: #cbd5e1;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.refund-refund-section::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 4px;
-  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 0 2px 2px 0;
-}
-
-.refund-refund-subtitle {
-  font-size: 1.6rem;
+  color: #38bdf8;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  margin-bottom: 8px;
 }
 
-.refund-refund-subtitle::before {
-  content: '';
-  width: 8px;
-  height: 24px;
-  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 4px;
-  display: inline-block;
+.refund-update-date {
+  color: #64748b;
+  font-size: 0.9rem;
 }
 
-/* =============== LIST STYLES =============== */
+/* Content Section */
+.refund-refund-section {
+  margin-bottom: 30px;
+  padding: 25px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Section Title */
+.refund-refund-subtitle {
+  color: #38bdf8;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #bae6fd;
+}
+
+/* List */
 .refund-refund-list {
   list-style: none;
-  padding-left: 1rem;
+  padding: 0;
 }
 
 .refund-refund-list li {
-  font-size: 1.1rem;
-  color: #475569;
-  margin-bottom: 1.2rem;
-  padding-left: 2.5rem;
-  position: relative;
-  line-height: 1.7;
-  font-weight: 500;
-}
-
-.refund-refund-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.5rem;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #3b82f6;
-}
-
-.refund-refund-list li::after {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(59, 130, 246, 0.2);
-  animation: refund-pulse 2s infinite;
-}
-
-@keyframes refund-pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.1;
-  }
-}
-
-/* =============== SPECIFIC SECTION STYLES =============== */
-.refund-refund-section:nth-child(2) .refund-refund-list li::before {
-  background: #10b981;
-}
-
-.refund-refund-section:nth-child(2) .refund-refund-list li::after {
-  background: rgba(16, 185, 129, 0.2);
-}
-
-.refund-refund-section:nth-child(3) .refund-refund-list li::before {
-  background: #ef4444;
-}
-
-.refund-refund-section:nth-child(3) .refund-refund-list li::after {
-  background: rgba(239, 68, 68, 0.2);
-}
-
-/* Add icons to list items */
-.refund-refund-list li {
-  display: flex;
-  align-items: flex-start;
-}
-
-.refund-refund-list li::before {
-  margin-right: 1rem;
-  flex-shrink: 0;
-}
-
-/* =============== BADGES FOR LIST ITEMS =============== */
-.refund-refund-list li span {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background: rgba(59, 130, 246, 0.1);
-  color: #1d4ed8;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-left: 0.5rem;
-  white-space: nowrap;
-}
-
-/* =============== FOOTER/EXTRA INFO =============== */
-.refund-refund-footer {
-  margin-top: 3rem;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border-radius: 20px;
-  border: 2px solid #bae6fd;
-  text-align: center;
-}
-
-.refund-refund-footer p {
-  color: #0369a1;
+  background: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border-left: 4px solid #38bdf8;
   font-size: 1rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
+  line-height: 1.6;
+  color: #334155;
 }
 
-.refund-refund-footer p::before {
-  content: 'ℹ️';
-  font-size: 1.2rem;
+/* Footer */
+.refund-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+  color: #475569;
+  font-size: 0.9rem;
 }
 
-/* =============== RESPONSIVE DESIGN =============== */
-
-/* Laptop */
-@media (max-width: 1024px) {
-  .refund-refund-card {
-    padding: 2.5rem;
-    max-width: 800px;
-  }
-  
-  .refund-refund-title {
-    font-size: 2.4rem;
-  }
-  
-  .refund-refund-title::before,
-  .refund-refund-title::after {
-    display: none;
-  }
-}
-
-/* Tablet */
+/* Responsive */
 @media (max-width: 768px) {
   .refund-refund-wrap {
-    padding: 1.5rem;
+    padding: 15px;
   }
   
   .refund-refund-card {
-    padding: 2rem;
-    border-radius: 20px;
-  }
-  
-  .refund-refund-title {
-    font-size: 2rem;
-  }
-  
-  .refund-refund-subtitle {
-    font-size: 1.4rem;
-  }
-  
-  .refund-refund-list li {
-    font-size: 1rem;
-    padding-left: 2rem;
-  }
-  
-  .refund-refund-section {
-    padding: 1.5rem;
-  }
-}
-
-/* Mobile */
-@media (max-width: 576px) {
-  .refund-refund-wrap {
-    padding: 1rem;
-  }
-  
-  .refund-refund-card {
-    padding: 1.5rem;
-    border-radius: 16px;
+    padding: 25px;
   }
   
   .refund-refund-title {
     font-size: 1.8rem;
   }
   
-  .refund-refund-subtitle {
-    font-size: 1.2rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .refund-refund-subtitle::before {
-    height: 20px;
-  }
-  
-  .refund-refund-list li {
-    font-size: 0.95rem;
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  
   .refund-refund-section {
-    padding: 1.25rem;
-    margin-bottom: 2rem;
+    padding: 20px;
   }
   
-  .refund-refund-list li span {
-    display: block;
-    margin: 0.25rem 0 0 0;
-    width: fit-content;
+  .refund-refund-subtitle {
+    font-size: 1.3rem;
   }
 }
 
-/* Small Mobile */
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .refund-refund-card {
-    padding: 1.25rem;
+    padding: 20px;
   }
   
   .refund-refund-title {
     font-size: 1.6rem;
   }
   
-  .refund-refund-subtitle {
-    font-size: 1.1rem;
-  }
-  
-  .refund-refund-list li {
-    font-size: 0.9rem;
-    padding-left: 1.25rem;
-  }
-  
   .refund-refund-section {
-    padding: 1rem;
-  }
-}
-
-/* =============== DARK MODE SUPPORT =============== */
-@media (prefers-color-scheme: dark) {
-  .refund-refund-wrap {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  }
-  
-  .refund-refund-wrap::before {
-    background-image: 
-      radial-gradient(#334155 1px, transparent 1px),
-      radial-gradient(#1e293b 1px, transparent 1px);
-    opacity: 0.2;
-  }
-  
-  .refund-refund-card {
-    background: rgba(30, 41, 59, 0.95);
-    border-color: rgba(51, 65, 85, 0.8);
-    color: #cbd5e1;
-  }
-  
-  .refund-refund-title {
-    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-    /* -webkit-background-clip: text; */
-    -webkit-text-fill-color: transparent;
+    padding: 15px;
   }
   
   .refund-refund-subtitle {
-    color: #f1f5f9;
+    font-size: 1.2rem;
   }
-  
-  .refund-refund-section {
-    background: rgba(51, 65, 85, 0.5);
-    border-color: rgba(71, 85, 105, 0.8);
-    color: #cbd5e1;
-  }
-  
-  .refund-refund-list li {
-    color: #94a3b8;
-  }
-  
-  .refund-refund-footer {
-    background: rgba(2, 132, 199, 0.1);
-    border-color: rgba(2, 132, 199, 0.3);
-  }
-  
-  .refund-refund-footer p {
-    color: #38bdf8;
-  }
-}
-
-/* =============== PRINT STYLES =============== */
-@media print {
-  .refund-refund-wrap {
-    background: white !important;
-    padding: 0 !important;
-  }
-  
-  .refund-refund-wrap::before {
-    display: none;
-  }
-  
-  .refund-refund-card {
-    box-shadow: none !important;
-    border: 1px solid #ddd !important;
-    padding: 2rem !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-  }
-  
-  .refund-refund-title {
-    color: #000 !important;
-    -webkit-text-fill-color: #000 !important;
-    background: none !important;
-  }
-  
-  .refund-refund-section {
-    break-inside: avoid;
-    box-shadow: none !important;
-    border: 1px solid #eee !important;
-  }
-}
-
-/* =============== ANIMATION ENHANCEMENTS =============== */
-.refund-refund-list li {
-  animation: refund-fadeIn 0.5s ease forwards;
-  opacity: 0;
-  transform: translateX(-10px);
-}
-
-.refund-refund-list li:nth-child(1) { animation-delay: 0.1s; }
-.refund-refund-list li:nth-child(2) { animation-delay: 0.2s; }
-.refund-refund-list li:nth-child(3) { animation-delay: 0.3s; }
-.refund-refund-list li:nth-child(4) { animation-delay: 0.4s; }
-.refund-refund-list li:nth-child(5) { animation-delay: 0.5s; }
-.refund-refund-list li:nth-child(6) { animation-delay: 0.6s; }
-.refund-refund-list li:nth-child(7) { animation-delay: 0.7s; }
-
-@keyframes refund-fadeIn {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* =============== ACCESSIBILITY =============== */
-.refund-refund-card:focus-within {
-  outline: 3px solid #3b82f6;
-  outline-offset: 4px;
-}
-
-.refund-refund-list li:focus-within {
-  outline: 2px solid #3b82f6;
-  outline-offset: 4px;
-  border-radius: 4px;
-}
-
-/* =============== HOVER EFFECTS ENHANCEMENT =============== */
-.refund-refund-list li:hover {
-  color: #1e293b;
-  transform: translateX(5px);
-  transition: all 0.3s ease;
-}
-
-.refund-refund-list li:hover::before {
-  transform: scale(1.2);
-  transition: transform 0.3s ease;
-}
-
-/* =============== SCROLLBAR STYLING =============== */
-.refund-refund-card::-webkit-scrollbar {
-  width: 8px;
-}
-
-.refund-refund-card::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 10px;
-}
-
-.refund-refund-card::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-
-.refund-refund-card::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
 }
