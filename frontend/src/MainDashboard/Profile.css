@@ -802,3 +802,55 @@ body {
 .profile-form-group .password-input-wrapper:first-of-type {
   margin-top: 8px;
 } */
+
+
+
+
+
+
+
+
+
+/* Add these styles to your Profile.css file */
+
+.password-input-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.password-input {
+  width: 100%;
+  padding-right: 40px !important; /* Space for eye button */
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.password-toggle-btn:hover {
+  color: #333;
+}
+
+.password-toggle-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* If you don't want the eye button to affect the input height */
+.profile-form-input {
+  min-height: 40px;
+  box-sizing: border-box;
+}
