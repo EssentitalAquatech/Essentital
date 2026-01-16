@@ -293,7 +293,7 @@ const DealerOrders = ({ dealerId, refreshTrigger }) => {
             <p className="order-amount"><b>Total:</b> ₹ {o.totalAmount}</p>
             <ul className="order-items">
               {o.items.map((i, idx) => (
-                <li key={idx}>{i.name} × {i.quantity} ({i.weight || 'N/A'}) - ₹ {i.price}</li>
+                <li key={idx}>{i.name} × {i.quantity} ({i.weight}) - ₹ {i.price}</li>
               ))}
             </ul>
           </div>
@@ -307,60 +307,81 @@ const DealerShop = () => {
   const { dealerId } = useParams();
   const [cart, setCart] = useState([]);
   const [ordersRefresh, setOrdersRefresh] = useState(0);
+  const [addingId, setAddingId] = useState(null);
+  const [selectedWeight, setSelectedWeight] = useState({});
 
-  // Weight options with price multipliers
-  const weightOptions = [
-    { label: "1kg", multiplier: 1 },
-    { label: "5kg", multiplier: 4.8 },
-    { label: "10kg", multiplier: 9.5 },
-    { label: "20kg", multiplier: 18 },
-    { label: "25kg", multiplier: 22 },
-    { label: "50kg", multiplier: 40 }
-  ];
+  // Weight options
+  const weightOptions = ["1kg", "10kg", "20kg"];
 
   // Calculate price based on weight
-  const calculatePrice = (product, weightLabel) => {
+  const getPriceForWeight = (product, weight) => {
     const basePrice = parseFloat(product.price.split('-')[0].trim());
-    const weight = weightOptions.find(w => w.label === weightLabel);
-    return basePrice * weight.multiplier;
-  };
-
-  // Add item with specific weight
-  const addToCartWithWeight = (product, weightLabel) => {
-    const price = calculatePrice(product, weightLabel);
     
-    // Check if same product with same weight already in cart
-    const existingItem = cart.find(item => 
-      item.id === product.id && item.weight === weightLabel
-    );
+    if (weight === "1kg") return basePrice;
+    if (weight === "10kg") return basePrice * 9.5;
+    if (weight === "20kg") return basePrice * 18;
     
-    if (existingItem) {
-      setCart(cart.map(item =>
-        item.id === product.id && item.weight === weightLabel
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, {
-        id: product.id,
-        name: product.name,
-        price: price,
-        quantity: 1,
-        weight: weightLabel
-      }]);
-    }
+    return basePrice;
   };
 
-  // Remove item from cart
-  const removeFromCart = (id) => {
-    setCart(cart.filter(item => item.id !== id));
+  // Add to cart
+  const addToCart = (product) => {
+    const weight = selectedWeight[product.id] || "1kg";
+    
+    setAddingId(product.id);
+    
+    setTimeout(() => {
+      const price = getPriceForWeight(product, weight);
+      
+      const existingItem = cart.find(item => 
+        item.id === product.id && item.weight === weight
+      );
+      
+      if (existingItem) {
+        setCart(cart.map(item =>
+          item.id === product.id && item.weight === weight
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        ));
+      } else {
+        setCart([...cart, {
+          ...product,
+          quantity: 1,
+          weight: weight,
+          price: price,
+          unitPrice: basePrice
+        }]);
+      }
+      
+      setAddingId(null);
+    }, 300);
   };
 
-  // Update quantity
-  const updateQuantity = (id, newQty) => {
-    setCart(cart.map(item =>
-      item.id === id ? { ...item, quantity: Math.max(newQty, 1) } : item
-    ));
+  // Remove from cart
+  const removeFromCart = (index) => {
+    setCart(cart.filter((_, i) => i !== index));
+  };
+
+  // Update quantity in cart
+  const updateQuantity = (index, newQty) => {
+    const updatedCart = [...cart];
+    updatedCart[index].quantity = Math.max(newQty, 1);
+    setCart(updatedCart);
+  };
+
+  // Update weight in cart
+  const updateWeight = (index, newWeight) => {
+    const updatedCart = [...cart];
+    const product = updatedCart[index];
+    const price = getPriceForWeight(product, newWeight);
+    
+    updatedCart[index] = {
+      ...product,
+      weight: newWeight,
+      price: price
+    };
+    
+    setCart(updatedCart);
   };
 
   // Calculate total
@@ -403,27 +424,52 @@ const DealerShop = () => {
       <div className="products-container">
         <h2>🛒 Dealer Shopping</h2>
         <div className="products-grid">
-          {products.map(product => (
-            <div key={product.id} className="product-card">
-              <img src={product.image} alt={product.name} className="product-image" />
-              <h6 className="product-name">{product.name}</h6>
-              <p className="product-price">₹ {product.price}</p>
-              
-              {/* Weight Selection Buttons */}
-              <div className="weight-buttons">
-                {weightOptions.map(weight => (
-                  <button
-                    key={weight.label}
-                    className="weight-btn"
-                    onClick={() => addToCartWithWeight(product, weight.label)}
-                    title={`Add ${weight.label}`}
-                  >
-                    {weight.label}
-                  </button>
-                ))}
+          {products.map(product => {
+            const basePrice = parseFloat(product.price.split('-')[0].trim());
+            
+            return (
+              <div key={product.id} className="product-card">
+                <img src={product.image} alt={product.name} className="product-image" />
+                <h6 className="product-name">{product.name}</h6>
+                <p className="product-price">₹ {product.price}</p>
+                <p className="product-unit">Starting from 1kg: ₹ {basePrice.toFixed(2)}</p>
+                
+                <div className="weight-selector">
+                  <label>Select Weight:</label>
+                  <div className="weight-options">
+                    {weightOptions.map(weight => (
+                      <button
+                        key={weight}
+                        className={`weight-option-btn ${
+                          selectedWeight[product.id] === weight ? 'selected' : ''
+                        }`}
+                        onClick={() => setSelectedWeight({
+                          ...selectedWeight,
+                          [product.id]: weight
+                        })}
+                      >
+                        {weight}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                <button
+                  className="add-to-cart-btn"
+                  onClick={() => addToCart(product)}
+                  disabled={addingId === product.id}
+                >
+                  {addingId === product.id ? (
+                    <>
+                      <span className="loader"></span> Adding...
+                    </>
+                  ) : (
+                    "Add to Cart"
+                  )}
+                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -435,38 +481,76 @@ const DealerShop = () => {
           {cart.length === 0 ? (
             <div className="empty-cart">
               <p>Your cart is empty</p>
-              <p className="cart-empty-sub">Click on weight buttons (1kg, 10kg, etc.) to add items</p>
+              <p className="cart-empty-sub">Add products from the list</p>
             </div>
           ) : (
             <>
               <div className="cart-items">
-                {cart.map(item => (
-                  <div key={`${item.id}-${item.weight}`} className="cart-item">
-                    <div className="cart-item-info">
-                      <p className="cart-item-name">{item.name}</p>
-                      <div className="item-details">
-                        <span className="weight-badge">{item.weight}</span>
-                        <span className="item-price">₹ {item.price.toFixed(2)}</span>
+                {cart.map((item, index) => (
+                  <div key={`${item.id}-${index}`} className="cart-item">
+                    <div className="cart-item-header">
+                      <span className="item-name">{item.name}</span>
+                      <button 
+                        className="remove-btn"
+                        onClick={() => removeFromCart(index)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    
+                    <div className="cart-item-body">
+                      {/* Weight Selection */}
+                      <div className="cart-weight-selector">
+                        <label>Weight:</label>
+                        <div className="weight-buttons">
+                          {weightOptions.map(weight => (
+                            <button
+                              key={weight}
+                              className={`cart-weight-btn ${
+                                item.weight === weight ? 'active' : ''
+                              }`}
+                              onClick={() => updateWeight(index, weight)}
+                            >
+                              {weight}
+                            </button>
+                          ))}
+                        </div>
                       </div>
+                      
+                      {/* Quantity */}
                       <div className="quantity-control">
                         <label>Quantity:</label>
-                        <input
-                          type="number"
-                          min="1"
-                          value={item.quantity}
-                          onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                          className="quantity-input"
-                        />
-                        <button 
-                          className="remove-btn"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          🗑️
-                        </button>
+                        <div className="quantity-input-group">
+                          <button 
+                            className="qty-btn minus"
+                            onClick={() => updateQuantity(index, item.quantity - 1)}
+                          >
+                            −
+                          </button>
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.quantity}
+                            onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
+                            className="quantity-input"
+                          />
+                          <button 
+                            className="qty-btn plus"
+                            onClick={() => updateQuantity(index, item.quantity + 1)}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                      <p className="item-total">
-                        Total: ₹ {(item.price * item.quantity).toFixed(2)}
-                      </p>
+                      
+                      {/* Price */}
+                      <div className="price-section">
+                        <span className="price-label">Price:</span>
+                        <span className="item-price">₹ {item.price.toFixed(2)}</span>
+                        <span className="item-total">
+                          Total: ₹ {(item.price * item.quantity).toFixed(2)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}
