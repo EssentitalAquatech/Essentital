@@ -396,19 +396,10 @@ const handlePasswordChange = async () => {
           </div>
 
           {/* Password Card */}
-          {isManualLogin && (
+          {/* {isManualLogin && (
             <div className="profile-form-group">
               <h4>{t("changePassword")}</h4>
-              {/* <label className="profile-form-label">{t("currentPassword")}:</label>
-              <input
-                type="password"
-                className="profile-form-input"
-                placeholder={t("currentPassword")}
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                disabled={isUpdatingPassword}
-              />
-               */}
+          
 
 
 <div className="password-input-wrapper">
@@ -431,16 +422,7 @@ const handlePasswordChange = async () => {
 
 
 
-              {/* <label className="profile-form-label">{t("newPassword")}:</label>
-              <input
-                type="password"
-                className="profile-form-input"
-                placeholder={t("newPassword")}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                disabled={isUpdatingPassword}
-              /> */}
-
+          
 
 <div className="password-input-wrapper">
   <input
@@ -477,7 +459,69 @@ const handlePasswordChange = async () => {
                 )}
               </button>
             </div>
-          )}
+          )} */}
+
+
+{/* Password Card */}
+{isManualLogin && (
+  <div className="profile-form-group">
+    <h4>{t("changePassword")}</h4>
+    
+    <label className="profile-form-label">{t("currentPassword")}:</label>
+    <div className="password-input-wrapper">
+      <input
+        type={showCurrentPassword ? "text" : "password"}
+        className="profile-form-input"
+        placeholder={t("currentPassword")}
+        value={currentPassword}
+        onChange={(e) => setCurrentPassword(e.target.value)}
+        disabled={isUpdatingPassword}
+      />
+      <button
+        type="button"
+        className="password-eye"
+        onClick={() => setShowCurrentPassword(prev => !prev)}
+      >
+        {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+      </button>
+    </div>
+
+    <label className="profile-form-label">{t("newPassword")}:</label>
+    <div className="password-input-wrapper">
+      <input
+        type={showNewPassword ? "text" : "password"}
+        className="profile-form-input"
+        placeholder={t("newPassword")}
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+        disabled={isUpdatingPassword}
+      />
+      <button
+        type="button"
+        className="password-eye"
+        onClick={() => setShowNewPassword(prev => !prev)}
+      >
+        {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+      </button>
+    </div>
+    
+    <button 
+      className="profile-btn-warning" 
+      onClick={handlePasswordChange}
+      disabled={isUpdatingPassword || !currentPassword || !newPassword}
+    >
+      {isUpdatingPassword ? (
+        <>
+          <span className="loader"></span>
+          {t("updating")}
+        </>
+      ) : (
+        t("updatePassword")
+      )}
+    </button>
+  </div>
+)}
+
         </div>
       </div>
     </div>

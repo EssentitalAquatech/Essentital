@@ -750,7 +750,7 @@ body {
 
 
 
-.password-input-wrapper {
+/* .password-input-wrapper {
   position: relative;
   width: 100%;
 }
@@ -766,4 +766,39 @@ body {
 
 .password-eye:hover {
   color: #111827;
+} */
+/* Add this to your Profile.css */
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.password-input-wrapper .profile-form-input {
+  width: 100%;
+  padding-right: 40px; /* Make space for the eye icon */
+}
+
+.password-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-eye:hover {
+  color: #111827;
+}
+
+/* For the password section specifically */
+.profile-form-group .password-input-wrapper:first-of-type {
+  margin-top: 8px;
 }
