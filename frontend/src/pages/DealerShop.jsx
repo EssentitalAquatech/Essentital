@@ -633,27 +633,37 @@ const DealerShop = () => {
   const [addingId, setAddingId] = useState(null);
   const [addedId, setAddedId] = useState(null);
 
-  // Weight options
-  const weightOptions = ["1kg", "10kg", "20kg"];
+  // Weight options with multipliers
+  const weightOptions = [
+    { label: "1kg", multiplier: 1 },
+    { label: "10kg", multiplier: 9.5 },
+    { label: "20kg", multiplier: 18 }
+  ];
 
-  // Calculate price based on weight
-  const getPriceForWeight = (product, weight) => {
-    const basePrice = parseFloat(product.price.split('-')[0].trim());
-    
-    if (weight === "1kg") return basePrice;
-    if (weight === "10kg") return basePrice * 9.5;
-    if (weight === "20kg") return basePrice * 18;
-    
+  // Extract base price from price string (e.g., "195.50 - 2660.50")
+  const getBasePrice = (priceString) => {
+    if (!priceString) return 0;
+    return parseFloat(priceString.split('-')[0].trim());
+  };
+
+  // Calculate price based on weight and base price
+  const calculatePrice = (basePrice, weight) => {
+    const weightOption = weightOptions.find(w => w.label === weight);
+    if (weightOption) {
+      return basePrice * weightOption.multiplier;
+    }
     return basePrice;
   };
 
-  // Add to cart - with loader
+  // Add to cart
   const addToCart = (product) => {
     setAddingId(product.id);
     
     setTimeout(() => {
-      const price = getPriceForWeight(product, "1kg");
+      const basePrice = getBasePrice(product.price);
+      const price = calculatePrice(basePrice, "1kg");
       
+      // Find existing item
       const existingItem = cart.find(item => 
         item.id === product.id && item.weight === "1kg"
       );
@@ -661,22 +671,28 @@ const DealerShop = () => {
       if (existingItem) {
         setCart(cart.map(item =>
           item.id === product.id && item.weight === "1kg"
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { 
+                ...item, 
+                quantity: item.quantity + 1,
+                totalPrice: calculatePrice(item.basePrice, item.weight) * (item.quantity + 1)
+              }
             : item
         ));
       } else {
         setCart([...cart, {
-          ...product,
+          id: product.id,
+          name: product.name,
+          basePrice: basePrice, // Store base price
+          price: price, // Current price per unit
           quantity: 1,
           weight: "1kg",
-          price: price
+          totalPrice: price // Total price for this item
         }]);
       }
       
       setAddingId(null);
       setAddedId(product.id);
       
-      // Reset "Added" text after 2 seconds
       setTimeout(() => {
         setAddedId(null);
       }, 2000);
@@ -689,17 +705,20 @@ const DealerShop = () => {
     setCart(cart.filter((_, i) => i !== index));
   };
 
-  // Update weight in cart
+  // Update weight in cart - FIXED FUNCTION
   const updateWeight = (index, newWeight) => {
     const updatedCart = [...cart];
-    const product = updatedCart[index];
-    const price = getPriceForWeight(product, newWeight);
+    const item = updatedCart[index];
     
-    // Update weight and price
+    // Calculate new price based on base price
+    const newPrice = calculatePrice(item.basePrice, newWeight);
+    const newTotalPrice = newPrice * item.quantity;
+    
     updatedCart[index] = {
-      ...product,
+      ...item,
       weight: newWeight,
-      price: price
+      price: newPrice,
+      totalPrice: newTotalPrice
     };
     
     setCart(updatedCart);
@@ -749,13 +768,32 @@ const DealerShop = () => {
         <h2>🛒 Dealer Shopping</h2>
         <div className="products-grid">
           {products.map(product => {
-            const basePrice = parseFloat(product.price.split('-')[0].trim());
+            const basePrice = getBasePrice(product.price);
+            const price1kg = calculatePrice(basePrice, "1kg");
+            const price10kg = calculatePrice(basePrice, "10kg");
+            const price20kg = calculatePrice(basePrice, "20kg");
             
             return (
               <div key={product.id} className="product-card">
                 <img src={product.image} alt={product.name} className="product-image" />
                 <h6 className="product-name">{product.name}</h6>
                 <p className="product-price">₹ {product.price}</p>
+                
+                {/* Price breakdown */}
+                <div className="price-breakdown">
+                  <div className="price-option">
+                    <span>1kg:</span>
+                    <span className="price-value">₹ {price1kg.toFixed(2)}</span>
+                  </div>
+                  <div className="price-option">
+                    <span>10kg:</span>
+                    <span className="price-value">₹ {price10kg.toFixed(2)}</span>
+                  </div>
+                  <div className="price-option">
+                    <span>20kg:</span>
+                    <span className="price-value">₹ {price20kg.toFixed(2)}</span>
+                  </div>
+                </div>
                 
                 {/* Product Description */}
                 <p className="product-description">
@@ -819,21 +857,21 @@ const DealerShop = () => {
                     <div className="cart-weight-selector">
                       <label>Select Weight:</label>
                       <div className="weight-buttons">
-                        {weightOptions.map(weight => (
+                        {weightOptions.map(weightObj => (
                           <button
-                            key={weight}
+                            key={weightObj.label}
                             className={`cart-weight-btn ${
-                              item.weight === weight ? 'active' : ''
+                              item.weight === weightObj.label ? 'active' : ''
                             }`}
-                            onClick={() => updateWeight(index, weight)}
+                            onClick={() => updateWeight(index, weightObj.label)}
                           >
-                            {weight}
+                            {weightObj.label}
                           </button>
                         ))}
                       </div>
                     </div>
                     
-                    {/* Quantity Display (NO EDITING) */}
+                    {/* Quantity Display */}
                     <div className="quantity-display">
                       <span className="qty-label">Quantity:</span>
                       <span className="qty-value">{item.quantity}</span>

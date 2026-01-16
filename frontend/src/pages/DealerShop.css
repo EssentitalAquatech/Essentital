@@ -558,3 +558,43 @@
     font-size: 18px;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Price Breakdown in Product Card */
+.price-breakdown {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.price-option {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 14px;
+}
+
+.price-option span:first-child {
+  color: #555;
+  font-weight: 500;
+}
+
+.price-option .price-value {
+  color: #2e7d32;
+  font-weight: 600;
+}
