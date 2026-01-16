@@ -940,8 +940,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -970,7 +968,7 @@ function Profile() {
 
   const userId = localStorage.getItem("userId");
 
-  // Eye button states
+  // Eye button states - false by default means password hidden (dots)
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
@@ -1363,3 +1361,4 @@ function Profile() {
 }
 
 export default Profile;
+

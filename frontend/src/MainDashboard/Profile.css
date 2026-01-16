@@ -812,7 +812,7 @@ body {
 
 
 /* Add these styles to your Profile.css file */
-
+/* Password Input Container Styles */
 .password-input-container {
   position: relative;
   width: 100%;
@@ -822,6 +822,14 @@ body {
 .password-input {
   width: 100%;
   padding-right: 40px !important; /* Space for eye button */
+  -webkit-text-security: disc !important; /* For Safari */
+  text-security: disc !important; /* For other browsers */
+}
+
+/* When password is visible */
+.password-input[type="text"] {
+  -webkit-text-security: none !important;
+  text-security: none !important;
 }
 
 .password-toggle-btn {
@@ -838,6 +846,7 @@ body {
   align-items: center;
   justify-content: center;
   transition: color 0.3s ease;
+  z-index: 10;
 }
 
 .password-toggle-btn:hover {
@@ -849,8 +858,25 @@ body {
   cursor: not-allowed;
 }
 
-/* If you don't want the eye button to affect the input height */
+/* Ensure input has proper styling */
 .profile-form-input {
   min-height: 40px;
   box-sizing: border-box;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.profile-form-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.profile-form-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
