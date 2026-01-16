@@ -33,8 +33,8 @@ function Profile() {
   const userId = localStorage.getItem("userId");
 
 
-  const [showCurrentPassword, setShowCurrentPassword] = useState(true);
-const [showNewPassword, setShowNewPassword] = useState(true);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+const [showNewPassword, setShowNewPassword] = useState(false);
 
 
   // Check if mobile view
