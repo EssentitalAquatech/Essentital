@@ -295,13 +295,6 @@
 
 
 
-
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
@@ -443,22 +436,6 @@ const Cart = () => {
     });
   };
 
-  // Calculate order status color
-  const getStatusColor = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'delivered':
-        return '#38a169';
-      case 'shipped':
-        return '#3182ce';
-      case 'processing':
-        return '#ed8936';
-      case 'pending':
-        return '#e53e3e';
-      default:
-        return '#718096';
-    }
-  };
-
   return (
     <div className="cart-page-container">
       <div className="cart-page-header">
@@ -587,12 +564,6 @@ const Cart = () => {
                         <span className="order-id">Order #{order.orderNumber || order._id?.slice(-6)}</span>
                         <span className="order-date">{formatDate(order.createdAt || order.orderDate)}</span>
                       </div>
-                      {/* <div 
-                        className="order-status"
-                        style={{ backgroundColor: getStatusColor(order.status) }}
-                      >
-                        {order.status || 'Processing'}
-                      </div> */}
                     </div>
                     
                     <div className="order-items-preview">
@@ -600,7 +571,7 @@ const Cart = () => {
                         <div key={index} className="order-item-preview">
                           <span className="preview-name">{item.name}</span>
                           <span className="preview-qty">{item.qty} × {item.weight}</span>
-                          <span className="preview-price">₹{item.price * item.qty}</span>
+                          <span className="preview-price">₹{(item.price * item.qty).toFixed(2)}</span>
                         </div>
                       ))}
                       {order.items?.length > 2 && (
@@ -614,12 +585,12 @@ const Cart = () => {
                       <div className="order-total">
                         Total: <span className="total-amount">₹{order.totalAmount?.toFixed(2)}</span>
                       </div>
-                      {/* <button 
+                      <button 
                         className="view-order-btn"
                         onClick={() => navigate(`/order-details/${order._id || order.orderId}`)}
                       >
                         View Details
-                      </button> */}
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -691,3 +662,7 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
+
+
