@@ -18,6 +18,14 @@
   border-bottom: 2px solid #1976d2;
 }
 
+/* Header top row for heading and cart button */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 .fixed-header h2 {
   margin: 0;
   color: #1976d2;
@@ -27,34 +35,51 @@
   gap: 10px;
 }
 
-.header-controls {
+/* View Cart Button in Header */
+.view-cart-btn {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-  gap: 20px;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+  white-space: nowrap;
+  height: 40px; /* Smaller height for mobile */
+  box-sizing: border-box;
+}
+
+.view-cart-btn:hover {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
 }
 
 /* Search Container */
 .search-container {
   display: flex;
-  flex: 1;
-  max-width: 600px;
+  width: 100%;
   gap: 10px;
-  align-items: center; /* Added for vertical alignment */
+  align-items: center;
 }
 
 .search-input {
-  flex: 1;
-  padding: 12px 20px;
+  flex: 7; /* 70% width */
+  padding: 12px 15px;
   border: 2px solid #1976d2;
   border-radius: 8px;
   font-size: 16px;
   outline: none;
   transition: all 0.3s;
-  height: 48px; /* Fixed height */
-  box-sizing: border-box; /* Ensure padding doesn't affect height */
+  height: 48px;
+  box-sizing: border-box;
 }
 
 .search-input:focus {
@@ -62,9 +87,10 @@
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
 }
 
-/* Search Button - Updated with same height and color as add to cart */
+/* Search Button */
 .search-btn {
-  padding: 0 25px;
+  flex: 3; /* 30% width */
+  padding: 0 15px;
   background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
   color: white;
   border: none;
@@ -78,7 +104,7 @@
   gap: 8px;
   transition: all 0.3s;
   white-space: nowrap;
-  height: 48px; /* Same height as search input */
+  height: 48px;
   box-sizing: border-box;
 }
 
@@ -88,34 +114,7 @@
   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
-/* View Cart Button in Header - Updated with same color as add to cart */
-.view-cart-btn {
-  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%); /* Changed to blue color */
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
-  white-space: nowrap;
-  height: 48px; /* Same height as search elements */
-  box-sizing: border-box;
-}
-
-.view-cart-btn:hover {
-  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
-}
-
-/* Clear Search Button in Results - Updated with same color */
+/* Clear Search Button in Results */
 .clear-search {
   background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
   color: white;
@@ -180,7 +179,7 @@
   font-size: 16px;
 }
 
-/* Clear Search Button in No Results - Updated with same color */
+/* Clear Search Button in No Results */
 .clear-search-btn {
   background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
   color: white;
@@ -277,7 +276,7 @@
   text-decoration: underline;
 }
 
-/* Add to Cart Button - All buttons will have same color now */
+/* Add to Cart Button */
 .add-to-cart-btn {
   width: 100%;
   padding: 12px;
@@ -351,25 +350,33 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .header-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .search-container {
-    max-width: 100%;
-  }
-  
-  .view-cart-btn {
-    width: 100%;
-    justify-content: center;
+  .dealer-shop-container {
+    padding-top: 150px;
   }
 }
 
+/* Desktop View */
+@media (min-width: 769px) {
+  .header-top {
+    margin-bottom: 0;
+  }
+  
+  .view-cart-btn {
+    font-size: 16px;
+    padding: 12px 25px;
+    height: 48px;
+  }
+  
+  .search-container {
+    max-width: 600px;
+  }
+}
+
+/* Mobile View - Below 768px */
 @media (max-width: 768px) {
   .dealer-shop-container {
     padding: 15px;
-    padding-top: 180px; /* More space for header on mobile */
+    padding-top: 150px; /* Reduced space for header on mobile */
   }
   
   .fixed-header {
@@ -380,29 +387,36 @@
     font-size: 20px;
   }
   
-  .header-controls {
-    gap: 10px;
+  /* Header top row - heading and cart button side by side */
+  .header-top {
+    margin-bottom: 10px;
   }
   
-  .search-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .search-input,
-  .search-btn,
   .view-cart-btn {
-    height: 45px; /* Slightly smaller on mobile */
+    font-size: 12px;
+    padding: 8px 12px;
+    height: 36px;
+    gap: 5px;
+  }
+  
+  /* Search container - 70:30 ratio */
+  .search-container {
+    gap: 8px;
   }
   
   .search-input {
-    padding: 10px 15px;
+    flex: 7; /* 70% */
+    height: 44px;
+    padding: 10px 12px;
+    font-size: 14px;
   }
   
-  .search-btn,
-  .view-cart-btn {
-    padding: 10px 20px;
+  .search-btn {
+    flex: 3; /* 30% */
+    height: 44px;
+    padding: 0 10px;
     font-size: 14px;
+    gap: 5px;
   }
   
   .products-grid {
@@ -415,9 +429,34 @@
   }
 }
 
+/* Small Mobile View - Below 480px */
 @media (max-width: 480px) {
   .dealer-shop-container {
-    padding-top: 200px;
+    padding-top: 140px; /* Further reduced space */
+  }
+  
+  .fixed-header h2 {
+    font-size: 18px;
+  }
+  
+  .header-top {
+    align-items: flex-start;
+  }
+  
+  .view-cart-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+    height: 34px;
+  }
+  
+  .search-input {
+    height: 42px;
+    font-size: 13px;
+  }
+  
+  .search-btn {
+    height: 42px;
+    font-size: 13px;
   }
   
   .products-grid {
@@ -444,11 +483,5 @@
   
   .clear-search {
     width: 100%;
-  }
-  
-  .search-input,
-  .search-btn,
-  .view-cart-btn {
-    height: 44px; /* Consistent height on small screens */
   }
 }
