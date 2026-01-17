@@ -465,7 +465,7 @@
   
   .products-grid {
     grid-template-columns: 1fr;
-    margin-top: 50px;
+    margin-top: -50px;
   }
   
   .product-image {
