@@ -891,7 +891,7 @@ const DealerShop = () => {
               })
             ) : (
               <div className="no-results">
-                <h3>No products found for "{searchTerm}"</h3>
+                <h3>No products found for--{searchTerm}"</h3>
                 <p>Try searching with different keywords</p>
                 <button 
                   className="clear-search-btn"
