@@ -1,6 +1,5 @@
 
 
-
 // import React from "react";
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -23,15 +22,17 @@
 // import AdminDashboard from "./admin/AdminDashboard";
 // import AdminWeather from "./admin/AdminWeather";
 
-
 // import DealerShop from "./pages/DealerShop";
 // import DealerOrders from "./pages/DealerOrders";
 
 // import OrdersDashboard from "./admin/OrdersDashboard";
 
+// import AdminLogin from "./start/AdminLogin";
+
+// import Astronomical from "./admin/Astronomical_Dashboard";
+
 // function App() {
 //   return (
-    
 //     <BrowserRouter>
 //       <Routes>
 //         <Route path="/" element={<SplashScreen />} />
@@ -47,33 +48,41 @@
 //         <Route path="/dealers" element={<Delears />} />
 //         <Route path="/agents" element={<Agent />} />
 
+//         <Route path="/terms" element={<Terms />} />
+//         <Route path="/privacy" element={<Privacy />} />
+//         <Route path="/cancellation" element={<Cancellation />} />
+//         <Route path="/refund" element={<Refund />} />
+
+//         <Route path="/adminDashboard" element={<AdminDashboard/>} />
+//         <Route path="weather-dashboard" element={<AdminWeather/>} />
+
+//         <Route path="/dealer-shop/:dealerId" element={<DealerShop />} />
+
+//         {/* ✅ dealerId optional bana diya */}
+//         {/* <Route path="/dealer-orders/:dealerId?" element={<DealerOrders />} /> */}
+//         <Route path="/dealer-orders/:dealerId?" element={<DealerOrders />} />
 
 
-// <Route path="/terms" element={<Terms />} />
-// <Route path="/privacy" element={<Privacy />} />
-// <Route path="/cancellation" element={<Cancellation />} />
-// <Route path="/refund" element={<Refund />} />
+//         {/* OrdersDashboard route */}
+//         <Route path="/orders-dashboard/:dealerId" element={<OrdersDashboard />} />
 
-// <Route path="/adminDashboard" element={<AdminDashboard/>} />
-// <Route path="weather-dashboard" element={<AdminWeather/>} />
+//         <Route path="/admin/login" element={<AdminLogin />} />
 
+//         <Route path="/admin/adminDashboard" element={<AdminDashboard />} />
 
-// <Route path="/dealer-shop/:dealerId" element={<DealerShop />} />
-// <Route path="/dealer-orders/:dealerId" element={<DealerOrders />} />
-// {/* 
-//   <Route path="/orders-dashboard" element={<OrdersDashboard />} /> */}
-
-//   <Route path="/orders-dashboard/:dealerId" element={<OrdersDashboard />} />
+//              <Route path="/astronomical-dashboard" element={<Astronomical />} />
 
 
+          
 //       </Routes>
 //     </BrowserRouter>
-
-    
 //   );
 // }
 
 // export default App;
+
+
+
 
 
 import React from "react";
@@ -99,12 +108,11 @@ import AdminDashboard from "./admin/AdminDashboard";
 import AdminWeather from "./admin/AdminWeather";
 
 import DealerShop from "./pages/DealerShop";
+import Cart from "./pages/Cart"; // ✅ Naya Cart component import karein
 import DealerOrders from "./pages/DealerOrders";
 
 import OrdersDashboard from "./admin/OrdersDashboard";
-
 import AdminLogin from "./start/AdminLogin";
-
 import Astronomical from "./admin/Astronomical_Dashboard";
 
 function App() {
@@ -133,11 +141,9 @@ function App() {
         <Route path="weather-dashboard" element={<AdminWeather/>} />
 
         <Route path="/dealer-shop/:dealerId" element={<DealerShop />} />
+        <Route path="/cart/:dealerId" element={<Cart />} /> {/* ✅ Naya Cart route */}
 
-        {/* ✅ dealerId optional bana diya */}
-        {/* <Route path="/dealer-orders/:dealerId?" element={<DealerOrders />} /> */}
         <Route path="/dealer-orders/:dealerId?" element={<DealerOrders />} />
-
 
         {/* OrdersDashboard route */}
         <Route path="/orders-dashboard/:dealerId" element={<OrdersDashboard />} />
@@ -146,10 +152,8 @@ function App() {
 
         <Route path="/admin/adminDashboard" element={<AdminDashboard />} />
 
-             <Route path="/astronomical-dashboard" element={<Astronomical />} />
+        <Route path="/astronomical-dashboard" element={<Astronomical />} />
 
-
-          
       </Routes>
     </BrowserRouter>
   );

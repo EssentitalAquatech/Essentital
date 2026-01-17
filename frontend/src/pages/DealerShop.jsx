@@ -268,12 +268,6 @@
 
 
 
-
-
-
-
-
-
 // import React, { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
 // import products from "../data/products";
@@ -333,19 +327,11 @@
 //   const [addedId, setAddedId] = useState(null);
 
 //   // Weight options with multipliers
-//   // const weightOptions = [
-//   //   { label: "1kg", multiplier: 1 },
-//   //   { label: "10kg", multiplier: 9.5 },
-//   //   { label: "20kg", multiplier: 18 }
-//   // ];
-
-// const weightOptions = [
-//   { label: "1kg", kg: 1 },
-//   { label: "10kg", kg: 10 },
-//   { label: "20kg", kg: 20 }
-// ];
-
-
+//   const weightOptions = [
+//     { label: "1kg", kg: 1 },
+//     { label: "10kg", kg: 10 },
+//     { label: "20kg", kg: 20 }
+//   ];
 
 //   // Extract base price from price string (e.g., "195.50 - 2660.50")
 //   const getBasePrice = (priceString) => {
@@ -353,14 +339,11 @@
 //     return parseFloat(priceString.split('-')[0].trim());
 //   };
 
- 
-
 //   const calculatePrice = (basePrice, weight) => {
-//   const weightOption = weightOptions.find(w => w.label === weight);
-//   if (!weightOption) return basePrice;
-//   return basePrice * weightOption.kg;
-// };
-
+//     const weightOption = weightOptions.find(w => w.label === weight);
+//     if (!weightOption) return basePrice;
+//     return basePrice * weightOption.kg;
+//   };
 
 //   // Add to cart
 //   const addToCart = (product) => {
@@ -380,8 +363,7 @@
 //           item.id === product.id && item.weight === "1kg"
 //             ? { 
 //                 ...item, 
-//                 quantity: item.quantity + 1,
-//                 totalPrice: calculatePrice(item.basePrice, item.weight) * (item.quantity + 1)
+//                 quantity: item.quantity + 1
 //               }
 //             : item
 //         ));
@@ -392,8 +374,7 @@
 //           basePrice: basePrice, // Store base price
 //           price: price, // Current price per unit
 //           quantity: 1,
-//           weight: "1kg",
-//           totalPrice: price // Total price for this item
+//           weight: "1kg"
 //         }]);
 //       }
       
@@ -412,20 +393,33 @@
 //     setCart(cart.filter((_, i) => i !== index));
 //   };
 
-//   // Update weight in cart - FIXED FUNCTION
+//   // Update weight in cart
 //   const updateWeight = (index, newWeight) => {
 //     const updatedCart = [...cart];
 //     const item = updatedCart[index];
     
 //     // Calculate new price based on base price
 //     const newPrice = calculatePrice(item.basePrice, newWeight);
-//     const newTotalPrice = newPrice * item.quantity;
     
 //     updatedCart[index] = {
 //       ...item,
 //       weight: newWeight,
-//       price: newPrice,
-//       totalPrice: newTotalPrice
+//       price: newPrice
+//     };
+    
+//     setCart(updatedCart);
+//   };
+
+//   // Update quantity in cart
+//   const updateQuantity = (index, delta) => {
+//     const updatedCart = [...cart];
+//     const item = updatedCart[index];
+    
+//     const newQuantity = Math.max(1, item.quantity + delta);
+    
+//     updatedCart[index] = {
+//       ...item,
+//       quantity: newQuantity
 //     };
     
 //     setCart(updatedCart);
@@ -578,10 +572,24 @@
 //                       </div>
 //                     </div>
                     
-//                     {/* Quantity Display */}
-//                     <div className="quantity-display">
+//                     {/* Quantity Controls with +/- buttons */}
+//                     <div className="quantity-controls">
 //                       <span className="qty-label">Quantity:</span>
-//                       <span className="qty-value">{item.quantity}</span>
+//                       <div className="qty-buttons">
+//                         <button 
+//                           className="qty-btn minus"
+//                           onClick={() => updateQuantity(index, -1)}
+//                         >
+//                           −
+//                         </button>
+//                         <span className="qty-value">{item.quantity}</span>
+//                         <button 
+//                           className="qty-btn plus"
+//                           onClick={() => updateQuantity(index, 1)}
+//                         >
+//                           +
+//                         </button>
+//                       </div>
 //                     </div>
                     
 //                     {/* Price Display */}
@@ -633,8 +641,13 @@
 // export default DealerShop;
 
 
+
+
+
+
+
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import products from "../data/products";
 import api from "../utils/api";
 import "./DealerShop.css";
@@ -685,6 +698,7 @@ const DealerOrders = ({ dealerId, refreshTrigger }) => {
 
 const DealerShop = () => {
   const { dealerId } = useParams();
+  const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [ordersRefresh, setOrdersRefresh] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState({});
@@ -798,6 +812,17 @@ const DealerShop = () => {
     return sum + (item.price * item.quantity);
   }, 0);
 
+  // View Cart button function - Navigate to cart page
+  const viewCart = () => {
+    if (cart.length === 0) {
+      alert("Your cart is empty. Add some products first!");
+      return;
+    }
+    navigate(`/cart/${dealerId}`, { 
+      state: { cart: cart } 
+    });
+  };
+
   // Place order
   const placeOrder = async () => {
     if (cart.length === 0) return alert("Cart empty");
@@ -831,7 +856,16 @@ const DealerShop = () => {
     <div className="dealer-shop-container">
       {/* Products Section */}
       <div className="products-container">
-        <h2>🛒 Dealer Shopping</h2>
+        <div className="shop-header">
+          <h2>🛒 Dealer Shopping</h2>
+          <button 
+            className="view-cart-btn"
+            onClick={viewCart}
+          >
+            🛍️ View Cart ({cart.length})
+          </button>
+        </div>
+        
         <div className="products-grid">
           {products.map(product => {
             const basePrice = getBasePrice(product.price);
