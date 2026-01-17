@@ -646,61 +646,15 @@
 
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import products from "../data/products";
-import api from "../utils/api";
 import "./DealerShop.css";
-
-const DealerOrders = ({ dealerId, refreshTrigger }) => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!dealerId) return;
-    
-    setLoading(true);
-    api.get(`/api/orders/dealer/${dealerId}`)
-      .then(res => {
-        setOrders(res.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.log("No orders found or error:", err);
-        setLoading(false);
-      });
-  }, [dealerId, refreshTrigger]);
-
-  if (loading) return <div className="loading">Loading orders...</div>;
-  if (orders.length === 0) return <div className="no-orders">No orders yet.</div>;
-
-  return (
-    <div className="orders-section">
-      <h4>📜 Previous Orders</h4>
-      <div className="orders-list">
-        {orders.map(o => (
-          <div key={o._id} className="order-card">
-            <p className="order-date"><b>Date:</b> {new Date(o.createdAt).toLocaleString()}</p>
-            <p className="order-amount"><b>Total:</b> ₹ {o.totalAmount}</p>
-            <ul className="order-items">
-              {o.items.map((i, idx) => (
-                <li key={idx}>
-                  {i.name} × {i.qty} ({i.weight}) - ₹ {i.price * i.qty}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 const DealerShop = () => {
   const { dealerId } = useParams();
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
-  const [ordersRefresh, setOrdersRefresh] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState({});
   const [addingId, setAddingId] = useState(null);
   const [addedId, setAddedId] = useState(null);
@@ -765,43 +719,6 @@ const DealerShop = () => {
       }, 2000);
       
     }, 300);
-  };
-
-  // Remove from cart
-  const removeFromCart = (index) => {
-    setCart(cart.filter((_, i) => i !== index));
-  };
-
-  // Update weight in cart
-  const updateWeight = (index, newWeight) => {
-    const updatedCart = [...cart];
-    const item = updatedCart[index];
-    
-    // Calculate new price based on base price
-    const newPrice = calculatePrice(item.basePrice, newWeight);
-    
-    updatedCart[index] = {
-      ...item,
-      weight: newWeight,
-      price: newPrice
-    };
-    
-    setCart(updatedCart);
-  };
-
-  // Update quantity in cart
-  const updateQuantity = (index, delta) => {
-    const updatedCart = [...cart];
-    const item = updatedCart[index];
-    
-    const newQuantity = Math.max(1, item.quantity + delta);
-    
-    updatedCart[index] = {
-      ...item,
-      quantity: newQuantity
-    };
-    
-    setCart(updatedCart);
   };
 
   // Toggle description
@@ -892,12 +809,6 @@ const DealerShop = () => {
             );
           })}
         </div>
-      </div>
-
-      {/* Only Orders History - Cart Section removed */}
-      <div className="sidebar-container">
-        {/* Orders History */}
-        <DealerOrders dealerId={dealerId} refreshTrigger={ordersRefresh} />
       </div>
     </div>
   );
