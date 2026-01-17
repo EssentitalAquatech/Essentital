@@ -964,12 +964,12 @@ const Cart = () => {
                       <div className="order-total">
                         Total: <span className="total-amount">₹{order.totalAmount?.toFixed(2)}</span>
                       </div>
-                      <button 
+                      {/* <button 
                         className="view-order-btn"
                         onClick={() => navigate(`/order-details/${order._id || order.orderId}`)}
                       >
                         View Details
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 ))}
