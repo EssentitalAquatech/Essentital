@@ -484,6 +484,8 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    margin-bottom: 60px;
+    margin-top: -80px;
   }
   
   .clear-search {
