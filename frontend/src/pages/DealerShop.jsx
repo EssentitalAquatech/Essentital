@@ -807,11 +807,6 @@ const DealerShop = () => {
   // Toggle description
   const toggleDesc = (id) => setShowFullDesc(prev => ({ ...prev, [id]: !prev[id] }));
 
-  // Calculate total
-  const total = cart.reduce((sum, item) => {
-    return sum + (item.price * item.quantity);
-  }, 0);
-
   // View Cart button function - Navigate to cart page
   const viewCart = () => {
     if (cart.length === 0) {
@@ -821,35 +816,6 @@ const DealerShop = () => {
     navigate(`/cart/${dealerId}`, { 
       state: { cart: cart } 
     });
-  };
-
-  // Place order
-  const placeOrder = async () => {
-    if (cart.length === 0) return alert("Cart empty");
-
-    try {
-      const orderItems = cart.map(item => ({
-        productId: item.id,
-        name: item.name,
-        price: item.price,
-        qty: item.quantity,      // ✅ BACKEND COMPATIBLE
-        weight: item.weight      // optional, backend ignore karega
-      }));
-
-      await api.post("/api/orders", {
-        dealerId: dealerId,
-        items: orderItems,
-        totalAmount: Number(total.toFixed(2)) // ✅ number
-      });
-
-      alert("Order placed successfully!");
-      setCart([]);
-      setOrdersRefresh(prev => prev + 1);
-
-    } catch (error) {
-      console.error("Order error:", error);
-      alert("Order placement failed");
-    }
   };
 
   return (
@@ -862,7 +828,7 @@ const DealerShop = () => {
             className="view-cart-btn"
             onClick={viewCart}
           >
-            🛍️ View Cart ({cart.length})
+            🛍️ View Cart ({cart.length} items)
           </button>
         </div>
         
@@ -928,108 +894,8 @@ const DealerShop = () => {
         </div>
       </div>
 
-      {/* Cart Section */}
+      {/* Only Orders History - Cart Section removed */}
       <div className="sidebar-container">
-        <div className="cart-section">
-          <h4>🧺 Cart ({cart.length} items)</h4>
-          
-          {cart.length === 0 ? (
-            <div className="empty-cart">
-              <p>Your cart is empty</p>
-              <p className="cart-empty-sub">Add products from the list</p>
-            </div>
-          ) : (
-            <>
-              <div className="cart-items">
-                {cart.map((item, index) => (
-                  <div key={`${item.id}-${index}`} className="cart-item">
-                    <div className="cart-item-header">
-                      <span className="item-name">{item.name}</span>
-                      <button 
-                        className="remove-btn"
-                        onClick={() => removeFromCart(index)}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                    
-                    {/* Weight Selection in Cart */}
-                    <div className="cart-weight-selector">
-                      <label>Select Weight:</label>
-                      <div className="weight-buttons">
-                        {weightOptions.map(weightObj => (
-                          <button
-                            key={weightObj.label}
-                            className={`cart-weight-btn ${
-                              item.weight === weightObj.label ? 'active' : ''
-                            }`}
-                            onClick={() => updateWeight(index, weightObj.label)}
-                          >
-                            {weightObj.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Quantity Controls with +/- buttons */}
-                    <div className="quantity-controls">
-                      <span className="qty-label">Quantity:</span>
-                      <div className="qty-buttons">
-                        <button 
-                          className="qty-btn minus"
-                          onClick={() => updateQuantity(index, -1)}
-                        >
-                          −
-                        </button>
-                        <span className="qty-value">{item.quantity}</span>
-                        <button 
-                          className="qty-btn plus"
-                          onClick={() => updateQuantity(index, 1)}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {/* Price Display */}
-                    <div className="price-display">
-                      <div className="price-row">
-                        <span>Price per {item.weight}:</span>
-                        <span className="price-value">₹ {item.price.toFixed(2)}</span>
-                      </div>
-                      <div className="price-row total-row">
-                        <span>Total:</span>
-                        <span className="total-value">₹ {(item.price * item.quantity).toFixed(2)}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="cart-summary">
-                <div className="summary-row">
-                  <span>Total Amount:</span>
-                  <span className="total-amount">₹ {total.toFixed(2)}</span>
-                </div>
-                
-                <button 
-                  className="place-order-btn" 
-                  onClick={placeOrder}
-                >
-                  Place Order
-                </button>
-                
-                <button 
-                  className="clear-cart-btn"
-                  onClick={() => setCart([])}
-                >
-                  Clear Cart
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-
         {/* Orders History */}
         <DealerOrders dealerId={dealerId} refreshTrigger={ordersRefresh} />
       </div>
