@@ -202,14 +202,24 @@ function HelpCenter() {
             </h4>
             <p>{t("emailSupportDesc")}</p>
 
-            <a
+            {/* <a
               href="https://mail.google.com/mail/?view=cm&fs=1&to=essentialaquatechindia@gmail.com"
               target="_blank"
               rel="noopener noreferrer"
               className="support-email-btn"
             >
               <Mail size={18} /> {t("emailUs")}
-            </a>
+            </a> */}
+
+<a
+  href="mailto:essentialaquatechindia@gmail.com?subject=Support Request&body=Hello, I need help regarding..."
+  className="support-email-btn"
+>
+  <Mail size={18} /> {t("emailUs")}
+</a>
+
+
+
 
             <div className="support-info">
               <Clock size={16} /> {t("responseTime")}
