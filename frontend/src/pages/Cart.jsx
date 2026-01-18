@@ -787,7 +787,6 @@
 
 
 
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
@@ -806,9 +805,9 @@ const Cart = () => {
   const [previousOrders, setPreviousOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [ordersRefresh, setOrdersRefresh] = useState(0);
-  const [expandedOrder, setExpandedOrder] = useState(null); // Track expanded order
-  const [selectedOrder, setSelectedOrder] = useState(null); // For modal view
-  const [showOrderModal, setShowOrderModal] = useState(false); // Modal visibility
+  const [expandedOrder, setExpandedOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showOrderModal, setShowOrderModal] = useState(false);
   
   const weightOptions = [
     { label: "1kg", kg: 1 },
@@ -849,7 +848,6 @@ const Cart = () => {
     const updatedCart = [...cart];
     const item = updatedCart[index];
     
-    // Calculate new price based on base price
     const weightOption = weightOptions.find(w => w.label === newWeight);
     const newPrice = item.basePrice * (weightOption?.kg || 1);
     
@@ -882,7 +880,7 @@ const Cart = () => {
     return sum + (item.price * item.quantity);
   }, 0);
 
-  // Place order
+  // Place order - UPDATED TO INCLUDE WEIGHT
   const placeOrder = async () => {
     if (cart.length === 0) return alert("Cart empty");
 
@@ -892,7 +890,7 @@ const Cart = () => {
         name: item.name,
         price: item.price,
         qty: item.quantity,
-        weight: item.weight
+        weight: item.weight || "1kg" // ✅ Ensure weight is always sent
       }));
 
       await api.post("/api/orders", {
@@ -1074,7 +1072,7 @@ const Cart = () => {
             </>
           )}
           
-          {/* Previous Orders Section */}
+          {/* Previous Orders Section - UPDATED FOR WEIGHT DISPLAY */}
           <div className="previous-orders-section">
             <h3 className="previous-orders-title">📦 Previous Orders</h3>
             
@@ -1111,7 +1109,8 @@ const Cart = () => {
                           <div key={index} className="order-item-preview">
                             <span className="preview-name">{item.name}</span>
                             <span className="preview-details">
-                              <span className="preview-weight">Weight: {item.weight || "N/A"}</span>
+                              {/* ✅ Updated to show actual weight or default */}
+                              <span className="preview-weight">Weight: {item.weight || "1kg"}</span>
                               <span className="preview-qty">Qty: {item.qty}</span>
                             </span>
                             <span className="preview-price">₹{((item.price || 0) * (item.qty || 1)).toFixed(2)}</span>
@@ -1135,7 +1134,6 @@ const Cart = () => {
                         <div className="order-total">
                           Total: <span className="total-amount">₹{order.totalAmount?.toFixed(2)}</span>
                         </div>
-                        {/* Status removed as per requirement */}
                       </div>
                     </div>
                   );
@@ -1204,7 +1202,7 @@ const Cart = () => {
         )}
       </div>
 
-      {/* Order Details Modal */}
+      {/* Order Details Modal - UPDATED FOR WEIGHT DISPLAY */}
       {showOrderModal && selectedOrder && (
         <div className="order-modal-overlay">
           <div className="order-modal">
@@ -1245,7 +1243,8 @@ const Cart = () => {
                   {selectedOrder.items && selectedOrder.items.map((item, index) => (
                     <div key={index} className="table-row">
                       <div className="table-col name">{item.name}</div>
-                      <div className="table-col weight">{item.weight || "N/A"}</div>
+                      {/* ✅ Updated to show actual weight or default */}
+                      <div className="table-col weight">{item.weight || "1kg"}</div>
                       <div className="table-col qty">{item.qty}</div>
                       <div className="table-col price">₹{(item.price || 0).toFixed(2)}</div>
                       <div className="table-col total">
