@@ -1383,6 +1383,13 @@
 
 
 
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from "react";
 // import { useNavigate, Link } from "react-router-dom";
 // import { useTranslation } from "react-i18next";
@@ -1581,6 +1588,18 @@
 //     }
 //   };
 
+//   // Update search result when dealers change
+//   useEffect(() => {
+//     if (isSearching && searchQuery.trim() !== "") {
+//       const filtered = dealers.filter((d) =>
+//         d.name.toLowerCase().includes(searchQuery.toLowerCase())
+//       );
+//       setSearchResult(filtered);
+//     } else {
+//       setSearchResult(dealers);
+//     }
+//   }, [dealers, isSearching, searchQuery]);
+
 //   return (
 //     <div className="dealers-container">
 //       {/* ================= MOBILE NAVBAR ================= */}
@@ -1602,7 +1621,7 @@
 //           </button>
           
 //           <div className="mobile-logo">
-//             <h3>Dealers</h3>
+//             <h3>{t("dealers")}</h3>
 //           </div>
           
 //           <div className="mobile-profile">
@@ -1713,8 +1732,8 @@
 //         <div className="dealers-count-section">
 //           <h3 className="dealers-count">
 //             {isSearching 
-//               ? t("searchResultsCount", { count: searchResult.length }) 
-//               : t("dealersCount", { count: dealers.length })
+//               ? `${t("searchResults")}: ${searchResult.length}` 
+//               : `${t("totalDealers")}: ${dealers.length}`
 //             }
 //           </h3>
 //           <button 
@@ -1833,17 +1852,18 @@
 //             <button 
 //               onClick={handleSearch}
 //               className="search-button"
-//               aria-label="Search"
+//               aria-label={t("search")}
 //             >
 //               <Search size={20} />
+//               <span className="search-button-text">{t("search")}</span>
 //             </button>
 //             {isSearching && (
 //               <button 
 //                 onClick={handleClearSearch}
 //                 className="clear-search-button"
-//                 aria-label="Clear search"
+//                 aria-label={t("clearSearch")}
 //               >
-//                 {t("clear")}
+//                 {t("clearSearch")}
 //               </button>
 //             )}
 //           </div>
@@ -1911,6 +1931,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -1940,8 +1970,8 @@ function DealersPage() {
   const [image, setImage] = useState(null);
   const [shopAddress, setShopAddress] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState([]); // New state for search results
-  const [isSearching, setIsSearching] = useState(false); // New state to track if search is active
+  const [searchResult, setSearchResult] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   
   // Loading states
   const [loadingSave, setLoadingSave] = useState(false);
@@ -1985,7 +2015,7 @@ function DealersPage() {
   const changeLanguage = async (lang) => {
     setLoadingLanguage(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 300)); // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 300));
       i18n.changeLanguage(lang);
       localStorage.setItem("lang", lang);
       setSelectedLang(lang);
@@ -2016,7 +2046,7 @@ function DealersPage() {
         `/api/dealers?userId=${userId}`
       );
       setDealers(res.data);
-      setSearchResult(res.data); // Initialize search results with all dealers
+      setSearchResult(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -2063,7 +2093,7 @@ function DealersPage() {
   const handleCardClick = async (dealer) => {
     setLoadingCard(prev => ({ ...prev, [dealer._id]: true }));
     try {
-      await new Promise(resolve => setTimeout(resolve, 300)); // Simulate loading
+      await new Promise(resolve => setTimeout(resolve, 300));
       localStorage.setItem("selectedDealerName", dealer.name);
       localStorage.setItem("selectedDealerAddress", dealer.shopAddress);
       navigate(`/dealer-shop/${dealer._id}`);
@@ -2079,47 +2109,53 @@ function DealersPage() {
     return `${greeting}, ${username}`;
   };
 
+  // ================= SEARCH LOGIC (FIXED) =================
+
   // Handle search when button is clicked
   const handleSearch = () => {
-    if (searchQuery.trim() === "") {
-      // If search is empty, show all dealers
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    if (normalizedQuery === "") {
       setSearchResult(dealers);
       setIsSearching(false);
-    } else {
-      // Filter dealers based on search query
-      const filtered = dealers.filter((d) =>
-        d.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSearchResult(filtered);
-      setIsSearching(true);
+      return;
     }
+
+    const filtered = dealers.filter((d) =>
+      d.name?.toLowerCase().includes(normalizedQuery)
+    );
+
+    setSearchResult(filtered);
+    setIsSearching(true);
   };
 
-  // Clear search and show all dealers
+  // Clear search
   const handleClearSearch = () => {
     setSearchQuery("");
     setSearchResult(dealers);
     setIsSearching(false);
   };
 
-  // Handle Enter key press
+  // Handle Enter key
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  // Update search result when dealers change
+  // Update search result when dealers or query changes
   useEffect(() => {
-    if (isSearching && searchQuery.trim() !== "") {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    if (isSearching && normalizedQuery !== "") {
       const filtered = dealers.filter((d) =>
-        d.name.toLowerCase().includes(searchQuery.toLowerCase())
+        d.name?.toLowerCase().includes(normalizedQuery)
       );
       setSearchResult(filtered);
     } else {
       setSearchResult(dealers);
     }
-  }, [dealers, isSearching, searchQuery]);
+  }, [dealers, searchQuery, isSearching]);
 
   return (
     <div className="dealers-container">
