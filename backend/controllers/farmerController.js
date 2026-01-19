@@ -262,9 +262,6 @@
 
 
 
-
-
-
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 
@@ -578,16 +575,235 @@ export const updateFarmer = async (req, res) => {
   }
 };
 
+// ----------------------------------------------------
+// 7️⃣ ADD POND (WITH VALIDATION) - UPDATE IN ROUTES
+// ----------------------------------------------------
+export const addPondWithValidation = async (req, res) => {
+  try {
+    const { farmerId } = req.params;
+    const pondData = req.body;
 
+    // Find farmer
+    const farmer = await Farmer.findById(farmerId);
+    if (!farmer) {
+      return res.status(404).json({ error: "Farmer not found" });
+    }
 
+    // -----------------------------
+    // ✅ POND REQUIRED FIELDS VALIDATION
+    // -----------------------------
+    const pondRequiredFields = [
+      'pondArea', 'pondDepth', 'species', 'dateOfStocking',
+      'qtySeedInitially', 'currentQty', 'waterTemperature',
+      'pH', 'DO', 'sourceOfWater'
+    ];
+    
+    const missingPondFields = [];
+    pondRequiredFields.forEach(field => {
+      if (!pondData[field] || pondData[field].toString().trim() === '') {
+        missingPondFields.push(field);
+      }
+    });
+    
+    if (missingPondFields.length > 0) {
+      return res.status(400).json({
+        error: `Pond required fields are missing: ${missingPondFields.join(', ')}`
+      });
+    }
 
+    // -----------------------------
+    // ✅ VALIDATE NUMERIC FIELDS
+    // -----------------------------
+    if (pondData.pondArea && isNaN(parseFloat(pondData.pondArea))) {
+      return res.status(400).json({ error: "Pond area must be a number" });
+    }
+    
+    if (pondData.pondDepth && isNaN(parseFloat(pondData.pondDepth))) {
+      return res.status(400).json({ error: "Pond depth must be a number" });
+    }
+    
+    if (pondData.qtySeedInitially && isNaN(parseInt(pondData.qtySeedInitially))) {
+      return res.status(400).json({ error: "Initial seed quantity must be a number" });
+    }
+    
+    if (pondData.currentQty && isNaN(parseInt(pondData.currentQty))) {
+      return res.status(400).json({ error: "Current quantity must be a number" });
+    }
+    
+    if (pondData.waterTemperature && isNaN(parseFloat(pondData.waterTemperature))) {
+      return res.status(400).json({ error: "Water temperature must be a number" });
+    }
+    
+    if (pondData.pH && isNaN(parseFloat(pondData.pH))) {
+      return res.status(400).json({ error: "pH must be a number" });
+    }
+    
+    if (pondData.DO && isNaN(parseFloat(pondData.DO))) {
+      return res.status(400).json({ error: "DO must be a number" });
+    }
 
+    // Create pond number
+    const pondNumber = farmer.ponds.length > 0 
+      ? Math.max(...farmer.ponds.map(p => p.pondNumber)) + 1 
+      : 1;
+    
+    const pondId = `${farmer.farmerId}-P${String(pondNumber).padStart(3, '0')}`;
 
+    // Create new pond object
+    const newPond = {
+      pondId,
+      pondNumber,
+      ...pondData,
+      pondImage: req.files?.pondImage?.[0]?.filename || "",
+      pondFiles: req.files?.pondFiles?.map(f => f.filename) || [],
+      fishFiles: req.files?.fishFiles?.map(f => f.filename) || [],
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
 
+    // Add pond to farmer
+    farmer.ponds.push(newPond);
+    farmer.pondCount = farmer.ponds.length;
 
+    await farmer.save();
 
+    res.json({ success: true, farmer });
 
+  } catch (err) {
+    console.error("ADD POND ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
 
+// ----------------------------------------------------
+// 8️⃣ UPDATE POND (WITH VALIDATION) - UPDATE IN ROUTES
+// ----------------------------------------------------
+export const updatePondWithValidation = async (req, res) => {
+  try {
+    const { farmerId, pondId } = req.params;
+    const updateData = req.body;
 
+    // Find farmer
+    const farmer = await Farmer.findById(farmerId);
+    if (!farmer) {
+      return res.status(404).json({ error: "Farmer not found" });
+    }
 
+    // Find pond
+    const pondIndex = farmer.ponds.findIndex(p => p.pondId === pondId);
+    if (pondIndex === -1) {
+      return res.status(404).json({ error: "Pond not found" });
+    }
 
+    const oldPond = farmer.ponds[pondIndex].toObject();
+
+    // -----------------------------
+    // ✅ POND REQUIRED FIELDS VALIDATION (for update)
+    // -----------------------------
+    const pondRequiredFields = [
+      'pondArea', 'pondDepth', 'species', 'dateOfStocking',
+      'qtySeedInitially', 'currentQty', 'waterTemperature',
+      'pH', 'DO', 'sourceOfWater'
+    ];
+    
+    const missingPondFields = [];
+    pondRequiredFields.forEach(field => {
+      if (updateData[field] !== undefined && 
+          (!updateData[field] || updateData[field].toString().trim() === '')) {
+        missingPondFields.push(field);
+      }
+    });
+    
+    if (missingPondFields.length > 0) {
+      return res.status(400).json({
+        error: `Pond required fields cannot be empty: ${missingPondFields.join(', ')}`
+      });
+    }
+
+    // -----------------------------
+    // ✅ VALIDATE NUMERIC FIELDS
+    // -----------------------------
+    if (updateData.pondArea && isNaN(parseFloat(updateData.pondArea))) {
+      return res.status(400).json({ error: "Pond area must be a number" });
+    }
+    
+    if (updateData.pondDepth && isNaN(parseFloat(updateData.pondDepth))) {
+      return res.status(400).json({ error: "Pond depth must be a number" });
+    }
+    
+    if (updateData.qtySeedInitially && isNaN(parseInt(updateData.qtySeedInitially))) {
+      return res.status(400).json({ error: "Initial seed quantity must be a number" });
+    }
+    
+    if (updateData.currentQty && isNaN(parseInt(updateData.currentQty))) {
+      return res.status(400).json({ error: "Current quantity must be a number" });
+    }
+    
+    if (updateData.waterTemperature && isNaN(parseFloat(updateData.waterTemperature))) {
+      return res.status(400).json({ error: "Water temperature must be a number" });
+    }
+    
+    if (updateData.pH && isNaN(parseFloat(updateData.pH))) {
+      return res.status(400).json({ error: "pH must be a number" });
+    }
+    
+    if (updateData.DO && isNaN(parseFloat(updateData.DO))) {
+      return res.status(400).json({ error: "DO must be a number" });
+    }
+
+    // Convert dates
+    if (updateData.dateOfStocking) {
+      updateData.dateOfStocking = new Date(updateData.dateOfStocking);
+    }
+    if (updateData.farmObservedDate) {
+      updateData.farmObservedDate = new Date(updateData.farmObservedDate);
+    }
+
+    // Track changes for history
+    const changes = {};
+    Object.keys(updateData).forEach(key => {
+      if (oldPond[key] != updateData[key]) {
+        changes[`pond.${key}`] = {
+          old: oldPond[key] || "N/A",
+          new: updateData[key]
+        };
+      }
+    });
+
+    // Add to update history if changes exist
+    if (Object.keys(changes).length > 0) {
+      farmer.updates.push({
+        snapshot: {
+          pondId: oldPond.pondId,
+          pondNumber: oldPond.pondNumber
+        },
+        changes,
+        createdAt: new Date()
+      });
+    }
+
+    // Update pond
+    farmer.ponds[pondIndex] = {
+      ...oldPond,
+      pondId: oldPond.pondId, // Never change
+      pondNumber: oldPond.pondNumber, // Never change
+      ...updateData,
+      pondImage: req.files?.pondImage?.[0]?.filename || oldPond.pondImage,
+      pondFiles: req.files?.pondFiles 
+        ? req.files.pondFiles.map(f => f.filename) 
+        : oldPond.pondFiles,
+      fishFiles: req.files?.fishFiles 
+        ? req.files.fishFiles.map(f => f.filename) 
+        : oldPond.fishFiles,
+      updatedAt: new Date()
+    };
+
+    await farmer.save();
+
+    res.json({ success: true, farmer });
+
+  } catch (err) {
+    console.error("UPDATE POND ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
