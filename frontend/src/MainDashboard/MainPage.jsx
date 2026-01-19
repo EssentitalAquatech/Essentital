@@ -6463,8 +6463,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from "react";
 import api, { getImageUrl } from "../utils/api";
 import { Link } from "react-router-dom";
@@ -6688,11 +6686,22 @@ function MainPage() {
     if (!newFarmer.familyOccupation.trim()) errors.familyOccupation = "Family occupation is required";
     if (!newFarmer.village.trim()) errors.village = "Village is required";
     
+    // Validate phone number format
+    if (newFarmer.contact && !/^\d{10}$/.test(newFarmer.contact.trim())) {
+      errors.contact = "Contact number must be 10 digits";
+    }
+    
+    // Validate Aadhar format
+    if (newFarmer.adhar && !/^\d{12}$/.test(newFarmer.adhar.trim())) {
+      errors.adhar = "Aadhar number must be 12 digits";
+    }
+    
     // Photo validation only for new farmer
     if (!editingFarmerId && !newFarmer.photo && !newFarmer.photoExisting) {
       errors.photo = "Photo is required";
     }
     
+    console.log("Farmer Validation Errors:", errors);
     setFarmerErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -6762,22 +6771,26 @@ function MainPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // ✅ Add Farmer - WITHOUT ALERT POPUP
+  // ✅ Add Farmer - WITH CORRECT API ENDPOINT
   const addFarmer = async () => {
     if (!validateFarmerForm()) {
-      // No alert, just return - errors are shown in form
       return;
     }
     
     const formData = new FormData();
     
-    for (let key in newFarmer) {
-      if (key === "photo" || key === "photoExisting") continue;
-      formData.append(key, newFarmer[key] ?? "");
-    }
-    
+    // Add all form fields
+    formData.append("name", newFarmer.name || "");
+    formData.append("contact", newFarmer.contact || "");
+    formData.append("age", newFarmer.age || "");
+    formData.append("gender", newFarmer.gender || "");
+    formData.append("village", newFarmer.village || "");
+    formData.append("adhar", newFarmer.adhar || "");
+    formData.append("familyMembers", newFarmer.familyMembers || "");
+    formData.append("familyOccupation", newFarmer.familyOccupation || "");
     formData.append("userId", userId);
     
+    // Add photo if exists
     if (newFarmer.photo instanceof File) {
       formData.append("photo", newFarmer.photo);
     }
@@ -6785,30 +6798,49 @@ function MainPage() {
     try {
       setLoading(prev => ({ ...prev, addFarmer: true }));
       const res = await api.post(`/api/farmers/add`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          "Accept": "application/json"
+        }
       });
       
-      // ✅ FIX: Ensure new farmer is added to array safely
-      setFarmers(prev => {
-        const newFarmerData = res.data.data || res.data;
-        return Array.isArray(prev) ? [...prev, newFarmerData] : [newFarmerData];
-      });
+      console.log("Add Farmer Response:", res.data);
       
-      setShowForm(false);
-      setNewFarmer(emptyFarmer);
-      setFarmerErrors({});
+      // ✅ CORRECT: Check response structure
+      if (res.data.success) {
+        const newFarmerData = res.data.data;
+        setFarmers(prev => {
+          if (!Array.isArray(prev)) return [newFarmerData];
+          return [...prev, newFarmerData];
+        });
+        
+        setShowForm(false);
+        setNewFarmer(emptyFarmer);
+        setFarmerErrors({});
+      } else {
+        console.error("Add Farmer Failed:", res.data.error);
+      }
     } catch (err) {
       console.error("Add Farmer Error:", err);
-      // Show error in console only, no alert
+      if (err.response) {
+        console.error("Error Response:", err.response.data);
+        // Show specific error messages
+        if (err.response.data && err.response.data.details) {
+          alert(`Validation Error: ${err.response.data.details.join(", ")}`);
+        } else {
+          alert(err.response.data.error || "Failed to add farmer");
+        }
+      } else {
+        alert("Network error. Please check your connection.");
+      }
     } finally {
       setLoading(prev => ({ ...prev, addFarmer: false }));
     }
   };
 
-  // ✅ Update Farmer - WITHOUT ALERT POPUP
+  // ✅ Update Farmer - WITH CORRECT API ENDPOINT
   const updateFarmer = async () => {
     if (!validateFarmerForm()) {
-      // No alert, just return - errors are shown in form
       return;
     }
     
@@ -6816,13 +6848,18 @@ function MainPage() {
     
     const formData = new FormData();
     
-    for (let key in newFarmer) {
-      if (key === "photo" || key === "photoExisting") continue;
-      formData.append(key, newFarmer[key] ?? "");
-    }
-    
+    // Add all form fields
+    formData.append("name", newFarmer.name || "");
+    formData.append("contact", newFarmer.contact || "");
+    formData.append("age", newFarmer.age || "");
+    formData.append("gender", newFarmer.gender || "");
+    formData.append("village", newFarmer.village || "");
+    formData.append("adhar", newFarmer.adhar || "");
+    formData.append("familyMembers", newFarmer.familyMembers || "");
+    formData.append("familyOccupation", newFarmer.familyOccupation || "");
     formData.append("userId", userId);
     
+    // Add photo if exists
     if (newFarmer.photo instanceof File) {
       formData.append("photo", newFarmer.photo);
     }
@@ -6830,149 +6867,267 @@ function MainPage() {
     try {
       setLoading(prev => ({ ...prev, updateFarmer: true }));
       const res = await api.put(`/api/farmers/update/${editingFarmerId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          "Accept": "application/json"
+        }
       });
       
-      // ✅ FIX: Update farmer safely
-      setFarmers(prev => {
-        if (!Array.isArray(prev)) return [res.data.data || res.data];
+      console.log("Update Farmer Response:", res.data);
+      
+      if (res.data.success) {
+        // ✅ FIX: Update farmer safely
+        setFarmers(prev => {
+          if (!Array.isArray(prev)) return [res.data.data || res.data];
+          
+          return prev.map(f =>
+            f._id === editingFarmerId
+              ? { ...(res.data.data || res.data), photo: (res.data.data || res.data).photo || f.photo }
+              : f
+          );
+        });
         
-        return prev.map(f =>
-          f._id === editingFarmerId
-            ? { ...(res.data.data || res.data), photo: (res.data.data || res.data).photo || f.photo }
-            : f
-        );
-      });
-      
-      setShowForm(false);
-      setEditingFarmerId(null);
-      setNewFarmer(emptyFarmer);
-      setIsUpdateMode(false);
-      setFarmerErrors({});
+        setShowForm(false);
+        setEditingFarmerId(null);
+        setNewFarmer(emptyFarmer);
+        setIsUpdateMode(false);
+        setFarmerErrors({});
+      } else {
+        console.error("Update Farmer Failed:", res.data.error);
+      }
     } catch (err) {
       console.error("Update Farmer Error:", err);
-      // Show error in console only, no alert
+      if (err.response) {
+        console.error("Error Response:", err.response.data);
+        if (err.response.data && err.response.data.details) {
+          alert(`Validation Error: ${err.response.data.details.join(", ")}`);
+        } else {
+          alert(err.response.data.error || "Failed to update farmer");
+        }
+      } else {
+        alert("Network error. Please check your connection.");
+      }
     } finally {
       setLoading(prev => ({ ...prev, updateFarmer: false }));
     }
   };
 
-  // ✅ Add Pond - WITHOUT ALERT POPUP
+  // ✅ Add Pond - WITH CORRECT API ENDPOINT
   const addPond = async () => {
     if (!validatePondForm()) {
-      // No alert, just return - errors are shown in form
       return;
     }
     
     if (!currentFarmerId) return;
     
     const formData = new FormData();
+    
+    // Convert symptoms array to string
     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
       ? newPond.symptoms.join(", ")
       : (newPond.symptomsObserved || "");
-
-    const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
-    for (let key in newPond) {
-      if (skipFiles.includes(key)) continue;
-      formData.append(key, newPond[key] ?? "");
+    
+    // Add all pond fields
+    const fields = [
+      "pondArea", "pondAreaUnit", "pondDepth", 
+      "overflow", "receivesSunlight", "treesOnBanks", 
+      "neighbourhood", "wastewaterEnters", "species", 
+      "dateOfStocking", "qtySeedInitially", "currentQty", 
+      "avgSize", "feedType", "feedOther", "feedFreq", 
+      "feedQtyPerDay", "feedTime", "recentFeedChanges", 
+      "reducedAppetite", "waterTemperature", "pH", 
+      "DO", "ammoniaLevel", "phytoplanktonLevel", 
+      "waterHardness", "algaeBloom", "pondWaterColor", 
+      "sourceOfWater", "diseaseSymptoms", "fishDeaths", 
+      "symptomsAffect", "farmObservedDate", "farmObservedTime", 
+      "lastSpecies", "lastHarvestComplete", "recentRainFlood", 
+      "pesticideRunoff", "constructionNear", "suddenTempChange", 
+      "notes", "userId"
+    ];
+    
+    fields.forEach(field => {
+      if (field === "userId") {
+        formData.append(field, userId);
+      } else if (field === "symptomsObserved") {
+        formData.append("symptomsObserved", symptomsStr);
+      } else {
+        formData.append(field, newPond[field] || "");
+      }
+    });
+    
+    // Add files
+    if (newPond.pondImage instanceof File) {
+      formData.append("pondImage", newPond.pondImage);
     }
-    formData.set("symptomsObserved", symptomsStr);
-
-    if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+    
     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
-      newPond.pondFiles.forEach((f) => {
-        if (f instanceof File) formData.append("pondFiles", f);
+      newPond.pondFiles.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append("pondFiles", file);
+        }
       });
     }
+    
     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
-      newPond.fishFiles.forEach((f) => {
-        if (f instanceof File) formData.append("fishFiles", f);
+      newPond.fishFiles.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append("fishFiles", file);
+        }
       });
     }
 
     try {
       setLoading(prev => ({ ...prev, addPond: true }));
+      
+      // ✅ CORRECT: Use the right endpoint with :id parameter
       const res = await api.post(`/api/farmers/add-pond/${currentFarmerId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          "Accept": "application/json"
+        }
       });
       
-      // ✅ FIX: Update farmer with pond safely
-      setFarmers(prev => {
-        if (!Array.isArray(prev)) return [res.data.farmer || res.data.data?.farmer];
+      console.log("Add Pond Response:", res.data);
+      
+      if (res.data.success) {
+        // Update farmers list
+        setFarmers(prev => {
+          if (!Array.isArray(prev)) return [];
+          return prev.map(f => 
+            f._id === currentFarmerId ? (res.data.farmer || res.data.data?.farmer || f) : f
+          );
+        });
         
-        return prev.map(f => 
-          f._id === currentFarmerId ? (res.data.farmer || res.data.data?.farmer || f) : f
-        );
-      });
-      
-      setShowPondForm(false);
-      setNewPond(emptyPond);
-      setCurrentFarmerId(null);
-      setPondErrors({});
+        setShowPondForm(false);
+        setNewPond(emptyPond);
+        setCurrentFarmerId(null);
+        setPondErrors({});
+      } else {
+        console.error("Add Pond Failed:", res.data.error);
+      }
     } catch (err) {
       console.error("Add Pond Error:", err);
-      // Show error in console only, no alert
+      if (err.response) {
+        console.error("Error Response:", err.response.data);
+        if (err.response.data && err.response.data.details) {
+          alert(`Validation Error: ${err.response.data.details.join(", ")}`);
+        } else {
+          alert(err.response.data.error || "Failed to add pond");
+        }
+      } else {
+        alert("Network error. Please check your connection.");
+      }
     } finally {
       setLoading(prev => ({ ...prev, addPond: false }));
     }
   };
 
-  // ✅ Update Pond - WITHOUT ALERT POPUP
+  // ✅ Update Pond - WITH CORRECT API ENDPOINT
   const updatePond = async () => {
     if (!validatePondForm()) {
-      // No alert, just return - errors are shown in form
       return;
     }
     
     if (!currentFarmerId || !editingPondId) return;
     
     const formData = new FormData();
+    
+    // Convert symptoms array to string
     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
       ? newPond.symptoms.join(", ")
       : (newPond.symptomsObserved || "");
-
-    const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
-    for (let key in newPond) {
-      if (skipFiles.includes(key)) continue;
-      formData.append(key, newPond[key] ?? "");
+    
+    // Add all pond fields
+    const fields = [
+      "pondArea", "pondAreaUnit", "pondDepth", 
+      "overflow", "receivesSunlight", "treesOnBanks", 
+      "neighbourhood", "wastewaterEnters", "species", 
+      "dateOfStocking", "qtySeedInitially", "currentQty", 
+      "avgSize", "feedType", "feedOther", "feedFreq", 
+      "feedQtyPerDay", "feedTime", "recentFeedChanges", 
+      "reducedAppetite", "waterTemperature", "pH", 
+      "DO", "ammoniaLevel", "phytoplanktonLevel", 
+      "waterHardness", "algaeBloom", "pondWaterColor", 
+      "sourceOfWater", "diseaseSymptoms", "fishDeaths", 
+      "symptomsAffect", "farmObservedDate", "farmObservedTime", 
+      "lastSpecies", "lastHarvestComplete", "recentRainFlood", 
+      "pesticideRunoff", "constructionNear", "suddenTempChange", 
+      "notes", "userId"
+    ];
+    
+    fields.forEach(field => {
+      if (field === "userId") {
+        formData.append(field, userId);
+      } else if (field === "symptomsObserved") {
+        formData.append("symptomsObserved", symptomsStr);
+      } else {
+        formData.append(field, newPond[field] || "");
+      }
+    });
+    
+    // Add files
+    if (newPond.pondImage instanceof File) {
+      formData.append("pondImage", newPond.pondImage);
     }
-    formData.set("symptomsObserved", symptomsStr);
-
-    if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+    
     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
-      newPond.pondFiles.forEach((f) => {
-        if (f instanceof File) formData.append("pondFiles", f);
+      newPond.pondFiles.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append("pondFiles", file);
+        }
       });
     }
+    
     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
-      newPond.fishFiles.forEach((f) => {
-        if (f instanceof File) formData.append("fishFiles", f);
+      newPond.fishFiles.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append("fishFiles", file);
+        }
       });
     }
 
     try {
       setLoading(prev => ({ ...prev, updatePond: true }));
+      
+      // ✅ CORRECT: Use the right endpoint
       const res = await api.put(`/api/farmers/update-pond/${currentFarmerId}/${editingPondId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          "Accept": "application/json"
+        }
       });
       
-      // ✅ FIX: Update farmer with updated pond safely
-      setFarmers(prev => {
-        if (!Array.isArray(prev)) return [res.data.farmer || res.data.data?.farmer];
+      console.log("Update Pond Response:", res.data);
+      
+      if (res.data.success) {
+        // Update farmers list
+        setFarmers(prev => {
+          if (!Array.isArray(prev)) return [];
+          return prev.map(f => 
+            f._id === currentFarmerId ? (res.data.farmer || res.data.data?.farmer || f) : f
+          );
+        });
         
-        return prev.map(f => 
-          f._id === currentFarmerId ? (res.data.farmer || res.data.data?.farmer || f) : f
-        );
-      });
-      
-      setShowPondForm(false);
-      setNewPond(emptyPond);
-      setCurrentFarmerId(null);
-      setEditingPondId(null);
-      setPondErrors({});
+        setShowPondForm(false);
+        setNewPond(emptyPond);
+        setCurrentFarmerId(null);
+        setEditingPondId(null);
+        setPondErrors({});
+      } else {
+        console.error("Update Pond Failed:", res.data.error);
+      }
     } catch (err) {
       console.error("Update Pond Error:", err);
-      // Show error in console only, no alert
+      if (err.response) {
+        console.error("Error Response:", err.response.data);
+        if (err.response.data && err.response.data.details) {
+          alert(`Validation Error: ${err.response.data.details.join(", ")}`);
+        } else {
+          alert(err.response.data.error || "Failed to update pond");
+        }
+      } else {
+        alert("Network error. Please check your connection.");
+      }
     } finally {
       setLoading(prev => ({ ...prev, updatePond: false }));
     }
@@ -7108,12 +7263,12 @@ function MainPage() {
     }
   };
 
-  // ✅ Error message component
+  // ✅ Error message component को update करें
   const ErrorMessage = ({ message }) => {
     if (!message) return null;
     return (
-      <div className="error-message">
-        <AlertCircle size={12} />
+      <div className="error-message text-danger mt-1" style={{ fontSize: '0.8rem' }}>
+        <AlertCircle size={12} className="me-1" />
         <span>{message}</span>
       </div>
     );
@@ -8380,9 +8535,6 @@ function MainPage() {
 }
 
 export default MainPage;
-
-
-
 
 
 
