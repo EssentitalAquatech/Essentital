@@ -6552,7 +6552,7 @@ function MainPage() {
   const [farmerErrors, setFarmerErrors] = useState({});
   const [pondErrors, setPondErrors] = useState({});
 
-  // ✅ Farmer form empty state - ALL FIELDS REQUIRED
+  // ✅ Farmer form empty state
   const emptyFarmer = {
     name: "", 
     contact: "", 
@@ -6567,9 +6567,8 @@ function MainPage() {
     photoExisting: ""
   };
 
-  // ✅ Pond form empty state - ALL FIELDS REQUIRED
+  // ✅ Pond form empty state
   const emptyPond = {
-    // Pond Details
     pondArea: "", 
     pondAreaUnit: "acre", 
     pondDepth: "", 
@@ -6579,16 +6578,13 @@ function MainPage() {
     treesOnBanks: "",
     neighbourhood: "", 
     wastewaterEnters: "",
-    // Species & files
     species: "",
     pondFiles: [],
     fishFiles: [],
-    // Stocking & quantities
     dateOfStocking: "", 
     qtySeedInitially: "", 
     currentQty: "", 
     avgSize: ">200gram",
-    // Feed
     feedType: "", 
     feedOther: "", 
     feedFreq: "", 
@@ -6596,7 +6592,6 @@ function MainPage() {
     feedTime: "",
     recentFeedChanges: "", 
     reducedAppetite: "",
-    // Water quality
     waterTemperature: "", 
     pH: "", 
     DO: "", 
@@ -6606,16 +6601,13 @@ function MainPage() {
     algaeBloom: "", 
     pondWaterColor: "", 
     sourceOfWater: "",
-    // Disease / symptoms
     diseaseSymptoms: "", 
     symptomsObserved: "", 
     symptoms: [],
     symptomsAffect: "",
     fishDeaths: "",
-    // Observation
     farmObservedDate: "", 
     farmObservedTime: "",
-    // misc
     notes: "",
     lastSpecies: "", 
     lastHarvestComplete: "", 
@@ -6672,13 +6664,21 @@ function MainPage() {
     localStorage.setItem("lang", lang);
   };
 
+  // ✅ FIXED: Safe fetch farmers with error handling
   const fetchFarmers = async () => {
     try {
       setLoading(prev => ({ ...prev, fetchFarmers: true }));
       const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
-      setFarmers(res.data || []);
+      
+      // ✅ FIX: Ensure data is always an array
+      const farmersData = res.data && Array.isArray(res.data.data) 
+        ? res.data.data 
+        : (Array.isArray(res.data) ? res.data : []);
+      
+      setFarmers(farmersData || []);
     } catch (err) {
       console.log("Fetch Farmers Error:", err);
+      setFarmers([]); // ✅ Set empty array on error
     } finally {
       setLoading(prev => ({ ...prev, fetchFarmers: false }));
     }
@@ -6698,7 +6698,6 @@ function MainPage() {
     if (!newFarmer.village.trim()) errors.village = "Village is required";
     if (!newFarmer.pondCount) errors.pondCount = "Pond count is required";
     
-    // ✅ Only require photo when adding new farmer
     if (!editingFarmerId && !newFarmer.photo && !newFarmer.photoExisting) {
       errors.photo = "Photo is required";
     }
@@ -6711,7 +6710,6 @@ function MainPage() {
   const validatePondForm = () => {
     const errors = {};
     
-    // Pond Details
     if (!newPond.pondArea.trim()) errors.pondArea = "Pond area is required";
     if (!newPond.pondDepth.trim()) errors.pondDepth = "Pond depth is required";
     if (!newPond.overflow) errors.overflow = "Overflow info is required";
@@ -6720,21 +6718,18 @@ function MainPage() {
     if (!newPond.neighbourhood) errors.neighbourhood = "Neighbourhood is required";
     if (!newPond.wastewaterEnters) errors.wastewaterEnters = "Wastewater info is required";
     
-    // Species & Stocking
     if (!newPond.species.trim()) errors.species = "Species is required";
     if (!newPond.dateOfStocking) errors.dateOfStocking = "Date of stocking is required";
     if (!newPond.qtySeedInitially.trim()) errors.qtySeedInitially = "Initial quantity is required";
     if (!newPond.currentQty.trim()) errors.currentQty = "Current quantity is required";
     if (!newPond.avgSize) errors.avgSize = "Average size is required";
     
-    // Feed Details
     if (!newPond.feedType) errors.feedType = "Feed type is required";
     if (!newPond.feedFreq) errors.feedFreq = "Feed frequency is required";
     if (!newPond.feedQtyPerDay.trim()) errors.feedQtyPerDay = "Feed quantity is required";
     if (!newPond.feedTime) errors.feedTime = "Feed time is required";
     if (!newPond.reducedAppetite) errors.reducedAppetite = "Appetite info is required";
     
-    // Water Quality
     if (!newPond.waterTemperature.trim()) errors.waterTemperature = "Water temperature is required";
     if (!newPond.pH.trim()) errors.pH = "pH is required";
     if (!newPond.DO.trim()) errors.DO = "DO is required";
@@ -6745,7 +6740,6 @@ function MainPage() {
     if (!newPond.pondWaterColor) errors.pondWaterColor = "Water color is required";
     if (!newPond.sourceOfWater) errors.sourceOfWater = "Water source is required";
     
-    // Disease & Symptoms
     if (!newPond.diseaseSymptoms) errors.diseaseSymptoms = "Disease symptoms info is required";
     if (newPond.diseaseSymptoms === "Yes" && !newPond.symptomsObserved.trim()) {
       errors.symptomsObserved = "Symptoms details are required";
@@ -6753,7 +6747,6 @@ function MainPage() {
     if (!newPond.symptomsAffect) errors.symptomsAffect = "Symptoms affect info is required";
     if (!newPond.fishDeaths.trim()) errors.fishDeaths = "Fish deaths count is required";
     
-    // Observation & Misc
     if (!newPond.farmObservedDate) errors.farmObservedDate = "Observation date is required";
     if (!newPond.farmObservedTime) errors.farmObservedTime = "Observation time is required";
     if (!newPond.lastSpecies.trim()) errors.lastSpecies = "Last species is required";
@@ -6763,7 +6756,6 @@ function MainPage() {
     if (!newPond.constructionNear) errors.constructionNear = "Construction info is required";
     if (!newPond.suddenTempChange) errors.suddenTempChange = "Temperature change info is required";
     
-    // ✅ Only require pond image when adding new pond
     if (!editingPondId && !newPond.pondImage && !newPond.pondImageExisting) {
       errors.pondImage = "Pond image is required";
     }
@@ -6776,11 +6768,6 @@ function MainPage() {
   const addFarmer = async () => {
     if (!validateFarmerForm()) {
       alert("Please fill all required fields");
-      return;
-    }
-    
-    if (!newFarmer.name || !newFarmer.contact) {
-      alert("Name and contact are required");
       return;
     }
     
@@ -6802,7 +6789,13 @@ function MainPage() {
       const res = await api.post(`/api/farmers/add`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
-      setFarmers([...farmers, res.data]);
+      
+      // ✅ FIX: Ensure new farmer is added to array safely
+      setFarmers(prev => {
+        const newFarmerData = res.data.data || res.data;
+        return Array.isArray(prev) ? [...prev, newFarmerData] : [newFarmerData];
+      });
+      
       setShowForm(false);
       setNewFarmer(emptyFarmer);
       setFarmerErrors({});
@@ -6842,11 +6835,16 @@ function MainPage() {
         headers: { "Content-Type": "multipart/form-data" }
       });
       
-      setFarmers(farmers.map(f =>
-        f._id === res.data._id
-          ? { ...res.data, photo: res.data.photo || f.photo }
-          : f
-      ));
+      // ✅ FIX: Update farmer safely
+      setFarmers(prev => {
+        if (!Array.isArray(prev)) return [res.data.data || res.data];
+        
+        return prev.map(f =>
+          f._id === editingFarmerId
+            ? { ...(res.data.data || res.data), photo: (res.data.data || res.data).photo || f.photo }
+            : f
+        );
+      });
       
       setShowForm(false);
       setEditingFarmerId(null);
@@ -6900,9 +6898,15 @@ function MainPage() {
         headers: { "Content-Type": "multipart/form-data" }
       });
       
-      setFarmers(farmers.map(f => 
-        f._id === currentFarmerId ? res.data.farmer : f
-      ));
+      // ✅ FIX: Update farmer with pond safely
+      setFarmers(prev => {
+        if (!Array.isArray(prev)) return [res.data.farmer || res.data.data?.farmer];
+        
+        return prev.map(f => 
+          f._id === currentFarmerId ? (res.data.farmer || res.data.data?.farmer || f) : f
+        );
+      });
+      
       setShowPondForm(false);
       setNewPond(emptyPond);
       setCurrentFarmerId(null);
@@ -6954,9 +6958,15 @@ function MainPage() {
         headers: { "Content-Type": "multipart/form-data" }
       });
       
-      setFarmers(farmers.map(f => 
-        f._id === currentFarmerId ? res.data.farmer : f
-      ));
+      // ✅ FIX: Update farmer with updated pond safely
+      setFarmers(prev => {
+        if (!Array.isArray(prev)) return [res.data.farmer || res.data.data?.farmer];
+        
+        return prev.map(f => 
+          f._id === currentFarmerId ? (res.data.farmer || res.data.data?.farmer || f) : f
+        );
+      });
+      
       setShowPondForm(false);
       setNewPond(emptyPond);
       setCurrentFarmerId(null);
@@ -7010,7 +7020,6 @@ function MainPage() {
       }
     });
 
-    // Handle symptoms
     if (typeof pond.symptomsObserved === "string" && pond.symptomsObserved.trim() !== "") {
       pre.symptoms = pond.symptomsObserved.split(",").map(s => s.trim()).filter(Boolean);
       pre.symptomsObserved = pond.symptomsObserved;
@@ -7020,8 +7029,8 @@ function MainPage() {
     pre.fishFiles = [];
     pre.pondImage = null;
     
-    pre.pondFilesExisting = pond.pondFiles || [];
-    pre.fishFilesExisting = pond.fishFiles || [];
+    pre.pondFilesExisting = Array.isArray(pond.pondFiles) ? pond.pondFiles : [];
+    pre.fishFilesExisting = Array.isArray(pond.fishFiles) ? pond.fishFiles : [];
     pre.pondImageExisting = pond.pondImage || "";
 
     setNewPond(pre);
@@ -7051,13 +7060,13 @@ function MainPage() {
   }, [username]);
 
   const renderExistingFiles = (list) => {
-    if (!list || list.length === 0) return null;
+    if (!list || !Array.isArray(list) || list.length === 0) return null;
     return (
       <div style={{ marginTop: 6 }}>
         {list.map((fn, i) => (
           <div key={i}>
             <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
-              {fn.split('/').pop()}
+              {typeof fn === 'string' ? fn.split('/').pop() : `File ${i + 1}`}
             </a>
           </div>
         ))}
@@ -7065,8 +7074,11 @@ function MainPage() {
     );
   };
 
-  const totalFarmers = farmers.length;
-  const totalPonds = farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0);
+  // ✅ FIXED: Safe total calculation
+  const totalFarmers = Array.isArray(farmers) ? farmers.length : 0;
+  const totalPonds = Array.isArray(farmers) 
+    ? farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0)
+    : 0;
 
   const [searchId, setSearchId] = useState("");
 
@@ -7078,8 +7090,13 @@ function MainPage() {
 
     setLoading(prev => ({ ...prev, search: true }));
     try {
+      if (!Array.isArray(farmers)) {
+        await fetchFarmers();
+        return;
+      }
+
       const filtered = farmers.filter(f =>
-        f.farmerId.toLowerCase().includes(searchId.toLowerCase())
+        f.farmerId && f.farmerId.toLowerCase().includes(searchId.toLowerCase())
       );
 
       if (filtered.length > 0) {
@@ -7288,6 +7305,24 @@ function MainPage() {
               <ButtonLoader />
               <p>Loading farmers...</p>
             </div>
+          ) : !Array.isArray(farmers) || farmers.length === 0 ? (
+            <div className="text-center py-5">
+              <div className="empty-cart-icon">👨‍🌾</div>
+              <h4>No farmers found</h4>
+              <p>Add your first farmer to get started</p>
+              <button 
+                className="btn btn-primary mt-3"
+                onClick={() => { 
+                  setShowForm(true); 
+                  setEditingFarmerId(null); 
+                  setNewFarmer(emptyFarmer);
+                  setIsUpdateMode(false);
+                  setFarmerErrors({});
+                }}
+              >
+                + Add First Farmer
+              </button>
+            </div>
           ) : (
             farmers.map(f => (
               <div key={f._id} className="farmer-box">
@@ -7303,17 +7338,17 @@ function MainPage() {
                 />
 
                 <div style={{ flex: 1 }}>
-                  <p><b>{t('farmerName')}:</b> {f.name}</p>
-                  <p><b>{t('farmerId')}:</b> {f.farmerId}</p>
-                  <p><b>{t('contactNumber')}:</b> {f.contact}</p>
-                  <p><b>{t('pondCount')}:</b> {f.pondCount}</p>
+                  <p><b>{t('farmerName')}:</b> {f.name || "N/A"}</p>
+                  <p><b>{t('farmerId')}:</b> {f.farmerId || "N/A"}</p>
+                  <p><b>{t('contactNumber')}:</b> {f.contact || "N/A"}</p>
+                  <p><b>{t('pondCount')}:</b> {f.pondCount || 0}</p>
                   <p className="updated-text" style={{ fontSize: "0.85rem" }}>
                     <b>{t('updated')}:</b> {timeAgo(f.updatedAt || f.createdAt, t)}
                   </p>
                 </div>
 
                 {/* Pond List with Update Buttons */}
-                {f.ponds && f.ponds.length > 0 && (
+                {Array.isArray(f.ponds) && f.ponds.length > 0 && (
                   <div style={{ marginTop: 10, width: "100%" }}>
                     <h6>Pond List</h6>
                     <button 
@@ -7338,9 +7373,9 @@ function MainPage() {
                         </thead>
                         <tbody>
                           {f.ponds.map((pond, index) => (
-                            <tr key={pond.pondId}>
+                            <tr key={pond.pondId || index}>
                               <td>{pond.pondNumber || index + 1}</td>
-                              <td>{pond.pondId}</td>
+                              <td>{pond.pondId || "N/A"}</td>
                               <td>{pond.species || "Not specified"}</td>
                               <td>{timeAgo(pond.updatedAt || pond.createdAt, t)}</td>
                               <td>
@@ -7361,14 +7396,14 @@ function MainPage() {
                     {/* Mobile Card View */}
                     <div className="mobile-pond-view">
                       {f.ponds.map((pond, index) => (
-                        <div key={pond.pondId} className="mobile-pond-card">
+                        <div key={pond.pondId || index} className="mobile-pond-card">
                           <div className="mobile-pond-row">
                             <span className="mobile-pond-label">Pond No.</span>
                             <span className="mobile-pond-value">{pond.pondNumber || index + 1}</span>
                           </div>
                           <div className="mobile-pond-row">
                             <span className="mobile-pond-label">Pond ID</span>
-                            <span className="mobile-pond-value">{pond.pondId}</span>
+                            <span className="mobile-pond-value">{pond.pondId || "N/A"}</span>
                           </div>
                           <div className="mobile-pond-row">
                             <span className="mobile-pond-label">Species</span>
@@ -7398,7 +7433,7 @@ function MainPage() {
                 )}
 
                 {/* If no ponds, show Add Pond button */}
-                {(!f.ponds || f.ponds.length === 0) && (
+                {(!Array.isArray(f.ponds) || f.ponds.length === 0) && (
                   <div style={{ marginTop: 10 }}>
                     <button 
                       className="btn btn-sm btn-success"
