@@ -279,6 +279,213 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import products from "../data/products";
+// import "./DealerShop.css";
+
+// const DealerShop = () => {
+//   const { dealerId } = useParams();
+//   const navigate = useNavigate();
+
+//   // Cart state
+//   const [cart, setCart] = useState(() => {
+//     const savedCart = localStorage.getItem(`dealerCart_${dealerId}`);
+//     return savedCart ? JSON.parse(savedCart) : [];
+//   });
+
+//   const [showFullDesc, setShowFullDesc] = useState({});
+//   const [addingId, setAddingId] = useState(null);
+//   const [addedId, setAddedId] = useState(null);
+
+//   // 🔍 Search states
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [filteredProducts, setFilteredProducts] = useState(products);
+
+//   // Save cart
+//   useEffect(() => {
+//     localStorage.setItem(`dealerCart_${dealerId}`, JSON.stringify(cart));
+//   }, [cart, dealerId]);
+
+//   // Weight options
+//   const weightOptions = [
+//     { label: "1kg", kg: 1 },
+//     { label: "10kg", kg: 10 },
+//     { label: "20kg", kg: 20 },
+//   ];
+
+//   const getBasePrice = (priceString) => {
+//     if (!priceString) return 0;
+//     return parseFloat(priceString.split("-")[0].trim());
+//   };
+
+//   const calculatePrice = (basePrice, weight) => {
+//     const option = weightOptions.find((w) => w.label === weight);
+//     return option ? basePrice * option.kg : basePrice;
+//   };
+
+//   // 🛒 Add to cart
+//   const addToCart = (product) => {
+//     setAddingId(product.id);
+
+//     setTimeout(() => {
+//       const basePrice = getBasePrice(product.price);
+//       const price = calculatePrice(basePrice, "1kg");
+
+//       const existingItem = cart.find(
+//         (item) => item.id === product.id && item.weight === "1kg"
+//       );
+
+//       let updatedCart;
+//       if (existingItem) {
+//         updatedCart = cart.map((item) =>
+//           item.id === product.id && item.weight === "1kg"
+//             ? { ...item, quantity: item.quantity + 1 }
+//             : item
+//         );
+//       } else {
+//         updatedCart = [
+//           ...cart,
+//           {
+//             id: product.id,
+//             name: product.name,
+//             basePrice,
+//             price,
+//             quantity: 1,
+//             weight: "1kg",
+//           },
+//         ];
+//       }
+
+//       setCart(updatedCart);
+//       setAddingId(null);
+//       setAddedId(product.id);
+
+//       setTimeout(() => setAddedId(null), 2000);
+//     }, 300);
+//   };
+
+//   const toggleDesc = (id) =>
+//     setShowFullDesc((prev) => ({ ...prev, [id]: !prev[id] }));
+
+//   const viewCart = () => navigate(`/cart/${dealerId}`);
+//   const viewHistory = () => navigate(`/history/${dealerId}`);
+
+//   // 🔍 SEARCH LOGIC (MAIN FIX)
+//   const handleSearch = () => {
+//     const trimmedSearch = searchTerm.trim().toLowerCase();
+
+//     if (trimmedSearch === "") {
+//       setFilteredProducts(products);
+//       return;
+//     }
+
+//     const filtered = products.filter((product) =>
+//       product.name.toLowerCase().includes(trimmedSearch)
+//     );
+
+//     setFilteredProducts(filtered);
+//   };
+
+//   // ⌨️ Enter key support
+//   const handleKeyPress = (e) => {
+//     if (e.key === "Enter") {
+//       handleSearch();
+//     }
+//   };
+
+//   return (
+//     <div className="dealer-shop-container">
+//       <div className="fixed-header">
+//         <h2>🛒 Dealer Shopping</h2>
+
+//         <div className="header-controls">
+//           <div className="search-container">
+//             <input
+//               type="text"
+//               placeholder="Search products by name..."
+//               className="search-input"
+//               value={searchTerm}
+//               onChange={(e) => setSearchTerm(e.target.value)}
+//               onKeyDown={handleKeyPress}
+//             />
+//             <button className="search-btn" onClick={handleSearch}>
+//               🔍 Search
+//             </button>
+//           </div>
+
+//           <div className="header-buttons">
+//             <button className="history-btn" onClick={viewHistory}>
+//               📋 History
+//             </button>
+
+//             <button className="view-cart-btn" onClick={viewCart}>
+//               🛍️ View Cart ({cart.length} items)
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="products-container">
+//         <div className="products-grid">
+//           {filteredProducts.length > 0 ? (
+//             filteredProducts.map((product) => {
+//               const basePrice = getBasePrice(product.price);
+
+//               return (
+//                 <div key={product.id} className="product-card">
+//                   <img src={product.image} alt={product.name} />
+//                   <h6>{product.name}</h6>
+//                   <p>₹ {product.price}</p>
+
+//                   <button
+//                     onClick={() => addToCart(product)}
+//                     disabled={addingId === product.id}
+//                   >
+//                     {addingId === product.id
+//                       ? "Adding..."
+//                       : addedId === product.id
+//                       ? "✅ Added"
+//                       : "Add to Cart"}
+//                   </button>
+//                 </div>
+//               );
+//             })
+//           ) : (
+//             <div className="no-results">
+//               <h3>No products found</h3>
+//               <button
+//                 onClick={() => {
+//                   setSearchTerm("");
+//                   setFilteredProducts(products);
+//                 }}
+//               >
+//                 Clear Search
+//               </button>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default DealerShop;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import products from "../data/products";
@@ -371,7 +578,7 @@ const DealerShop = () => {
   const viewCart = () => navigate(`/cart/${dealerId}`);
   const viewHistory = () => navigate(`/history/${dealerId}`);
 
-  // 🔍 SEARCH LOGIC (MAIN FIX)
+  // 🔍 SEARCH LOGIC
   const handleSearch = () => {
     const trimmedSearch = searchTerm.trim().toLowerCase();
 
@@ -387,6 +594,12 @@ const DealerShop = () => {
     setFilteredProducts(filtered);
   };
 
+  // Clear search and show all items
+  const clearSearch = () => {
+    setSearchTerm("");
+    setFilteredProducts(products);
+  };
+
   // ⌨️ Enter key support
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -400,25 +613,36 @@ const DealerShop = () => {
         <h2>🛒 Dealer Shopping</h2>
 
         <div className="header-controls">
-          <div className="search-container">
-            <input
-              type="text"
-              placeholder="Search products by name..."
-              className="search-input"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={handleKeyPress}
-            />
-            <button className="search-btn" onClick={handleSearch}>
-              🔍 Search
-            </button>
+          <div className="search-section">
+            <div className="search-container">
+              <div className="search-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Search products by name..."
+                  className="search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                />
+                {searchTerm && (
+                  <button className="clear-search-btn" onClick={clearSearch}>
+                    ✕
+                  </button>
+                )}
+              </div>
+              <button className="search-btn" onClick={handleSearch}>
+                🔍 Search
+              </button>
+            </div>
           </div>
 
-          <div className="header-buttons">
+          <div className="action-buttons">
             <button className="history-btn" onClick={viewHistory}>
               📋 History
             </button>
-
+            <button className="clear-btn" onClick={clearSearch}>
+              🗑️ Clear
+            </button>
             <button className="view-cart-btn" onClick={viewCart}>
               🛍️ View Cart ({cart.length} items)
             </button>
@@ -454,14 +678,7 @@ const DealerShop = () => {
           ) : (
             <div className="no-results">
               <h3>No products found</h3>
-              <button
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilteredProducts(products);
-                }}
-              >
-                Clear Search
-              </button>
+              <button onClick={clearSearch}>Show All Products</button>
             </div>
           )}
         </div>
