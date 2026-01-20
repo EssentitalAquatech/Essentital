@@ -441,7 +441,7 @@
   
   /* SMALL MOBILE: Search box और search button एक line में */
   .search-container {
-    gap: 6px;
+    gap: 50px;
   }
   
   .search-input {
@@ -508,7 +508,7 @@
   
   /* EXTRA SMALL MOBILE: Search box और search button एक line में */
   .search-container {
-    gap: 5px;
+    gap: 50px;
   }
   
   .search-input {
