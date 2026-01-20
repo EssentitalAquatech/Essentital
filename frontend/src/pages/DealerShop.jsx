@@ -649,7 +649,7 @@ const DealerShop = () => {
               📋 History
             </button>
 
-            <button className="view-cart-btn" onClick={viewCart}>
+            <button className=" abc-view-cart-btn" onClick={viewCart}>
               🛍️ View Cart ({cart.length} items)
             </button>
           </div>
