@@ -639,13 +639,13 @@ const DealerShop = () => {
               )}
             </div>
 
-            <button className="search-btn" onClick={handleSearch}>
+            <button className="shop-search-btn" onClick={handleSearch}>
               🔍 Search
             </button>
           </div>
 
           <div className="header-buttons">
-            <button className="history-btn" onClick={viewHistory}>
+            <button className="shop-history-btn" onClick={viewHistory}>
               📋 History
             </button>
 
