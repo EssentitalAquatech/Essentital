@@ -1220,14 +1220,14 @@ function Profile() {
           </li>
           
           {/* Logout Button in Sidebar */}
-          <li>
+          {/* <li>
             <button 
               className="profile-menu-btn logout-btn"
               onClick={handleLogout}
             >
               <LogOut size={18} /> {t("logout") || "Logout"}
             </button>
-          </li>
+          </li> */}
         </ul>
 
         {/* ================= LANGUAGE ================= */}
