@@ -248,7 +248,16 @@ totalDealers: "Total Dealers",
 search: "Search",
 clearSearch: "Clear Search",
 searchDealer: "Search dealer...",
-noSearchResults: "No dealers found matching your search"
+noSearchResults: "No dealers found matching your search",
+
+
+
+  dealerNameRequired: "Dealer name is required",
+  contactRequired: "Contact number is required",
+  validContact: "Please enter a valid 10-digit contact number",
+  gstNumberRequired: "GST number is required",
+  shopAddressRequired: "Shop address is required",
+  imageRequired: "Profile image is required"
 
 
 
@@ -487,7 +496,15 @@ totalDealers: "कुल डीलर",
 search: "खोजें",
 clearSearch: "खोज साफ करें", 
 searchDealer: "डीलर खोजें...",
-noSearchResults: "आपकी खोज से मेल खाने वाला कोई डीलर नहीं मिला"
+noSearchResults: "आपकी खोज से मेल खाने वाला कोई डीलर नहीं मिला",
+
+
+ dealerNameRequired: "डीलर का नाम आवश्यक है",
+  contactRequired: "संपर्क नंबर आवश्यक है",
+  validContact: "कृपया एक मान्य 10-अंकों का संपर्क नंबर दर्ज करें",
+  gstNumberRequired: "जीएसटी नंबर आवश्यक है",
+  shopAddressRequired: "दुकान का पता आवश्यक है",
+  imageRequired: "प्रोफ़ाइल छवि आवश्यक है"
 
 
     }
@@ -712,6 +729,14 @@ yourApprovedFarmers: "আপনার অনুমোদিত কৃষক",
 requestSent: "অনুরোধ সফলভাবে পাঠানো হয়েছে",
 requestFailed: "অনুরোধ ব্যর্থ হয়েছে",
 errorCheckingAccess: "অ্যাক্সেস স্ট্যাটাস চেক করতে ত্রুটি",
+
+
+ dealerNameRequired: "ডিলারের নাম প্রয়োজন",
+  contactRequired: "যোগাযোগ নম্বর প্রয়োজন",
+  validContact: "অনুগ্রহ করে একটি বৈধ ১০ সংখ্যার যোগাযোগ নম্বর লিখুন",
+  gstNumberRequired: "জিএসটি নম্বর প্রয়োজন",
+  shopAddressRequired: "দোকানের ঠিকানা প্রয়োজন",
+  imageRequired: "প্রোফাইল ছবি প্রয়োজন",
 
 
     }
@@ -951,7 +976,14 @@ totalDealers: "মোট ডিলার",
 search: "অনুসন্ধান",
 clearSearch: "অনুসন্ধান মুছুন",
 searchDealer: "ডিলার খুঁজুন...",
-noSearchResults: "আপনার অনুসন্ধানের সাথে মিলে যাওয়া কোনো ডিলার পাওয়া যায়নি"
+noSearchResults: "আপনার অনুসন্ধানের সাথে মিলে যাওয়া কোনো ডিলার পাওয়া যায়নি",
+
+ dealerNameRequired: "ডিলাৰৰ নাম প্ৰয়োজন",
+  contactRequired: "যোগাযোগ নম্বৰ প্ৰয়োজন",
+  validContact: "অনুগ্ৰহ কৰি এটা বৈধ ১০ সংখ্যাৰ যোগাযোগ নম্বৰ দিয়ক",
+  gstNumberRequired: "GST নম্বৰ প্ৰয়োজন",
+  shopAddressRequired: "দোকানৰ ঠিকনা প্ৰয়োজন",
+  imageRequired: "প্ৰফাইল ছবি প্ৰয়োজন",
 
 
 
@@ -1186,7 +1218,14 @@ totalDealers: "மொத்த டீலர்கள்",
 search: "தேடு",
 clearSearch: "தேடலை அழி",
 searchDealer: "டீலரை தேடு...",
-noSearchResults: "உங்கள் தேடலுடன் பொருந்தக்கூடிய டீலர்கள் எதுவும் கிடைக்கவில்லை"
+noSearchResults: "உங்கள் தேடலுடன் பொருந்தக்கூடிய டீலர்கள் எதுவும் கிடைக்கவில்லை",
+
+dealerNameRequired: "டீலர் பெயர் அவசியம்",
+  contactRequired: "தொடர்பு எண் அவசியம்",
+  validContact: "சரியான 10 இலக்க தொடர்பு எண்ணை உள்ளிடவும்",
+  gstNumberRequired: "GST எண் அவசியம்",
+  shopAddressRequired: "கடை முகவரி அவசியம்",
+  imageRequired: "சுயவிவர படம் அவசியம்",
 
     }
   },
@@ -1419,7 +1458,15 @@ totalDealers: "एकूण डीलर्स",
 search: "शोधा",
 clearSearch: "शोध साफ करा",
 searchDealer: "डीलर शोधा...",
-noSearchResults: "तुमच्या शोधाशी जुळणारा कोणताही डीलर सापडला नाही"
+noSearchResults: "तुमच्या शोधाशी जुळणारा कोणताही डीलर सापडला नाही",
+
+
+ dealerNameRequired: "डीलरचे नाव आवश्यक आहे",
+  contactRequired: "संपर्क क्रमांक आवश्यक आहे",
+  validContact: "कृपया वैध 10 अंकी संपर्क क्रमांक टाका",
+  gstNumberRequired: "GST क्रमांक आवश्यक आहे",
+  shopAddressRequired: "दुकानचा पत्ता आवश्यक आहे",
+  imageRequired: "प्रोफाइल प्रतिमा आवश्यक आहे"
 
 
     }
@@ -1650,7 +1697,15 @@ totalDealers: "ಒಟ್ಟು ಡೀಲರ್ಗಳು",
 search: "ಹುಡುಕು",
 clearSearch: "ಹುಡುಕಾಟ ತೆರವುಗೊಳಿಸಿ",
 searchDealer: "ಡೀಲರ್ ಹುಡುಕಿ...",
-noSearchResults: "ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಹೊಂದಾಣಿಕೆಯಾಗುವ ಯಾವುದೇ ಡೀಲರ್ಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+noSearchResults: "ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಹೊಂದಾಣಿಕೆಯಾಗುವ ಯಾವುದೇ ಡೀಲರ್ಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+
+
+ dealerNameRequired: "ಡೀಲರ್ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+  contactRequired: "ಸಂಪರ್ಕ ಸಂಖ್ಯೆ ಅಗತ್ಯವಿದೆ",
+  validContact: "ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ 10 ಅಂಕಿಯ ಸಂಪರ್ಕ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ",
+  gstNumberRequired: "GST ಸಂಖ್ಯೆ ಅಗತ್ಯವಿದೆ",
+  shopAddressRequired: "ಅಂಗಡಿಯ ವಿಳಾಸ ಅಗತ್ಯವಿದೆ",
+  imageRequired: "ಪ್ರೊಫೈಲ್ ಚಿತ್ರ ಅಗತ್ಯವಿದೆ"
 
     }
   }
