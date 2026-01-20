@@ -6517,11 +6517,16 @@ const SYMPTOMS_LIST = [
 ];
 
 // Helper functions
-const getFarmerImage = (farmer) => {
-  if (!farmer || !farmer.photo) return "/profile.png";
-  return getImageUrl(farmer.photo);
-};
+// const getFarmerImage = (farmer) => {
+//   if (!farmer || !farmer.photo) return "/profile.png";
+//   return getImageUrl(farmer.photo);
+// };
 
+export function getFarmerImage(farmer) {
+  if (!farmer.photo) return "/profile.png";
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
+  return `${BASE_URL}/${farmer.photo}`;
+}
 
 
 
@@ -7107,28 +7112,7 @@ function MainPage() {
 
   const [searchId, setSearchId] = useState("");
 
-  // const handleSearch = async () => {
-  //   if (!searchId) {
-  //     await fetchFarmers();
-  //     return;
-  //   }
-
-  //   setLoading(prev => ({ ...prev, search: true }));
-  //   try {
-  //     const filtered = farmers.filter(f =>
-  //       f.farmerId.toLowerCase().includes(searchId.toLowerCase())
-  //     );
-
-  //     if (filtered.length > 0) {
-  //       const remaining = farmers.filter(f => !filtered.includes(f));
-  //       setFarmers([...filtered, ...remaining]);
-  //     } else {
-  //       await fetchFarmers();
-  //     }
-  //   } finally {
-  //     setLoading(prev => ({ ...prev, search: false }));
-  //   }
-  // };
+ 
 
 
 
@@ -7358,8 +7342,8 @@ const handleSearch = async () => {
                 /> */}
 
 
-                <img
-  src={`https://betaproject.onrender.com/${f.photo}`}
+  <img
+  src={getFarmerImage(f)}
   alt={f.name}
   className="profile-pic"
   loading="lazy"
@@ -7368,6 +7352,7 @@ const handleSearch = async () => {
     e.target.onerror = null;
   }}
 />
+
 
 
                 <div style={{ flex: 1 }}>
