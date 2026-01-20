@@ -131,6 +131,8 @@ import OrdersDashboard from "./admin/OrdersDashboard";
 import AdminLogin from "./start/AdminLogin";
 import Astronomical from "./admin/Astronomical_Dashboard";
 
+import History from './pages/History';
+
 function App() {
   return (
     <BrowserRouter>
@@ -259,6 +261,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+
+<Route
+  path="/history/:dealerId"
+  element={
+    <ProtectedRoute>
+      <History />
+    </ProtectedRoute>
+  }
+/>
+
 
         {/* ADMIN (OPTIONAL PROTECTION LATER) */}
         <Route path="/adminDashboard" element={<AdminDashboard />} />
