@@ -5489,19 +5489,39 @@ function MainPage() {
     localStorage.setItem("lang", lang);
   };
 
-  const fetchFarmers = async () => {
-    try {
-      setLoading(prev => ({ ...prev, fetchFarmers: true }));
-      const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
+  // const fetchFarmers = async () => {
+  //   try {
+  //     setLoading(prev => ({ ...prev, fetchFarmers: true }));
+  //     const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
       
-      // ✅ FIXED: Sirf direct data set karo, koi normalize mat karo
-      setFarmers(res.data || []);
-    } catch (err) {
-      console.log("Fetch Farmers Error:", err);
-    } finally {
-      setLoading(prev => ({ ...prev, fetchFarmers: false }));
+  //     // ✅ FIXED: Sirf direct data set karo, koi normalize mat karo
+  //     setFarmers(res.data || []);
+  //   } catch (err) {
+  //     console.log("Fetch Farmers Error:", err);
+  //   } finally {
+  //     setLoading(prev => ({ ...prev, fetchFarmers: false }));
+  //   }
+  // };
+
+  const fetchFarmers = async () => {
+  try {
+    setLoading(prev => ({ ...prev, fetchFarmers: true }));
+    const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
+    
+    // DEBUG: Check what data is coming
+    console.log("📊 Farmers data received:", res.data);
+    if (res.data && res.data.length > 0) {
+      console.log("📸 First farmer's photo path:", res.data[0].photo);
+      console.log("🔗 Full photo URL would be:", getImageUrl(res.data[0].photo));
     }
-  };
+    
+    setFarmers(res.data || []);
+  } catch (err) {
+    console.log("Fetch Farmers Error:", err);
+  } finally {
+    setLoading(prev => ({ ...prev, fetchFarmers: false }));
+  }
+};
 
   // ✅ 3️⃣ Add Farmer API me photo FormData me bhejo
   const addFarmer = async () => {
@@ -5990,7 +6010,7 @@ function MainPage() {
             farmers.map(f => (
               <div key={f._id} className="farmer-box">
                 {/* ✅ FIXED: Farmer image using corrected helper function */}
-                <img
+                {/* <img
                   
                   
                   // src={getImageUrl(`/api/images/${f.farmerId}/profile`)}
@@ -6003,7 +6023,22 @@ function MainPage() {
                     e.target.src = "/profile.png";
                     e.target.onerror = null;
                   }}
-                />
+                /> */}
+
+
+              <img
+  src={f.photo ? getImageUrl(f.photo) : "/profile.png"}
+  alt={f.name}
+  className="profile-pic"
+  loading="lazy"
+  onError={(e) => {
+    console.log("Image failed to load:", f.photo); // Debug के लिए
+    e.target.src = "/profile.png";
+    e.target.onerror = null;
+  }}
+/>
+
+
 
                 <div style={{ flex: 1 }}>
                   <p><b>{t('farmerName')}:</b> {f.name}</p>
