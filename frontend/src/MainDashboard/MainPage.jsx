@@ -7792,7 +7792,7 @@ function MainPage() {
             farmers.map(f => (
               <div key={f._id} className="farmer-box">
                 {/* ✅ FIXED: Farmer image using corrected helper function */}
-                <img
+                {/* <img
                   
                   
                   // src={getImageUrl(`/api/images/${f.farmerId}/profile`)}
@@ -7805,7 +7805,19 @@ function MainPage() {
                     e.target.src = "/profile.png";
                     e.target.onerror = null;
                   }}
-                />
+                /> */}
+
+                <img
+  src={getFarmerImage(f)}
+  alt={f.name}
+  className="profile-pic"
+  loading="lazy"
+  onError={(e) => {
+    e.target.src = "/profile.png";
+    e.target.onerror = null;
+  }}
+/>
+
 
 
               {/* <img
