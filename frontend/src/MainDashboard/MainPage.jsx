@@ -7143,15 +7143,11 @@ const SYMPTOMS_LIST = [
 // };
 
 // Helper function update karo
-const getFarmerImage = (farmer) => {
-  if (!farmer || !farmer.photo) return "/profile.png";
-  
-  // Debug line
-  console.log("Farmer photo path:", farmer.photo);
-  console.log("Full URL:", getImageUrl(farmer.photo));
-  
-  return getImageUrl(farmer.photo);
+export const getImageUrl = (path) => {
+  if (!path) return "/profile.png";
+  return `${import.meta.env.VITE_API_URL}${path}`;
 };
+
 
 function MainPage() {
   const { t, i18n } = useTranslation();
@@ -7807,8 +7803,8 @@ function MainPage() {
                   }}
                 /> */}
 
-                <img
-  src={getFarmerImage(f)}
+            <img
+  src={getImageUrl(`/api/images/farmer/${f._id}/photo`)}
   alt={f.name}
   className="profile-pic"
   loading="lazy"
@@ -7817,6 +7813,7 @@ function MainPage() {
     e.target.onerror = null;
   }}
 />
+
 
 
 
