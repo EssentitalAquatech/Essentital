@@ -1892,12 +1892,12 @@ function Profile() {
               {/* <p className="mobile-logout-text">
                 {t("logoutDescription") || "End your current session and logout from the application"}
               </p> */}
-              <button 
+              {/* <button 
                 className="profile-btn-logout-mobile"
                 onClick={handleLogout}
               >
                 <LogOut size={20} /> {t("logout") || "Logout"}
-              </button>
+              </button> */}
             </div>
           )}
 
