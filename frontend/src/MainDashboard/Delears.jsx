@@ -1889,7 +1889,7 @@ function DealersPage() {
             <h5 className="dealers-username">{username || "User"}</h5>
           </div>
 
-          {isMobile && (
+          {/* {isMobile && (
             <button 
               className="sidebar-close-btn"
               onClick={() => setIsSidebarOpen(false)}
@@ -1898,7 +1898,7 @@ function DealersPage() {
             >
               {loadingSidebar ? <Loader size={20} className="spinner" /> : <X size={20} />}
             </button>
-          )}
+          )} */}
         </div>
 
         <ul className="dealers-nav-links">

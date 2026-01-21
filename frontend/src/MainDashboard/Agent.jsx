@@ -926,7 +926,7 @@ function Agent() {
             <h5 className="agent-left-username">{username}</h5>
           </div>
 
-          {isMobile && (
+          {/* {isMobile && (
             <button 
               className="sidebar-close-btn"
               onClick={() => setIsSidebarOpen(false)}
@@ -934,7 +934,7 @@ function Agent() {
             >
               <X size={20} />
             </button>
-          )}
+          )} */}
         </div>
 
         {/* Stats Section */}

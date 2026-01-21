@@ -117,7 +117,7 @@ function HelpCenter() {
             <h5>{username || "User"}</h5>
           </div>
 
-          {isMobile && (
+          {/* {isMobile && (
             <button 
               className="sidebar-close-btn"
               onClick={() => setIsSidebarOpen(false)}
@@ -125,7 +125,7 @@ function HelpCenter() {
             >
               <X size={20} />
             </button>
-          )}
+          )} */}
         </div>
 
         <ul className="help-center-menu">

@@ -5856,7 +5856,7 @@ function MainPage() {
             <h5>{username}</h5>
           </div>
 
-          {isMobile && (
+          {/* {isMobile && (
             <button 
               className="sidebar-close-btn"
               onClick={() => setIsSidebarOpen(false)}
@@ -5865,7 +5865,7 @@ function MainPage() {
             >
               <X size={20} />
             </button>
-          )}
+          )} */}
         </div>
 
         <ul className="menu">
