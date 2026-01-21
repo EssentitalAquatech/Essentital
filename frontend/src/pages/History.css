@@ -1,3 +1,19 @@
+/* Font Family Add Karen */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Background scroll rokne ke liye */
+body.modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
 .history-page-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -38,6 +54,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  font-family: 'Inter', sans-serif;
 }
 
 .header-actions {
@@ -64,6 +81,7 @@
   align-items: center;
   gap: 8px;
   backdrop-filter: blur(8px);
+  font-family: 'Inter', sans-serif;
 }
 
 .back-to-shop-btn:hover {
@@ -86,6 +104,7 @@
   align-items: center;
   gap: 8px;
   backdrop-filter: blur(8px);
+  font-family: 'Inter', sans-serif;
 }
 
 .view-cart-btn:hover {
@@ -100,6 +119,7 @@
   border-radius: 14px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid #f0f5ff;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-orders-section {
@@ -114,6 +134,7 @@
   align-items: center;
   gap: 10px;
   font-weight: 700;
+  font-family: 'Inter', sans-serif;
 }
 
 .loading-orders {
@@ -142,6 +163,7 @@
 .loading-orders p {
   color: #718096;
   font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-orders-list {
@@ -158,6 +180,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
   transition: all 0.25s ease;
   border: 1px solid #f0f5ff;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-order-card:hover {
@@ -184,11 +207,13 @@
   font-weight: 700;
   color: #4a5568;
   font-size: 1.1rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-order-date {
   font-size: 0.85rem;
   color: #718096;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-view-order-btn {
@@ -202,6 +227,7 @@
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 3px 10px rgba(74, 144, 226, 0.15);
+  font-family: 'Inter', sans-serif;
 }
 
 .history-view-order-btn:hover {
@@ -236,6 +262,7 @@
   font-weight: 500;
   font-size: 0.95rem;
   line-height: 1.3;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-preview-details {
@@ -254,12 +281,14 @@
   padding: 2px 6px;
   border-radius: 8px;
   display: inline-block;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-preview-qty {
   color: #718096;
   font-weight: 500;
   font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-preview-price {
@@ -269,6 +298,7 @@
   font-weight: 700;
   font-size: 0.95rem;
   min-width: 80px;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-more-items-toggle {
@@ -292,6 +322,7 @@
   align-items: center;
   gap: 5px;
   box-shadow: 0 3px 10px rgba(74, 144, 226, 0.15);
+  font-family: 'Inter', sans-serif;
 }
 
 .history-toggle-items-btn:hover {
@@ -313,6 +344,7 @@
   font-weight: 600;
   color: #4a5568;
   font-size: 1.1rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-total-amount {
@@ -320,12 +352,14 @@
   font-weight: 700;
   font-size: 1.2rem;
   margin-left: 8px;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-order-status {
   font-weight: 600;
   color: #4a5568;
   font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .status-badge {
@@ -336,6 +370,7 @@
   font-size: 0.8rem;
   font-weight: 600;
   margin-left: 8px;
+  font-family: 'Inter', sans-serif;
 }
 
 .no-history-orders-message {
@@ -358,6 +393,7 @@
   margin-bottom: 12px;
   font-size: 1.5rem;
   font-weight: 600;
+  font-family: 'Inter', sans-serif;
 }
 
 .no-history-orders-message p {
@@ -368,6 +404,7 @@
   margin-left: auto;
   margin-right: auto;
   line-height: 1.5;
+  font-family: 'Inter', sans-serif;
 }
 
 .shop-now-btn {
@@ -381,6 +418,7 @@
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+  font-family: 'Inter', sans-serif;
 }
 
 .shop-now-btn:hover {
@@ -389,7 +427,7 @@
   box-shadow: 0 6px 18px rgba(74, 144, 226, 0.25);
 }
 
-/* Modal Styles */
+/* Modal Styles - SCROLL FIX ADDED */
 .history-order-modal-overlay {
   position: fixed;
   top: 0;
@@ -403,6 +441,7 @@
   z-index: 1000;
   padding: 20px;
   backdrop-filter: blur(4px);
+  overflow: hidden !important;
 }
 
 .history-order-modal {
@@ -415,7 +454,7 @@
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: modalSlideIn 0.3s ease-out;
-  overflow: hidden;
+  overflow: hidden !important;
 }
 
 @keyframes modalSlideIn {
@@ -436,12 +475,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-modal-header h3 {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-modal-close-btn {
@@ -457,6 +498,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-modal-close-btn:hover {
@@ -467,7 +509,10 @@
 .history-modal-content {
   padding: 25px;
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
+  -webkit-overflow-scrolling: touch;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-order-info-section {
@@ -494,12 +539,14 @@
   font-weight: 600;
   color: #4a5568;
   font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-info-value {
   color: #4a90e2;
   font-weight: 600;
   font-size: 1rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-order-items-section {
@@ -513,6 +560,7 @@
   padding-bottom: 10px;
   border-bottom: 2px solid #f0f7ff;
   font-weight: 600;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-order-items-table {
@@ -530,6 +578,7 @@
   color: #4a5568;
   font-size: 0.9rem;
   border-bottom: 2px solid #d1e3ff;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-table-row {
@@ -537,6 +586,7 @@
   padding: 15px;
   border-bottom: 1px solid #f0f7ff;
   transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-table-row:hover {
@@ -552,6 +602,7 @@
   padding: 0 10px;
   word-break: break-word;
   overflow-wrap: break-word;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-table-col.name {
@@ -589,6 +640,7 @@
   padding: 10px 0;
   font-size: 1rem;
   color: #4a5568;
+  font-family: 'Inter', sans-serif;
 }
 
 .history-summary-row.grand-total {
@@ -624,6 +676,7 @@
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+  font-family: 'Inter', sans-serif;
 }
 
 .history-modal-close-button:hover {
