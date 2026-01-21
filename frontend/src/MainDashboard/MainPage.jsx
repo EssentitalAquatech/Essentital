@@ -5992,7 +5992,9 @@ function MainPage() {
                 {/* ✅ FIXED: Farmer image using corrected helper function */}
                 <img
                   
-                   src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+                  
+                  // src={getImageUrl(`/api/images/${f.farmerId}/profile`)}
+                       src={f.photo ? getImageUrl(`/${f.photo}`) : "/profile.png"}
                   alt={f.name}
                   className="profile-pic"
                   loading="lazy"
