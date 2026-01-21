@@ -5991,8 +5991,8 @@ function MainPage() {
               <div key={f._id} className="farmer-box">
                 {/* ✅ FIXED: Farmer image using corrected helper function */}
                 <img
-                  // src={getFarmerImage(f)}
-                   src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+                  
+                   src={getImageUrl(`/api/images/${f._id}/profile`)}
                   alt={f.name}
                   className="profile-pic"
                   loading="lazy"
