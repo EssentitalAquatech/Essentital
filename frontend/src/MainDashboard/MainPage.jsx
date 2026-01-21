@@ -5366,8 +5366,19 @@ const SYMPTOMS_LIST = [
 ];
 
 // ✅ FIXED: Helper function for farmer image
+// const getFarmerImage = (farmer) => {
+//   if (!farmer || !farmer.photo) return "/profile.png";
+//   return getImageUrl(farmer.photo);
+// };
+
+// Helper function update karo
 const getFarmerImage = (farmer) => {
   if (!farmer || !farmer.photo) return "/profile.png";
+  
+  // Debug line
+  console.log("Farmer photo path:", farmer.photo);
+  console.log("Full URL:", getImageUrl(farmer.photo));
+  
   return getImageUrl(farmer.photo);
 };
 
