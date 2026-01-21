@@ -103,8 +103,6 @@ body {
   transform: translateX(4px);
 }
 
-
-
 /* Logout Button Styles in Sidebar */
 .profile-menu-btn.logout-btn {
   color: #dc2626;
@@ -260,6 +258,53 @@ body {
   font-size: 1.4rem;
   font-weight: 600;
   position: relative;
+}
+
+/* Mobile Logout Container */
+.mobile-logout-container {
+  margin-top: auto;
+}
+
+.mobile-logout-container::before {
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%) !important;
+}
+
+.mobile-logout-text {
+  color: #6b7280;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.profile-btn-logout-mobile {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none;
+  letter-spacing: 0;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 300px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+  border: 1.5px solid #fca5a5;
+}
+
+.profile-btn-logout-mobile:hover {
+  background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+  border-color: #f87171;
 }
 
 /* Image Section - Enhanced */
@@ -541,6 +586,7 @@ body {
 .profile-btn-primary:disabled,
 .profile-btn-success:disabled,
 .profile-btn-warning:disabled,
+.profile-btn-logout-mobile:disabled,
 .logout-btn-header:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -647,6 +693,12 @@ body {
     padding: 10px 20px;
     font-size: 0.9rem;
   }
+  
+  /* Ensure mobile logout button appears at bottom */
+  .mobile-logout-container {
+    order: 999; /* Make it appear last */
+    margin-top: auto;
+  }
 }
 
 /* Mobile Large */
@@ -697,6 +749,12 @@ body {
   .profile-form-input {
     padding: 12px 15px;
     font-size: 0.95rem;
+  }
+  
+  /* Mobile logout button styling */
+  .profile-btn-logout-mobile {
+    max-width: 100%;
+    padding: 12px 20px;
   }
 }
 
@@ -756,6 +814,11 @@ body {
     padding: 10px 14px;
     font-size: 0.9rem;
     margin-bottom: 16px;
+  }
+  
+  /* Mobile logout button */
+  .mobile-logout-text {
+    font-size: 0.9rem;
   }
 }
 
