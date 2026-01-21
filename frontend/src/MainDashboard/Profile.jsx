@@ -1574,6 +1574,31 @@ function Profile() {
     }
   };
 
+
+
+// 🔒 Lock body scroll when mobile sidebar is open
+useEffect(() => {
+  if (isMobile && isSidebarOpen) {
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none"; // mobile touch fix
+  } else {
+    document.body.style.overflow = "";
+    document.body.style.touchAction = "";
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+    document.body.style.touchAction = "";
+  };
+}, [isMobile, isSidebarOpen]);
+
+
+
+
+
+
+
+
   const handlePasswordChange = async () => {
     if (!currentPassword || !newPassword) return;
 
