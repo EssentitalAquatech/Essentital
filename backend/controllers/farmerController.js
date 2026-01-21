@@ -3125,12 +3125,195 @@
 
 
 
+// import Farmer from "../models/farmerModel.js";
+// import AccessRequest from "../models/accessRequestModel.js";
+
+// // ===== HELPER: PHOTO URL =====
+// const getPhotoURL = (filename) =>
+//   filename ? `https://essentital.onrender.com/uploads/${filename}` : null;
+
+// // ===== 1️⃣ GET FARMERS BY AGENT =====
+// export const getFarmersByAgent = async (req, res) => {
+//   try {
+//     const { agentId, viewerId } = req.query;
+//     const allFarmers = await Farmer.find({ createdBy: agentId })
+//       .select("name contact village photo _id")
+//       .sort({ name: 1 });
+
+//     const farmersWithAccess = await Promise.all(
+//       allFarmers.map(async (farmer) => {
+//         const access = await AccessRequest.findOne({
+//           requesterId: viewerId,
+//           targetFarmerId: farmer._id,
+//           status: "approved",
+//         });
+
+//         if (access) {
+//           const fullFarmer = await Farmer.findById(farmer._id);
+//           return { 
+//             ...fullFarmer.toObject(), 
+//             accessApproved: true,
+//             photo: getPhotoURL(fullFarmer.photo)
+//           };
+//         }
+
+//         return {
+//           _id: farmer._id,
+//           name: farmer.name,
+//           contact: farmer.contact,
+//           village: farmer.village,
+//           photo: getPhotoURL(farmer.photo),
+//           accessApproved: false,
+//         };
+//       })
+//     );
+
+//     res.json({
+//       approved: farmersWithAccess.some(f => f.accessApproved),
+//       farmers: farmersWithAccess
+//     });
+//   } catch (err) {
+//     console.error("🔥 GET FARMERS BY AGENT ERROR:", err);
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
+// // ===== 2️⃣ ADD FARMER =====
+// export const addFarmer = async (req, res) => {
+//   try {
+//     const {
+//       name, contact, age, gender, village, pondCount,
+//       adhar, familyMembers, familyOccupation, userId
+//     } = req.body;
+
+//     // ✅ REQUIRED FIELD CHECK
+//     const requiredFields = [
+//       'name','contact','age','gender','village','adhar','familyMembers','familyOccupation'
+//     ];
+//     const missingFields = requiredFields.filter(f => !req.body[f]?.toString().trim());
+//     if (missingFields.length > 0) {
+//       return res.status(400).json({ error: `Required fields missing: ${missingFields.join(", ")}` });
+//     }
+
+//     // ✅ AADHAR VALIDATION
+//     if (adhar && (!/^\d{12}$/.test(adhar.toString().trim()))) {
+//       return res.status(400).json({ error: "Aadhar must be exactly 12 digits" });
+//     }
+
+//     // ✅ FILES
+//     const photo = req.files?.photo?.[0]?.filename || "";
+//     const pondImage = req.files?.pondImage?.[0]?.filename || "";
+//     const pondFiles = req.files?.pondFiles?.map(f => f.filename) || [];
+//     const fishFiles = req.files?.fishFiles?.map(f => f.filename) || [];
+
+//     // ✅ PONDS ARRAY
+//     const totalPonds = parseInt(pondCount || 0);
+//     let pondsArray = [];
+//     for (let i=1; i<=totalPonds; i++) {
+//       pondsArray.push({
+//         pondId: `TEMP-${Date.now()}-${i}-${Math.random().toString(36).substring(2,7)}`,
+//         pondNumber: i,
+//         pondArea: req.body[`pondArea${i}`] || "",
+//         pondDepth: req.body[`pondDepth${i}`] || "",
+//         overflow: req.body[`overflow${i}`] || "",
+//         receivesSunlight: req.body[`receivesSunlight${i}`] || "",
+//         treesOnBanks: req.body[`treesOnBanks${i}`] || "",
+//         neighbourhood: req.body[`neighbourhood${i}`] || "",
+//         wastewaterEnters: req.body[`wastewaterEnters${i}`] || ""
+//       });
+//     }
+
+//     // ✅ CREATE FARMER
+//     const newFarmer = new Farmer({
+//       userId,
+//       createdBy: userId,
+//       name, contact, age, gender, village, adhar,
+//       familyMembers, familyOccupation, photo, pondImage,
+//       pondFiles, fishFiles,
+//       pondCount: totalPonds,
+//       ...(pondsArray.length > 0 && { ponds: pondsArray })
+//     });
+
+//     await newFarmer.save();
+
+//     // ✅ FINALIZE POND IDs
+//     if (newFarmer.ponds?.length > 0) {
+//       newFarmer.ponds = newFarmer.ponds.map((p,i)=>({
+//         ...p._doc,
+//         pondId: `POND-${newFarmer.farmerId}-${String(i+1).padStart(3,"0")}`
+//       }));
+//       await newFarmer.save();
+//     }
+
+//     res.status(201).json({
+//       ...newFarmer.toObject(),
+//       photo: getPhotoURL(newFarmer.photo)
+//     });
+
+//   } catch (err) {
+//     console.error("🔥 ADD FARMER ERROR:", err);
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
+// // ===== 3️⃣ GET FARMERS =====
+// export const getFarmers = async (req,res)=>{
+//   try{
+//     const includeShared = req.query.includeShared==="true";
+//     const userId = req.query.userId;
+//     let farmers;
+
+//     if(includeShared){
+//       const approvedRequests = await AccessRequest.find({requesterId:userId,status:"approved"});
+//       const ids = approvedRequests.map(r=>r.targetFarmerId);
+//       farmers = await Farmer.find({_id:{$in:ids}});
+//     } else farmers = await Farmer.find({createdBy:userId});
+
+//     res.json(farmers.map(f=>({...f.toObject(), photo:getPhotoURL(f.photo)})));
+//   } catch(err){
+//     console.error("🔥 GET FARMERS ERROR:",err);
+//     res.status(500).json({error:err.message});
+//   }
+// };
+
+// // ===== 4️⃣ UPDATE FARMER =====
+// export const updateFarmer = async (req,res)=>{
+//   try{
+//     const farmer = await Farmer.findById(req.params.id);
+//     if(!farmer) return res.status(404).json({error:"Farmer not found"});
+
+//     // ✅ REQUIRED FIELD CHECK
+//     const requiredFields = ['name','contact','age','gender','village','adhar','familyMembers','familyOccupation'];
+//     const missingFields = requiredFields.filter(f=>req.body[f]!==undefined && !req.body[f]?.toString().trim());
+//     if(missingFields.length>0) return res.status(400).json({error:`Fields cannot be empty: ${missingFields.join(", ")}`});
+
+//     // ✅ UPDATE SAFE
+//     Object.keys(req.body).forEach(k=>{
+//       if(!["userId","ponds","farmerId","photo"].includes(k) && req.body[k]!=="") farmer[k]=req.body[k];
+//     });
+
+//     // ✅ PHOTO UPDATE
+//     if(req.files?.photo?.[0]) farmer.photo = req.files.photo[0].filename;
+//     if(req.files?.pondImage) farmer.pondImage = req.files.pondImage[0].filename;
+//     if(req.files?.pondFiles) farmer.pondFiles.push(...req.files.pondFiles.map(f=>f.filename));
+//     if(req.files?.fishFiles) farmer.fishFiles.push(...req.files.fishFiles.map(f=>f.filename));
+
+//     await farmer.save();
+//     res.json({...farmer.toObject(), photo:getPhotoURL(farmer.photo)});
+//   } catch(err){
+//     console.error("🔥 UPDATE FARMER ERROR:",err);
+//     res.status(500).json({error:err.message});
+//   }
+// };
+
+
+//sabse uper vala sahi hai
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 
 // ===== HELPER: PHOTO URL =====
-const getPhotoURL = (filename) =>
-  filename ? `https://essentital.onrender.com/uploads/${filename}` : null;
+const getFarmerPhotoAPI = (farmerId) =>
+  `https://essentital.onrender.com/api/images/farmer/${farmerId}/photo`;
 
 // ===== 1️⃣ GET FARMERS BY AGENT =====
 export const getFarmersByAgent = async (req, res) => {
@@ -3153,7 +3336,7 @@ export const getFarmersByAgent = async (req, res) => {
           return { 
             ...fullFarmer.toObject(), 
             accessApproved: true,
-            photo: getPhotoURL(fullFarmer.photo)
+            photo: fullFarmer.photo ? getFarmerPhotoAPI(fullFarmer._id) : null
           };
         }
 
@@ -3162,7 +3345,7 @@ export const getFarmersByAgent = async (req, res) => {
           name: farmer.name,
           contact: farmer.contact,
           village: farmer.village,
-          photo: getPhotoURL(farmer.photo),
+          photo: farmer.photo ? getFarmerPhotoAPI(farmer._id) : null,
           accessApproved: false,
         };
       })
@@ -3247,7 +3430,7 @@ export const addFarmer = async (req, res) => {
 
     res.status(201).json({
       ...newFarmer.toObject(),
-      photo: getPhotoURL(newFarmer.photo)
+      photo: newFarmer.photo ? getFarmerPhotoAPI(newFarmer._id) : null
     });
 
   } catch (err) {
@@ -3269,7 +3452,10 @@ export const getFarmers = async (req,res)=>{
       farmers = await Farmer.find({_id:{$in:ids}});
     } else farmers = await Farmer.find({createdBy:userId});
 
-    res.json(farmers.map(f=>({...f.toObject(), photo:getPhotoURL(f.photo)})));
+    res.json(farmers.map(f=>({
+      ...f.toObject(), 
+      photo: f.photo ? getFarmerPhotoAPI(f._id) : null
+    })));
   } catch(err){
     console.error("🔥 GET FARMERS ERROR:",err);
     res.status(500).json({error:err.message});
@@ -3299,7 +3485,10 @@ export const updateFarmer = async (req,res)=>{
     if(req.files?.fishFiles) farmer.fishFiles.push(...req.files.fishFiles.map(f=>f.filename));
 
     await farmer.save();
-    res.json({...farmer.toObject(), photo:getPhotoURL(farmer.photo)});
+    res.json({
+      ...farmer.toObject(), 
+      photo: farmer.photo ? getFarmerPhotoAPI(farmer._id) : null
+    });
   } catch(err){
     console.error("🔥 UPDATE FARMER ERROR:",err);
     res.status(500).json({error:err.message});

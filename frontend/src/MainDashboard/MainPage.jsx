@@ -7094,12 +7094,8 @@
 
 
 
-
-
-
-
 import React, { useState, useEffect } from "react";
-import api, { getImageUrl } from "../utils/api";
+import api from "../utils/api";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7137,17 +7133,17 @@ const SYMPTOMS_LIST = [
 ];
 
 // ✅ FIXED: Helper function for farmer image
-// const getFarmerImage = (farmer) => {
-//   if (!farmer || !farmer.photo) return "/profile.png";
-//   return getImageUrl(farmer.photo);
-// };
-
-// Helper function update karo
-export const getImageUrl = (path) => {
-  if (!path) return "/profile.png";
-  return `${import.meta.env.VITE_API_URL}${path}`;
+const getFarmerImage = (farmer) => {
+  if (!farmer || !farmer._id) return "/profile.png";
+  return `${import.meta.env.VITE_API_URL}/api/images/farmer/${farmer._id}/photo`;
 };
 
+// ✅ FIXED: General file URL helper
+const getFileUrl = (path) => {
+  if (!path) return "#";
+  if (path.startsWith("http")) return path;
+  return `${import.meta.env.VITE_API_URL}/${path.replace(/^\/+/, "")}`;
+};
 
 function MainPage() {
   const { t, i18n } = useTranslation();
@@ -7180,7 +7176,7 @@ function MainPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // ✅ 1️⃣ Farmer form empty state - PHOTO FIELD ADDED
+  // ✅ Farmer form empty state - PHOTO FIELD ADDED
   const emptyFarmer = {
     name: "", contact: "", age: "", gender: "", village: "",
     pondCount: "", adhar: "", familyMembers: "", familyOccupation: "",
@@ -7267,41 +7263,27 @@ function MainPage() {
     localStorage.setItem("lang", lang);
   };
 
-  // const fetchFarmers = async () => {
-  //   try {
-  //     setLoading(prev => ({ ...prev, fetchFarmers: true }));
-  //     const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
-      
-  //     // ✅ FIXED: Sirf direct data set karo, koi normalize mat karo
-  //     setFarmers(res.data || []);
-  //   } catch (err) {
-  //     console.log("Fetch Farmers Error:", err);
-  //   } finally {
-  //     setLoading(prev => ({ ...prev, fetchFarmers: false }));
-  //   }
-  // };
-
   const fetchFarmers = async () => {
-  try {
-    setLoading(prev => ({ ...prev, fetchFarmers: true }));
-    const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
-    
-    // DEBUG: Check what data is coming
-    console.log("📊 Farmers data received:", res.data);
-    if (res.data && res.data.length > 0) {
-      console.log("📸 First farmer's photo path:", res.data[0].photo);
-      console.log("🔗 Full photo URL would be:", getImageUrl(res.data[0].photo));
+    try {
+      setLoading(prev => ({ ...prev, fetchFarmers: true }));
+      const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
+      
+      // DEBUG: Check what data is coming
+      console.log("📊 Farmers data received:", res.data);
+      if (res.data && res.data.length > 0) {
+        console.log("📸 First farmer's photo path:", res.data[0].photo);
+        console.log("🔗 Photo API:", getFarmerImage(res.data[0]));
+      }
+      
+      setFarmers(res.data || []);
+    } catch (err) {
+      console.log("Fetch Farmers Error:", err);
+    } finally {
+      setLoading(prev => ({ ...prev, fetchFarmers: false }));
     }
-    
-    setFarmers(res.data || []);
-  } catch (err) {
-    console.log("Fetch Farmers Error:", err);
-  } finally {
-    setLoading(prev => ({ ...prev, fetchFarmers: false }));
-  }
-};
+  };
 
-  // ✅ 3️⃣ Add Farmer API me photo FormData me bhejo
+  // ✅ Add Farmer API me photo FormData me bhejo
   const addFarmer = async () => {
     if (!newFarmer.name || !newFarmer.contact) return alert("Name and contact required");
     
@@ -7336,7 +7318,7 @@ function MainPage() {
     }
   };
 
-  // ✅ 4️⃣ Update Farmer API me bhi photo bhejo
+  // ✅ Update Farmer API me bhi photo bhejo
   const updateFarmer = async () => {
     if (!editingFarmerId) return;
     
@@ -7361,7 +7343,7 @@ function MainPage() {
         headers: { "Content-Type": "multipart/form-data" }
       });
       
-      // ✅ STEP 4: Update Farmer ke baad photo safe rakho
+      // ✅ Update Farmer ke baad photo safe rakho
       setFarmers(farmers.map(f =>
         f._id === res.data._id
           ? { ...res.data, photo: res.data.photo || f.photo }
@@ -7479,7 +7461,7 @@ function MainPage() {
     }
   };
 
-  // ✅ 5️⃣ Edit Farmer open karte waqt existing photo set karo
+  // ✅ Edit Farmer open karte waqt existing photo set karo
   const openEdit = (farmer) => {
     setIsUpdateMode(true);
     const pre = { ...emptyFarmer };
@@ -7564,7 +7546,7 @@ function MainPage() {
       <div style={{ marginTop: 6 }}>
         {list.map((fn, i) => (
           <div key={i}>
-            <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
+            <a target="_blank" rel="noreferrer" href={getFileUrl(fn)}>
               {fn.split('/').pop()}
             </a>
           </div>
@@ -7606,6 +7588,40 @@ function MainPage() {
     <Loader2 className="spin-loader" size={16} />
   );
 
+  // Delete Farmer
+  const deleteFarmer = async (farmerId) => {
+    if (!window.confirm("Delete this farmer? All ponds will be deleted.")) return;
+    
+    try {
+      setLoading(prev => ({ ...prev, deleteFarmer: true }));
+      await api.delete(`/api/farmers/delete/${farmerId}?userId=${userId}`);
+      setFarmers(farmers.filter(f => f._id !== farmerId));
+    } catch (err) {
+      console.error("Delete Error:", err);
+      alert("Could not delete farmer.");
+    } finally {
+      setLoading(prev => ({ ...prev, deleteFarmer: false }));
+    }
+  };
+
+  // Delete Pond
+  const deletePond = async (farmerId, pondId) => {
+    if (!window.confirm("Delete this pond?")) return;
+    
+    try {
+      setLoading(prev => ({ ...prev, deletePond: true }));
+      const res = await api.delete(`/api/farmers/delete-pond/${farmerId}/${pondId}`);
+      setFarmers(farmers.map(f => 
+        f._id === farmerId ? res.data.farmer : f
+      ));
+    } catch (err) {
+      console.error("Delete Pond Error:", err);
+      alert("Could not delete pond.");
+    } finally {
+      setLoading(prev => ({ ...prev, deletePond: false }));
+    }
+  };
+  
   return (
     <div className="dashboard-container">
       {/* ================= MOBILE NAVBAR ================= */}

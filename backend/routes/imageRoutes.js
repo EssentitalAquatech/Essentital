@@ -57,15 +57,37 @@
 // export default router;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import express from "express";
 import User from "../models/userModel.js";
 import Farmer from "../models/farmerModel.js";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
 
-/* ================= USER IMAGES (OLD - KEEP AS IS) ================= */
+/* ================= FIX __dirname ================= */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/* =================================================
+   ✅ USER IMAGES (OLD – KEEP EXACTLY SAME)
+   URL: /api/images/:userId/:imageType
+================================================= */
 router.get("/:userId/:imageType", async (req, res) => {
   try {
     const { userId, imageType } = req.params;
@@ -100,25 +122,33 @@ router.get("/:userId/:imageType", async (req, res) => {
         return res.status(400).end();
     }
 
-    if (!imageData) return res.status(404).end();
+    if (!imageData || !contentType) return res.status(404).end();
 
-    res.set("Content-Type", contentType);
+    res.setHeader("Content-Type", contentType);
     res.send(imageData);
-
   } catch (err) {
-    console.error("User image error:", err);
+    console.error("❌ USER IMAGE ERROR:", err);
     res.status(500).end();
   }
 });
 
-/* ================= FARMER IMAGE (NEW - ADD THIS) ================= */
+/* =================================================
+   ✅ FARMER PHOTO (NEW – SAFE & PRODUCTION READY)
+   URL: /api/images/farmer/:farmerId/photo
+================================================= */
 router.get("/farmer/:farmerId/photo", async (req, res) => {
   try {
     const farmer = await Farmer.findById(req.params.farmerId);
-    if (!farmer || !farmer.photo) return res.status(404).end();
+    if (!farmer || !farmer.photo) {
+      return res.status(404).end();
+    }
 
-    const imgPath = path.resolve(farmer.photo);
-    if (!fs.existsSync(imgPath)) return res.status(404).end();
+    // 🔥 REAL FILE PATH
+    const imgPath = path.join(__dirname, "../uploads", farmer.photo);
+
+    if (!fs.existsSync(imgPath)) {
+      return res.status(404).end();
+    }
 
     const ext = path.extname(imgPath).toLowerCase();
     const typeMap = {
@@ -128,11 +158,10 @@ router.get("/farmer/:farmerId/photo", async (req, res) => {
       ".webp": "image/webp"
     };
 
-    res.set("Content-Type", typeMap[ext] || "image/png");
-    res.send(fs.readFileSync(imgPath));
-
+    res.setHeader("Content-Type", typeMap[ext] || "image/png");
+    res.sendFile(imgPath);
   } catch (err) {
-    console.error("Farmer image error:", err);
+    console.error("❌ FARMER IMAGE ERROR:", err);
     res.status(500).end();
   }
 });
