@@ -7792,12 +7792,12 @@ function MainPage() {
             farmers.map(f => (
               <div key={f._id} className="farmer-box">
                 {/* ✅ FIXED: Farmer image using corrected helper function */}
-                {/* <img
+                <img
                   
                   
                   // src={getImageUrl(`/api/images/${f.farmerId}/profile`)}
                       //  src={f.photo ? getImageUrl(`/${f.photo}`) : "/profile.png"}
-                      src={f.photo ? getImageUrl(f.photo) : "/profile.png"}
+                      src={`https://essentital.onrender.com/${farmer.photo}`}
                   alt={f.name}
                   className="profile-pic"
                   loading="lazy"
@@ -7805,7 +7805,7 @@ function MainPage() {
                     e.target.src = "/profile.png";
                     e.target.onerror = null;
                   }}
-                /> */}
+                />
 
 
               {/* <img
@@ -7820,7 +7820,7 @@ function MainPage() {
   }}
 /> */}
 
-<img
+{/* <img
   src={f.photo || "/profile.png"}
   alt={f.name}
   className="profile-pic"
@@ -7830,7 +7830,7 @@ function MainPage() {
     e.target.src = "/profile.png";
     e.target.onerror = null;
   }}
-/>
+/> */}
 
 
 
