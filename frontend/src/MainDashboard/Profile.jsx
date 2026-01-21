@@ -1663,7 +1663,7 @@ useEffect(() => {
             <h5>{username || "User"}</h5>
           </div>
 
-          {isMobile && (
+          {/* {isMobile && (
             <button 
               className="sidebar-close-btn"
               onClick={() => setIsSidebarOpen(false)}
@@ -1671,7 +1671,7 @@ useEffect(() => {
             >
               <X size={20} />
             </button>
-          )}
+          )} */}
         </div>
 
         <ul className="profile-menu">
