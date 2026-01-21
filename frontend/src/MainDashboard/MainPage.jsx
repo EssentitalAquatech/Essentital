@@ -5994,7 +5994,8 @@ function MainPage() {
                   
                   
                   // src={getImageUrl(`/api/images/${f.farmerId}/profile`)}
-                       src={f.photo ? getImageUrl(`/${f.photo}`) : "/profile.png"}
+                      //  src={f.photo ? getImageUrl(`/${f.photo}`) : "/profile.png"}
+                      src={f.photo ? getImageUrl(f.photo) : "/profile.png"}
                   alt={f.name}
                   className="profile-pic"
                   loading="lazy"
