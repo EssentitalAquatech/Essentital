@@ -509,9 +509,6 @@
 
 
 
-
-
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import products from "../data/products";
@@ -540,23 +537,11 @@ const DealerShop = () => {
     localStorage.setItem(`dealerCart_${dealerId}`, JSON.stringify(cart));
   }, [cart, dealerId]);
 
-  // Weight options
-  const weightOptions = [
-    { label: "1kg", kg: 1 },
-    { label: "10kg", kg: 10 },
-    { label: "20kg", kg: 20 },
-  ];
-
-  // NEW: Helper function to get price by weight
-  const getPriceByWeight = (product, weight = "1kg") => {
-    return product.prices?.[weight] || 0;
-  };
-
   // NEW: Function to get formatted price string
   const getFormattedPrice = (product) => {
-    const price1kg = getPriceByWeight(product, "1kg");
-    const price10kg = getPriceByWeight(product, "10kg");
-    const price20kg = getPriceByWeight(product, "20kg");
+    const price1kg = product.prices?.["1kg"] || 0;
+    const price10kg = product.prices?.["10kg"] || 0;
+    const price20kg = product.prices?.["20kg"] || 0;
     
     if (price1kg && price10kg && price20kg) {
       return `₹${price1kg} - ₹${price10kg} - ₹${price20kg}`;
@@ -571,16 +556,18 @@ const DealerShop = () => {
     setAddingId(product.id);
 
     setTimeout(() => {
-      const price = getPriceByWeight(product, "1kg");
+      const weight = "1kg";
+      const price = product.prices[weight];
 
       const existingItem = cart.find(
-        (item) => item.id === product.id && item.weight === "1kg"
+        (item) => item.id === product.id && item.weight === weight
       );
 
       let updatedCart;
+
       if (existingItem) {
         updatedCart = cart.map((item) =>
-          item.id === product.id && item.weight === "1kg"
+          item.id === product.id && item.weight === weight
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -590,10 +577,10 @@ const DealerShop = () => {
           {
             id: product.id,
             name: product.name,
-            basePrice: price,
-            price,
+            prices: product.prices,   // ✅ MOST IMPORTANT LINE
+            weight: weight,
+            price: price,
             quantity: 1,
-            weight: "1kg",
           },
         ];
       }
@@ -720,10 +707,3 @@ const DealerShop = () => {
 };
 
 export default DealerShop;
-
-
-
-
-
-
-
