@@ -99,7 +99,7 @@ import express from "express";
 import multer from "multer";
 
 // ⭐ IMPORT AUTH MIDDLEWARE
-import authMiddleware from "../middleware/authMiddleware.js";
+import authMiddleware from "../middlewares/authMiddleware.js"
 
 // ⭐ IMPORT SIGNUP CONTROLLER
 import { signup } from "../controllers/signupController.js";
