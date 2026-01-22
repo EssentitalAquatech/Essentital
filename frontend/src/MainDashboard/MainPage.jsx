@@ -3909,7 +3909,7 @@ function MainPage() {
             farmers.map(f => (
               <div key={f._id} className="farmer-box">
                 {/* ✅ FIXED: Farmer image using corrected helper function */}
-                <img
+                {/* <img
                       // src={f.photo ? getImageUrl(f.photo) : "/profile.png"}
                        src={getImageUrl(f.image)}
                   alt={f.name}
@@ -3919,7 +3919,20 @@ function MainPage() {
                     e.target.src = "/profile.png";
                     e.target.onerror = null;
                   }}
-                />
+                /> */}
+<div className="farmer-card" key={farmer._id}>
+  <img
+    src={getFarmerImage(farmer)}
+    alt={farmer.name}
+    className="farmer-card-img"
+    onError={(e) => { e.target.src = "/profile.png"; }}
+  />
+  <div className="farmer-card-info">
+    <h5>{farmer.name}</h5>
+    <p>{farmer.contact}</p>
+    <p>{farmer.village}</p>
+  </div>
+</div>
 
 
               {/* <img
