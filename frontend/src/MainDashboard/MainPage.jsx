@@ -3910,10 +3910,6 @@ function MainPage() {
               <div key={f._id} className="farmer-box">
                 {/* ✅ FIXED: Farmer image using corrected helper function */}
                 <img
-                  
-                  
-                  // src={getImageUrl(`/api/images/${f.farmerId}/profile`)}
-                      //  src={f.photo ? getImageUrl(`/${f.photo}`) : "/profile.png"}
                       src={f.photo ? getImageUrl(f.photo) : "/profile.png"}
                   alt={f.name}
                   className="profile-pic"
