@@ -55,14 +55,19 @@ const api = axios.create({
 });
 
 // ✅ SAFE IMAGE URL BUILDER (REPLACE ONLY THIS)
-// In api.js or utils/api.js
 export const getImageUrl = (path) => {
+  // fallback image
   if (!path) return "/profile.png";
-  
-  // Remove 'uploads/' prefix if it's already there
-  const cleanPath = path.startsWith('uploads/') ? path : `uploads/${path}`;
-  
-  return `${API_BASE_URL}/${cleanPath}`;
+
+  // already full URL
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+
+  // normalize path
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
+  return `${API_URL.replace(/\/$/, "")}/${cleanPath}`;
 };
 
 export default api;

@@ -5680,7 +5680,7 @@ function MainPage() {
 
                 {/* Replace the current img tag in farmers-list with: */}
 <img
-  src={getFarmerImage(f)}  // Use the helper function
+   src={f.photo ? getImageUrl(f.photo) : "/profile.png"} // Use the helper function
   alt={f.name}
   className="profile-pic"
   loading="lazy"
