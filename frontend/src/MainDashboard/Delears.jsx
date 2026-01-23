@@ -2146,13 +2146,8 @@ function DealersPage() {
                   //     e.target.src = "/no-image.png";
                   //   }}
                   // />
-
-                  <img
-  src={
-    dealer.image
-      ? getImageUrl(dealer.image)
-      : "/no-image.png"
-  }
+<img
+  src={getImageUrl(dealer.image)}
   alt={dealer.name}
   className="dealers-card-img"
   loading="lazy"
@@ -2161,6 +2156,7 @@ function DealersPage() {
     e.target.onerror = null;
   }}
 />
+
 
                 )}
                 <div className="dealers-card-content">

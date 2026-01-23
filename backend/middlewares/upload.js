@@ -69,32 +69,18 @@
 
 
 
-
-
-
-import multer from "multer";
 import path from "path";
+import { fileURLToPath } from "url";
 
-// ===== STORAGE CONFIG =====
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, path.join(__dirname, "../uploads"));
   },
   filename: (req, file, cb) => {
     const uniqueName = Date.now() + path.extname(file.originalname);
     cb(null, uniqueName);
   }
 });
-
-// ===== FILE FILTER =====
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image/")) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only image files allowed"), false);
-  }
-};
-
-const upload = multer({ storage, fileFilter });
-
-export default upload;
