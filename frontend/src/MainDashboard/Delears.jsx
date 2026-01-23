@@ -1889,16 +1889,7 @@ function DealersPage() {
             <h5 className="dealers-username">{username || "User"}</h5>
           </div>
 
-          {/* {isMobile && (
-            <button 
-              className="sidebar-close-btn"
-              onClick={() => setIsSidebarOpen(false)}
-              aria-label="Close menu"
-              disabled={loadingSidebar}
-            >
-              {loadingSidebar ? <Loader size={20} className="spinner" /> : <X size={20} />}
-            </button>
-          )} */}
+          
         </div>
 
         <ul className="dealers-nav-links">
@@ -2147,14 +2138,30 @@ function DealersPage() {
                 onClick={() => handleCardClick(dealer)}
               >
                 {dealer.image && (
+                  // <img
+                  //   src={getImageUrl(dealer.image)}
+                  //   alt={dealer.name}
+                  //   className="dealers-card-img"
+                  //   onError={(e) => {
+                  //     e.target.src = "/no-image.png";
+                  //   }}
+                  // />
+
                   <img
-                    src={getImageUrl(dealer.image)}
-                    alt={dealer.name}
-                    className="dealers-card-img"
-                    onError={(e) => {
-                      e.target.src = "/no-image.png";
-                    }}
-                  />
+  src={
+    dealer.image
+      ? getImageUrl(dealer.image)
+      : "/no-image.png"
+  }
+  alt={dealer.name}
+  className="dealers-card-img"
+  loading="lazy"
+  onError={(e) => {
+    e.target.src = "/no-image.png";
+    e.target.onerror = null;
+  }}
+/>
+
                 )}
                 <div className="dealers-card-content">
                   <h5 className="dealers-card-title">
