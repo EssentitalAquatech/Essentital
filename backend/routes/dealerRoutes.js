@@ -32,3 +32,11 @@ router.post("/", upload.single("image"), addDealer); // POST /api/dealers
 router.put("/:id", upload.single("image"), updateDealer); // PUT /api/dealers/:id
 
 export default router;
+
+
+
+//ye uper vala sahi 
+
+
+
+
