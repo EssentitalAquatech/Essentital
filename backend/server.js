@@ -14,6 +14,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
 // ===== IMPORT ROUTES =====
 import dbConnect from "./database/dbConnection.js";
 import accessRoutes from "./routes/accessRoutes.js";
@@ -38,8 +39,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ===== STATIC UPLOADS =====
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/uploads", express.static(path.join(process.cwd(), "backend/uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // ===== DATABASE =====
 dbConnect();
