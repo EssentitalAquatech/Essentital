@@ -111,6 +111,12 @@
 
 //ye uper vala bhi sahi hai 
 
+
+
+
+
+
+
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -118,7 +124,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 // ✅ axios instance
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: true, // 🔥 must for cookies/session
 });
 
 // ✅ image helper
@@ -133,6 +139,4 @@ export const getImageUrl = (path) => {
   return `${API_URL}/${cleanPath}`;
 };
 
-// 🔥 MOST IMPORTANT
 export default api;
-

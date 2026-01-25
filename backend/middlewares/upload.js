@@ -66,18 +66,23 @@
 
 
 
+import express from "express";
+import upload from "../middleware/uploads.js";
 
-import multer from "multer";
-import path from "path";
+const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads"),
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + path.extname(file.originalname);
-    cb(null, uniqueName);
-  }
+// Single file upload
+router.post("/upload", upload.single("file"), (req, res) => {
+  if (!req.file) return res.status(400).send("No file uploaded");
+  res.send({ filename: req.file.filename, path: `/uploads/${req.file.filename}` });
 });
 
-const upload = multer({ storage });
-export default upload;
+// Multiple files
+router.post("/uploads", upload.array("files", 5), (req, res) => {
+  const files = req.files.map(f => ({ filename: f.filename, path: `/uploads/${f.filename}` }));
+  res.send({ files });
+});
+
+export default router;
+
 
