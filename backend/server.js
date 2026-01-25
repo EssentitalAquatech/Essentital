@@ -38,7 +38,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ===== STATIC UPLOADS =====
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(process.cwd(), "backend/uploads")));
 
 // ===== DATABASE =====
 dbConnect();
