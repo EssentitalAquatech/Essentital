@@ -5000,11 +5000,24 @@ const SYMPTOMS_LIST = [
 ];
 
 // Helper function for farmer image
+// const getFarmerImage = (farmer) => {
+//   if (!farmer) return "/profile.png";
+  
+//   if (farmer.photo) {
+//     return getImageUrl(farmer.photo);
+//   }
+  
+//   return "/profile.png";
+// };
+
+// Helper function for farmer image - FIXED
 const getFarmerImage = (farmer) => {
   if (!farmer) return "/profile.png";
   
   if (farmer.photo) {
-    return getImageUrl(farmer.photo);
+    const url = getImageUrl(farmer.photo);
+    console.log(`Farmer ${farmer.name} photo URL:`, url);
+    return url;
   }
   
   return "/profile.png";
@@ -5139,6 +5152,9 @@ function MainPage() {
       console.log("Farmers data received:", res.data);
       if (res.data && res.data.length > 0) {
         console.log("First farmer's photo path:", res.data[0].photo);
+        console.log("First farmer object:", res.data[0]);
+    
+      console.log("Constructed URL:", getImageUrl(res.data[0].photo));
       }
       
       setFarmers(res.data || []);

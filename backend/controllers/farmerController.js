@@ -1238,8 +1238,10 @@
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 
+// ... existing code ...
+
 // ----------------------------------------------------
-// 1️⃣ GET FARMERS BY AGENT (With Access Control)
+// 1️⃣ GET FARMERS BY AGENT (With Access Control) - FIXED
 // ----------------------------------------------------
 export const getFarmersByAgent = async (req, res) => {
   try {
@@ -1263,7 +1265,7 @@ export const getFarmersByAgent = async (req, res) => {
             ...fullFarmer.toObject(),
             accessApproved: true,
             photo: fullFarmer.photo
-              ? `${req.protocol}://${req.get("host")}/uploads/${fullFarmer.photo}`
+              ? `${req.protocol}://${req.get("host")}/${fullFarmer.photo}`
               : null,
           };
         }
@@ -1274,7 +1276,7 @@ export const getFarmersByAgent = async (req, res) => {
           contact: farmer.contact,
           village: farmer.village,
           photo: farmer.photo
-            ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
+            ? `${req.protocol}://${req.get("host")}/${farmer.photo}`
             : null,
           accessApproved: false,
         };
@@ -1293,7 +1295,64 @@ export const getFarmersByAgent = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 2️⃣ ADD FARMER
+// 3️⃣ GET FARMERS - FIXED
+// ----------------------------------------------------
+export const getFarmers = async (req, res) => {
+  try {
+    const includeShared = req.query.includeShared === "true";
+    const userId = req.query.userId;
+
+    let farmers;
+
+    if (includeShared) {
+      const approvedRequests = await AccessRequest.find({ requesterId: userId, status: "approved" });
+      const ids = approvedRequests.map(r => r.targetFarmerId);
+      farmers = await Farmer.find({ _id: { $in: ids } });
+    } else {
+      farmers = await Farmer.find({ createdBy: userId });
+    }
+
+    const formattedFarmers = farmers.map(f => ({
+      ...f.toObject(),
+      photo: f.photo ? `${req.protocol}://${req.get("host")}/${f.photo}` : null,
+      pondImage: f.pondImage ? `${req.protocol}://${req.get("host")}/${f.pondImage}` : null,
+      pondFiles: f.pondFiles.map(fil => `${req.protocol}://${req.get("host")}/${fil}`),
+      fishFiles: f.fishFiles.map(fil => `${req.protocol}://${req.get("host")}/${fil}`)
+    }));
+
+    res.status(200).json(formattedFarmers);
+
+  } catch (err) {
+    console.error("🔥 GET FARMERS ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// ----------------------------------------------------
+// 4️⃣ GET SINGLE FARMER - FIXED
+// ----------------------------------------------------
+export const getFarmerById = async (req, res) => {
+  try {
+    const farmer = await Farmer.findById(req.params.id);
+    if (!farmer) return res.status(404).json({ error: "Farmer not found" });
+
+    const formattedFarmer = {
+      ...farmer.toObject(),
+      photo: farmer.photo ? `${req.protocol}://${req.get("host")}/${farmer.photo}` : null,
+      pondImage: farmer.pondImage ? `${req.protocol}://${req.get("host")}/${farmer.pondImage}` : null,
+      pondFiles: farmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/${f}`),
+      fishFiles: farmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/${f}`)
+    };
+
+    res.json(formattedFarmer);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// ----------------------------------------------------
+// 2️⃣ ADD FARMER - FIXED
 // ----------------------------------------------------
 export const addFarmer = async (req, res) => {
   try {
@@ -1374,12 +1433,25 @@ export const addFarmer = async (req, res) => {
       await newFarmer.save();
     }
 
+    // Generate farmerId
+    if (!newFarmer.farmerId) {
+      const year = new Date().getFullYear();
+      const count = await Farmer.countDocuments({ 
+        createdAt: { 
+          $gte: new Date(`${year}-01-01`), 
+          $lt: new Date(`${year + 1}-01-01`) 
+        } 
+      });
+      newFarmer.farmerId = `FAR-${year}-${String(count).padStart(5, "0")}`;
+      await newFarmer.save();
+    }
+
     const formattedFarmer = {
       ...newFarmer.toObject(),
-      photo: newFarmer.photo ? `${req.protocol}://${req.get("host")}/uploads/${newFarmer.photo}` : null,
-      pondImage: newFarmer.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${newFarmer.pondImage}` : null,
-      pondFiles: newFarmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`),
-      fishFiles: newFarmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`)
+      photo: newFarmer.photo ? `${req.protocol}://${req.get("host")}/${newFarmer.photo}` : null,
+      pondImage: newFarmer.pondImage ? `${req.protocol}://${req.get("host")}/${newFarmer.pondImage}` : null,
+      pondFiles: newFarmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/${f}`),
+      fishFiles: newFarmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/${f}`)
     };
 
     res.status(201).json(formattedFarmer);
@@ -1391,64 +1463,7 @@ export const addFarmer = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 3️⃣ GET FARMERS
-// ----------------------------------------------------
-export const getFarmers = async (req, res) => {
-  try {
-    const includeShared = req.query.includeShared === "true";
-    const userId = req.query.userId;
-
-    let farmers;
-
-    if (includeShared) {
-      const approvedRequests = await AccessRequest.find({ requesterId: userId, status: "approved" });
-      const ids = approvedRequests.map(r => r.targetFarmerId);
-      farmers = await Farmer.find({ _id: { $in: ids } });
-    } else {
-      farmers = await Farmer.find({ createdBy: userId });
-    }
-
-    const formattedFarmers = farmers.map(f => ({
-      ...f.toObject(),
-      photo: f.photo ? `${req.protocol}://${req.get("host")}/uploads/${f.photo}` : null,
-      pondImage: f.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${f.pondImage}` : null,
-      pondFiles: f.pondFiles.map(fil => `${req.protocol}://${req.get("host")}/uploads/${fil}`),
-      fishFiles: f.fishFiles.map(fil => `${req.protocol}://${req.get("host")}/uploads/${fil}`)
-    }));
-
-    res.status(200).json(formattedFarmers);
-
-  } catch (err) {
-    console.error("🔥 GET FARMERS ERROR:", err);
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// ----------------------------------------------------
-// 4️⃣ GET SINGLE FARMER
-// ----------------------------------------------------
-export const getFarmerById = async (req, res) => {
-  try {
-    const farmer = await Farmer.findById(req.params.id);
-    if (!farmer) return res.status(404).json({ error: "Farmer not found" });
-
-    const formattedFarmer = {
-      ...farmer.toObject(),
-      photo: farmer.photo ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}` : null,
-      pondImage: farmer.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${farmer.pondImage}` : null,
-      pondFiles: farmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`),
-      fishFiles: farmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`)
-    };
-
-    res.json(formattedFarmer);
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// ----------------------------------------------------
-// 5️⃣ UPDATE FARMER
+// 5️⃣ UPDATE FARMER - FIXED
 // ----------------------------------------------------
 export const updateFarmer = async (req, res) => {
   try {
@@ -1481,10 +1496,10 @@ export const updateFarmer = async (req, res) => {
 
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}` : null,
-      pondImage: farmer.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${farmer.pondImage}` : null,
-      pondFiles: farmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`),
-      fishFiles: farmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`)
+      photo: farmer.photo ? `${req.protocol}://${req.get("host")}/${farmer.photo}` : null,
+      pondImage: farmer.pondImage ? `${req.protocol}://${req.get("host")}/${farmer.pondImage}` : null,
+      pondFiles: farmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/${f}`),
+      fishFiles: farmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/${f}`)
     };
 
     res.status(200).json(formattedFarmer);
@@ -1494,6 +1509,8 @@ export const updateFarmer = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// ... rest of the code remains same ...
 
 // ----------------------------------------------------
 // 6️⃣ ADD POND TO EXISTING FARMER
