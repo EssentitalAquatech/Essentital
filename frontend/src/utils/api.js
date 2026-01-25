@@ -111,22 +111,28 @@
 
 //ye uper vala bhi sahi hai 
 
-const API_URL = import.meta.env.VITE_API_URL;
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+// ✅ axios instance
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+});
+
+// ✅ image helper
 export const getImageUrl = (path) => {
   if (!path) return "/profile.png";
 
-  // already full url
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path.replace("http://", "https://");
   }
 
-  // remove starting slash
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-
-  // final image url
-  return `${BASE_URL}/${cleanPath}`;
+  return `${API_URL}/${cleanPath}`;
 };
 
-export default API_URL;
+// 🔥 MOST IMPORTANT
+export default api;
+
