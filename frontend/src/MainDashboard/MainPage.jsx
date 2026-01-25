@@ -4999,16 +4999,7 @@ const SYMPTOMS_LIST = [
   "Other"
 ];
 
-// Helper function for farmer image
-// const getFarmerImage = (farmer) => {
-//   if (!farmer) return "/profile.png";
-  
-//   if (farmer.photo) {
-//     return getImageUrl(farmer.photo);
-//   }
-  
-//   return "/profile.png";
-// };
+
 
 // Helper function for farmer image - FIXED
 const getFarmerImage = (farmer) => {
@@ -5993,8 +5984,14 @@ function MainPage() {
                   {newFarmer.photoExisting && (
                     <div style={{ marginTop: 6 }}>
                       <img
-                        src={getImageUrl(newFarmer.photoExisting)}
-                        alt="Existing Farmer"
+                        // src={getImageUrl(newFarmer.photoExisting)}
+                       
+  src={getImageUrl(farmer.photo)}
+  alt={farmer.name}
+  
+
+
+                       
                         style={{ width: 80, height: 80, borderRadius: "50%" }}
                         onError={(e) => {
                           e.target.src = "/profile.png";

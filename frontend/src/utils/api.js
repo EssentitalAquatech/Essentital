@@ -111,63 +111,22 @@
 
 //ye uper vala bhi sahi hai 
 
+const API_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
-const BASE_URL = import.meta.env.VITE_BASE_URL || API_URL;
-
-const api = axios.create({
-  baseURL: API_URL,
-  withCredentials: false,
-});
-
-// ✅ FIXED: Image URL builder that handles different path formats
 export const getImageUrl = (path) => {
-  // fallback image
-  if (!path || path.trim() === "") return "/profile.png";
+  if (!path) return "/profile.png";
 
-  // already full URL (http:// or https://)
+  // already full url
   if (path.startsWith("http://") || path.startsWith("https://")) {
-    // If it's already a full URL, return as-is
-    console.log(`Already full URL: ${path}`);
-    return path;
+    return path.replace("http://", "https://");
   }
 
-  // Handle image API routes (like /api/images/{userId}/profile)
-  if (path.startsWith("/api/images/") || path.startsWith("api/images/")) {
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const fullUrl = `${API_URL}/${cleanPath}`;
-    console.log(`Image API URL: ${fullUrl}`);
-    return fullUrl;
-  }
+  // remove starting slash
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
 
-  // Handle uploads paths
-  let cleanPath = path;
-  
-  // Remove leading slash if exists
-  if (cleanPath.startsWith("/")) {
-    cleanPath = cleanPath.slice(1);
-  }
-  
-  // Check if it already has uploads prefix
-  if (cleanPath.startsWith("uploads/")) {
-    // If it already has uploads/, use as-is
-    const fullUrl = `${BASE_URL}/${cleanPath}`;
-    console.log(`Uploads path (already correct): ${fullUrl}`);
-    return fullUrl;
-  } else {
-    // If it doesn't have uploads/, add it
-    const fullUrl = `${BASE_URL}/uploads/${cleanPath}`;
-    console.log(`Uploads path (added prefix): ${fullUrl}`);
-    return fullUrl;
-  }
+  // final image url
+  return `${BASE_URL}/${cleanPath}`;
 };
 
-// For debugging
-console.log("BASE_URL:", BASE_URL);
-console.log("API_URL:", API_URL);
-
-// Export for use in other components
-export { BASE_URL };
-export default api;
+export default API_URL;
