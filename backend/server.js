@@ -76,7 +76,6 @@
 
 // //ye uper vala sahi hai 
 
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -108,7 +107,7 @@ import userRoutes from "./routes/userRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 2008;
 
-// ===== CORS (🔥 FIXED – NO WILDCARD) =====
+// ===== ✅ CORS FIX (NO STAR ⭐) =====
 const allowedOrigins = [
   "https://essentital.vercel.app",
   "http://localhost:5173"
@@ -116,7 +115,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -151,16 +150,6 @@ app.use("/api/notification", notificationRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-
-// ===== FRONTEND SERVE (OPTIONAL) =====
-if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../frontend/dist");
-  app.use(express.static(frontendPath));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-}
 
 // ===== SERVER START =====
 app.listen(PORT, "0.0.0.0", () => {
