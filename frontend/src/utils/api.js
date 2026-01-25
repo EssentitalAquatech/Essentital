@@ -156,10 +156,16 @@ export const getImageUrl = (path) => {
 };
 
 // ✅ Helper to get farmer photo URL
+// export const getFarmerPhotoUrl = (farmerId) => {
+//   if (!farmerId) return "/profile.png";
+//   return `${BASE_URL}/api/farmers/file/${farmerId}/photo`;
+// };
+
 export const getFarmerPhotoUrl = (farmerId) => {
   if (!farmerId) return "/profile.png";
   return `${BASE_URL}/api/farmers/file/${farmerId}/photo`;
 };
+
 
 // ✅ Helper to get pond image URL
 export const getPondImageUrl = (farmerId, pondId) => {

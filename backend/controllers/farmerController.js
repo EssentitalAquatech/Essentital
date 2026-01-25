@@ -1240,7 +1240,6 @@
 
 
 
-
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 
@@ -1304,7 +1303,7 @@ export const getFarmersByAgent = async (req, res) => {
             ...fullFarmer.toObject(), 
             accessApproved: true,
             // Photo URL for frontend
-            photoUrl: fullFarmer.photo 
+            photoUrl: fullFarmer.photo && fullFarmer.photo.data 
               ? `/api/farmers/file/${fullFarmer._id}/photo`
               : null
           };
@@ -1316,7 +1315,7 @@ export const getFarmersByAgent = async (req, res) => {
           name: farmer.name,
           contact: farmer.contact,
           village: farmer.village,
-          photoUrl: farmer.photo 
+          photoUrl: farmer.photo && farmer.photo.data 
             ? `/api/farmers/file/${farmer._id}/photo`
             : null,
           accessApproved: false,
@@ -1336,7 +1335,7 @@ export const getFarmersByAgent = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 2️⃣ ADD FARMER (FINAL – WITH VALIDATION & BINARY FILES)
+// 2️⃣ ADD FARMER (WITH BINARY FILES)
 // ----------------------------------------------------
 export const addFarmer = async (req, res) => {
   try {
@@ -1395,7 +1394,7 @@ export const addFarmer = async (req, res) => {
     const fishFiles = await processFiles(req.files?.fishFiles || []);
 
     // -----------------------------
-    // ✅ FIX 1: SAFE POND COUNT
+    // ✅ FIX: SAFE POND COUNT
     // -----------------------------
     const totalPonds = parseInt(pondCount || 0);
     let pondsArray = [];
@@ -1406,27 +1405,28 @@ export const addFarmer = async (req, res) => {
           .toString(36)
           .substring(2, 7)}`;
 
+        const defaultPondImage = pondImageFile || {
+          data: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==", "base64"),
+          contentType: "image/png",
+          filename: "placeholder.png",
+          size: 95,
+          uploadedAt: new Date()
+        };
+
         pondsArray.push({
           pondId: tempPondId,
           pondNumber: i,
           pondArea: req.body[`pondArea${i}`] || "",
+          pondAreaUnit: "acre",
           pondDepth: req.body[`pondDepth${i}`] || "",
-          overflow: req.body[`overflow${i}`] || "",
-          receivesSunlight: req.body[`receivesSunlight${i}`] || "",
-          treesOnBanks: req.body[`treesOnBanks${i}`] || "",
-          neighbourhood: req.body[`neighbourhood${i}`] || "",
-          wastewaterEnters: req.body[`wastewaterEnters${i}`] || "",
-          // Initialize with empty file objects for required fields
-          pondImage: pondImageFile || {
-            data: Buffer.from(""),
-            contentType: "image/png",
-            filename: "placeholder.png",
-            size: 0,
-            uploadedAt: new Date()
-          },
+          overflow: req.body[`overflow${i}`] || "No",
+          receivesSunlight: req.body[`receivesSunlight${i}`] || "Yes",
+          treesOnBanks: req.body[`treesOnBanks${i}`] || "No",
+          neighbourhood: req.body[`neighbourhood${i}`] || "Agriculture Farm",
+          wastewaterEnters: req.body[`wastewaterEnters${i}`] || "No",
+          pondImage: defaultPondImage,
           pondFiles: [],
           fishFiles: [],
-          // Required fields with default values
           species: "",
           dateOfStocking: new Date(),
           qtySeedInitially: "",
@@ -1460,13 +1460,15 @@ export const addFarmer = async (req, res) => {
           pesticideRunoff: "No",
           constructionNear: "No",
           suddenTempChange: "No",
-          notes: ""
+          notes: "",
+          createdAt: new Date(),
+          updatedAt: new Date()
         });
       }
     }
 
     // -----------------------------
-    // 2️⃣ CREATE FARMER WITH BINARY FILES
+    // CREATE FARMER WITH BINARY FILES
     // -----------------------------
     const newFarmer = new Farmer({
       userId,
@@ -1489,7 +1491,7 @@ export const addFarmer = async (req, res) => {
     await newFarmer.save();
 
     // -----------------------------
-    // 3️⃣ FINAL POND IDS
+    // FINAL POND IDS
     // -----------------------------
     if (newFarmer.ponds && newFarmer.ponds.length > 0) {
       newFarmer.ponds = newFarmer.ponds.map((p, i) => ({
@@ -1540,7 +1542,9 @@ export const getFarmers = async (req, res) => {
     // Format farmers with photo URLs
     const formattedFarmers = farmers.map(farmer => ({
       ...farmer.toObject(),
-      photoUrl: `/api/farmers/file/${farmer._id}/photo`
+      photoUrl: farmer.photo && farmer.photo.data 
+        ? `/api/farmers/file/${farmer._id}/photo`
+        : null
     }));
 
     res.status(200).json(formattedFarmers);
@@ -1561,7 +1565,9 @@ export const getFarmerById = async (req, res) => {
     
     const formattedFarmer = {
       ...farmer.toObject(),
-      photoUrl: `/api/farmers/file/${farmer._id}/photo`
+      photoUrl: farmer.photo && farmer.photo.data 
+        ? `/api/farmers/file/${farmer._id}/photo`
+        : null
     };
     
     res.json(formattedFarmer);
@@ -1584,7 +1590,7 @@ export const deleteFarmer = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 6️⃣ UPDATE FARMER (WITH VALIDATION & BINARY FILES)
+// 6️⃣ UPDATE FARMER (WITH BINARY FILES)
 // ----------------------------------------------------
 export const updateFarmer = async (req, res) => {
   try {
@@ -1657,7 +1663,9 @@ export const updateFarmer = async (req, res) => {
     
     const formattedFarmer = {
       ...farmer.toObject(),
-      photoUrl: `/api/farmers/file/${farmer._id}/photo`
+      photoUrl: farmer.photo && farmer.photo.data 
+        ? `/api/farmers/file/${farmer._id}/photo`
+        : null
     };
     
     res.status(200).json(formattedFarmer);
@@ -1669,7 +1677,7 @@ export const updateFarmer = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 7️⃣ ADD POND (WITH VALIDATION & BINARY FILES)
+// 7️⃣ ADD POND (WITH BINARY FILES)
 // ----------------------------------------------------
 export const addPondWithValidation = async (req, res) => {
   try {
@@ -1702,38 +1710,6 @@ export const addPondWithValidation = async (req, res) => {
       return res.status(400).json({
         error: `Pond required fields are missing: ${missingPondFields.join(', ')}`
       });
-    }
-
-    // -----------------------------
-    // ✅ VALIDATE NUMERIC FIELDS
-    // -----------------------------
-    if (pondData.pondArea && isNaN(parseFloat(pondData.pondArea))) {
-      return res.status(400).json({ error: "Pond area must be a number" });
-    }
-    
-    if (pondData.pondDepth && isNaN(parseFloat(pondData.pondDepth))) {
-      return res.status(400).json({ error: "Pond depth must be a number" });
-    }
-    
-    if (pondData.waterTemperature && isNaN(parseFloat(pondData.waterTemperature))) {
-      return res.status(400).json({ error: "Water temperature must be a number" });
-    }
-    
-    if (pondData.pH && isNaN(parseFloat(pondData.pH))) {
-      return res.status(400).json({ error: "pH must be a number" });
-    }
-    
-    if (pondData.DO && isNaN(parseFloat(pondData.DO))) {
-      return res.status(400).json({ error: "DO must be a number" });
-    }
-
-    // ✅ ADDED: Optional safe check for length
-    if (pondData.qtySeedInitially && pondData.qtySeedInitially.length > 20) {
-      return res.status(400).json({ error: "Initial seed quantity is too long" });
-    }
-
-    if (pondData.currentQty && pondData.currentQty.length > 20) {
-      return res.status(400).json({ error: "Current quantity is too long" });
     }
 
     // PROCESS POND FILES
@@ -1772,7 +1748,9 @@ export const addPondWithValidation = async (req, res) => {
 
     const formattedFarmer = {
       ...farmer.toObject(),
-      photoUrl: `/api/farmers/file/${farmer._id}/photo`
+      photoUrl: farmer.photo && farmer.photo.data 
+        ? `/api/farmers/file/${farmer._id}/photo`
+        : null
     };
 
     res.json({ success: true, farmer: formattedFarmer });
@@ -1784,7 +1762,7 @@ export const addPondWithValidation = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 8️⃣ UPDATE POND (WITH VALIDATION & BINARY FILES)
+// 8️⃣ UPDATE POND (WITH BINARY FILES)
 // ----------------------------------------------------
 export const updatePondWithValidation = async (req, res) => {
   try {
@@ -1804,61 +1782,6 @@ export const updatePondWithValidation = async (req, res) => {
     }
 
     const oldPond = farmer.ponds[pondIndex].toObject();
-
-    // -----------------------------
-    // ✅ POND REQUIRED FIELDS VALIDATION (for update)
-    // -----------------------------
-    const pondRequiredFields = [
-      'pondArea', 'pondDepth', 'species', 'dateOfStocking',
-      'qtySeedInitially', 'currentQty', 'waterTemperature',
-      'pH', 'DO', 'sourceOfWater'
-    ];
-    
-    const missingPondFields = [];
-    pondRequiredFields.forEach(field => {
-      if (updateData[field] !== undefined && 
-          (!updateData[field] || updateData[field].toString().trim() === '')) {
-        missingPondFields.push(field);
-      }
-    });
-    
-    if (missingPondFields.length > 0) {
-      return res.status(400).json({
-        error: `Pond required fields cannot be empty: ${missingPondFields.join(', ')}`
-      });
-    }
-
-    // -----------------------------
-    // ✅ VALIDATE NUMERIC FIELDS
-    // -----------------------------
-    if (updateData.pondArea && isNaN(parseFloat(updateData.pondArea))) {
-      return res.status(400).json({ error: "Pond area must be a number" });
-    }
-    
-    if (updateData.pondDepth && isNaN(parseFloat(updateData.pondDepth))) {
-      return res.status(400).json({ error: "Pond depth must be a number" });
-    }
-    
-    if (updateData.waterTemperature && isNaN(parseFloat(updateData.waterTemperature))) {
-      return res.status(400).json({ error: "Water temperature must be a number" });
-    }
-    
-    if (updateData.pH && isNaN(parseFloat(updateData.pH))) {
-      return res.status(400).json({ error: "pH must be a number" });
-    }
-    
-    if (updateData.DO && isNaN(parseFloat(updateData.DO))) {
-      return res.status(400).json({ error: "DO must be a number" });
-    }
-
-    // ✅ ADDED: Optional safe check for length
-    if (updateData.qtySeedInitially && updateData.qtySeedInitially.length > 20) {
-      return res.status(400).json({ error: "Initial seed quantity is too long" });
-    }
-
-    if (updateData.currentQty && updateData.currentQty.length > 20) {
-      return res.status(400).json({ error: "Current quantity is too long" });
-    }
 
     // Convert dates
     if (updateData.dateOfStocking) {
@@ -1925,7 +1848,9 @@ export const updatePondWithValidation = async (req, res) => {
 
     const formattedFarmer = {
       ...farmer.toObject(),
-      photoUrl: `/api/farmers/file/${farmer._id}/photo`
+      photoUrl: farmer.photo && farmer.photo.data 
+        ? `/api/farmers/file/${farmer._id}/photo`
+        : null
     };
 
     res.json({ success: true, farmer: formattedFarmer });
@@ -1952,7 +1877,7 @@ export const getFarmerFile = async (req, res) => {
 
     switch (fileType) {
       case "photo":
-        if (farmer.photo) {
+        if (farmer.photo && farmer.photo.data) {
           fileData = farmer.photo.data;
           contentType = farmer.photo.contentType;
         }
@@ -1962,7 +1887,7 @@ export const getFarmerFile = async (req, res) => {
         const { pondId } = req.query;
         if (pondId) {
           const pond = farmer.ponds.find(p => p.pondId === pondId);
-          if (pond && pond.pondImage) {
+          if (pond && pond.pondImage && pond.pondImage.data) {
             fileData = pond.pondImage.data;
             contentType = pond.pondImage.contentType;
           }
@@ -1971,9 +1896,9 @@ export const getFarmerFile = async (req, res) => {
 
       case "pond-file":
         const { pondId: pondId2, index } = req.query;
-        if (pondId2 && index) {
+        if (pondId2 && index !== undefined) {
           const pond = farmer.ponds.find(p => p.pondId === pondId2);
-          if (pond && pond.pondFiles && pond.pondFiles[index]) {
+          if (pond && pond.pondFiles && pond.pondFiles[index] && pond.pondFiles[index].data) {
             fileData = pond.pondFiles[index].data;
             contentType = pond.pondFiles[index].contentType;
           }
@@ -1982,9 +1907,9 @@ export const getFarmerFile = async (req, res) => {
 
       case "fish-file":
         const { pondId: pondId3, index: fishIndex } = req.query;
-        if (pondId3 && fishIndex) {
+        if (pondId3 && fishIndex !== undefined) {
           const pond = farmer.ponds.find(p => p.pondId === pondId3);
-          if (pond && pond.fishFiles && pond.fishFiles[fishIndex]) {
+          if (pond && pond.fishFiles && pond.fishFiles[fishIndex] && pond.fishFiles[fishIndex].data) {
             fileData = pond.fishFiles[fishIndex].data;
             contentType = pond.fishFiles[fishIndex].contentType;
           }
@@ -1992,14 +1917,14 @@ export const getFarmerFile = async (req, res) => {
         break;
 
       case "farmer-pond-file":
-        if (farmer.pondFiles && farmer.pondFiles[fileIndex]) {
+        if (farmer.pondFiles && farmer.pondFiles[fileIndex] && farmer.pondFiles[fileIndex].data) {
           fileData = farmer.pondFiles[fileIndex].data;
           contentType = farmer.pondFiles[fileIndex].contentType;
         }
         break;
 
       case "farmer-fish-file":
-        if (farmer.fishFiles && farmer.fishFiles[fileIndex]) {
+        if (farmer.fishFiles && farmer.fishFiles[fileIndex] && farmer.fishFiles[fileIndex].data) {
           fileData = farmer.fishFiles[fileIndex].data;
           contentType = farmer.fishFiles[fileIndex].contentType;
         }
@@ -2064,4 +1989,3 @@ export const getPondFileUrls = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-

@@ -255,15 +255,16 @@ const router = express.Router();
    MULTER CONFIG FOR BINARY UPLOAD
 ================================ */
 // Memory storage for binary uploads (CHANGED FROM diskStorage)
+// Memory storage for binary uploads
 const storage = multer.memoryStorage();
 
 const upload = multer({ 
   storage,
   limits: {
-    fileSize: 50 * 1024 * 1024, // 50MB limit (ADDED)
+    fileSize: 50 * 1024 * 1024, // 50MB limit
   },
   fileFilter: (req, file, cb) => {
-    // Accept images and videos (ADDED)
+    // Accept images and videos
     if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
       cb(null, true);
     } else {
@@ -271,7 +272,6 @@ const upload = multer({
     }
   }
 });
-
 /* ===============================
    GET FARMERS BY AGENT (WITH ACCESS CONTROL)
 ================================ */
