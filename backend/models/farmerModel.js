@@ -329,3 +329,13 @@ farmerSchema.pre("save", async function () {
 
 const Farmer = mongoose.model("Farmer", farmerSchema);
 export default Farmer;
+
+
+
+//ye bhi sahi hai 
+
+
+
+
+
+
