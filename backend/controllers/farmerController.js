@@ -1234,7 +1234,7 @@
 
 
 //uper vala sahi hai 
-
+// farmerController.js
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 
@@ -1246,7 +1246,7 @@ export const getFarmersByAgent = async (req, res) => {
     const { agentId, viewerId } = req.query;
 
     const allFarmers = await Farmer.find({ createdBy: agentId })
-      .select("name contact village photo _id") // ✅ PHOTO FIELD ADDED
+      .select("name contact village photo _id")
       .sort({ name: 1 });
 
     const farmersWithAccess = await Promise.all(
@@ -1259,12 +1259,12 @@ export const getFarmersByAgent = async (req, res) => {
 
         if (access) {
           const fullFarmer = await Farmer.findById(farmer._id);
-          return { 
-            ...fullFarmer.toObject(), 
+          return {
+            ...fullFarmer.toObject(),
             accessApproved: true,
             photo: fullFarmer.photo
               ? `${req.protocol}://${req.get("host")}/uploads/${fullFarmer.photo}`
-              : null // ✅ PHOTO URL FORMATTED
+              : null,
           };
         }
 
@@ -1275,7 +1275,7 @@ export const getFarmersByAgent = async (req, res) => {
           village: farmer.village,
           photo: farmer.photo
             ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-            : null, // ✅ PHOTO URL FORMATTED
+            : null,
           accessApproved: false,
         };
       })
@@ -1293,91 +1293,57 @@ export const getFarmersByAgent = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 2️⃣ ADD FARMER (FINAL – WITH VALIDATION)
+// 2️⃣ ADD FARMER
 // ----------------------------------------------------
 export const addFarmer = async (req, res) => {
   try {
-    console.log("🔥 ADD FARMER BODY:", req.body);
-
     const {
       name, contact, age, gender, village, pondCount,
       adhar, familyMembers, familyOccupation,
       userId
     } = req.body;
 
-    // -----------------------------
-    // ✅ VALIDATION: REQUIRED FIELDS
-    // -----------------------------
+    // Required fields validation
     const requiredFields = [
-      'name', 'contact', 'age', 'gender', 'village', 
+      'name', 'contact', 'age', 'gender', 'village',
       'adhar', 'familyMembers', 'familyOccupation'
     ];
-    
-    const missingFields = [];
-    requiredFields.forEach(field => {
-      if (!req.body[field] || req.body[field].toString().trim() === '') {
-        missingFields.push(field);
-      }
-    });
-    
+    const missingFields = requiredFields.filter(f => !req.body[f] || req.body[f].toString().trim() === '');
     if (missingFields.length > 0) {
       return res.status(400).json({
         error: `Required fields are missing: ${missingFields.join(', ')}`
       });
     }
 
-    // -----------------------------
-    // ✅ VALIDATION: AADHAR NUMBER
-    // -----------------------------
-    if (adhar) {
-      const adharStr = adhar.toString().trim();
-      if (adharStr.length !== 12 || !/^\d+$/.test(adharStr)) {
-        return res.status(400).json({
-          error: "Aadhar number must be exactly 12 digits"
-        });
-      }
+    // Aadhaar validation
+    if (adhar && (!/^\d{12}$/.test(adhar.toString().trim()))) {
+      return res.status(400).json({ error: "Aadhar number must be exactly 12 digits" });
     }
 
-    // -----------------------------
-    // FILES - ✅ FIXED: Store only filename
-    // -----------------------------
-    const photo = req.files?.photo?.[0]
-      ? req.files.photo[0].filename // ✅ Only filename, no path prefix
-      : "";
-
+    // Files handling
+    const photo = req.files?.photo?.[0]?.filename || "";
     const pondImage = req.files?.pondImage?.[0]?.filename || "";
     const pondFiles = req.files?.pondFiles?.map(f => f.filename) || [];
     const fishFiles = req.files?.fishFiles?.map(f => f.filename) || [];
 
-    // -----------------------------
-    // ✅ FIX 1: SAFE POND COUNT
-    // -----------------------------
+    // Pond array creation
     const totalPonds = parseInt(pondCount || 0);
-    let pondsArray = [];
-
-    if (totalPonds > 0) {
-      for (let i = 1; i <= totalPonds; i++) {
-        const tempPondId = `TEMP-${Date.now()}-${i}-${Math.random()
-          .toString(36)
-          .substring(2, 7)}`;
-
-        pondsArray.push({
-          pondId: tempPondId, // ✅ never null
-          pondNumber: i,
-          pondArea: req.body[`pondArea${i}`] || "",
-          pondDepth: req.body[`pondDepth${i}`] || "",
-          overflow: req.body[`overflow${i}`] || "",
-          receivesSunlight: req.body[`receivesSunlight${i}`] || "",
-          treesOnBanks: req.body[`treesOnBanks${i}`] || "",
-          neighbourhood: req.body[`neighbourhood${i}`] || "",
-          wastewaterEnters: req.body[`wastewaterEnters${i}`] || ""
-        });
-      }
+    const pondsArray = [];
+    for (let i = 1; i <= totalPonds; i++) {
+      pondsArray.push({
+        pondId: `TEMP-${Date.now()}-${i}-${Math.random().toString(36).substring(2, 7)}`,
+        pondNumber: i,
+        pondArea: req.body[`pondArea${i}`] || "",
+        pondDepth: req.body[`pondDepth${i}`] || "",
+        overflow: req.body[`overflow${i}`] || "",
+        receivesSunlight: req.body[`receivesSunlight${i}`] || "",
+        treesOnBanks: req.body[`treesOnBanks${i}`] || "",
+        neighbourhood: req.body[`neighbourhood${i}`] || "",
+        wastewaterEnters: req.body[`wastewaterEnters${i}`] || ""
+      });
     }
 
-    // -----------------------------
-    // 2️⃣ CREATE FARMER
-    // -----------------------------
+    // Create Farmer
     const newFarmer = new Farmer({
       userId,
       createdBy: userId,
@@ -1390,48 +1356,42 @@ export const addFarmer = async (req, res) => {
       adhar,
       familyMembers,
       familyOccupation,
-      photo, // ✅ Now stores only filename
+      photo,
       pondImage,
       pondFiles,
       fishFiles,
       ...(pondsArray.length > 0 && { ponds: pondsArray })
     });
 
-    await newFarmer.save(); // ✅ FIRST SAVE
+    await newFarmer.save();
 
-    // -----------------------------
-    // 3️⃣ FINAL POND IDS
-    // -----------------------------
-    if (newFarmer.ponds && newFarmer.ponds.length > 0) {
+    // Update pond IDs after save
+    if (newFarmer.ponds.length > 0) {
       newFarmer.ponds = newFarmer.ponds.map((p, i) => ({
         ...p._doc,
-        pondId: `POND-${newFarmer.farmerId}-${String(i + 1).padStart(3, "0")}`
+        pondId: `POND-${newFarmer._id}-${String(i + 1).padStart(3, "0")}`
       }));
-
-      await newFarmer.save(); // ✅ SECOND SAVE
+      await newFarmer.save();
     }
 
-    // Format photo URL for response
     const formattedFarmer = {
       ...newFarmer.toObject(),
-      photo: newFarmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${newFarmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      photo: newFarmer.photo ? `${req.protocol}://${req.get("host")}/uploads/${newFarmer.photo}` : null,
+      pondImage: newFarmer.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${newFarmer.pondImage}` : null,
+      pondFiles: newFarmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`),
+      fishFiles: newFarmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`)
     };
 
     res.status(201).json(formattedFarmer);
 
   } catch (err) {
     console.error("🔥 ADD FARMER ERROR:", err);
-    res.status(500).json({
-      error: err.message,
-      details: "If error persists, drop ponds.pondId index from MongoDB"
-    });
+    res.status(500).json({ error: err.message });
   }
 };
 
 // ----------------------------------------------------
-// 3️⃣ GET FARMERS (Own + Approved Shared)
+// 3️⃣ GET FARMERS
 // ----------------------------------------------------
 export const getFarmers = async (req, res) => {
   try {
@@ -1441,24 +1401,19 @@ export const getFarmers = async (req, res) => {
     let farmers;
 
     if (includeShared) {
-      const approvedRequests = await AccessRequest.find({
-        requesterId: userId,
-        status: "approved"
-      });
-
+      const approvedRequests = await AccessRequest.find({ requesterId: userId, status: "approved" });
       const ids = approvedRequests.map(r => r.targetFarmerId);
       farmers = await Farmer.find({ _id: { $in: ids } });
-
     } else {
       farmers = await Farmer.find({ createdBy: userId });
     }
 
-    // Format photo URLs for all farmers
-    const formattedFarmers = farmers.map(farmer => ({
-      ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED FOR ALL FARMERS
+    const formattedFarmers = farmers.map(f => ({
+      ...f.toObject(),
+      photo: f.photo ? `${req.protocol}://${req.get("host")}/uploads/${f.photo}` : null,
+      pondImage: f.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${f.pondImage}` : null,
+      pondFiles: f.pondFiles.map(fil => `${req.protocol}://${req.get("host")}/uploads/${fil}`),
+      fishFiles: f.fishFiles.map(fil => `${req.protocol}://${req.get("host")}/uploads/${fil}`)
     }));
 
     res.status(200).json(formattedFarmers);
@@ -1476,113 +1431,62 @@ export const getFarmerById = async (req, res) => {
   try {
     const farmer = await Farmer.findById(req.params.id);
     if (!farmer) return res.status(404).json({ error: "Farmer not found" });
-    
-    // Format photo URL
+
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      photo: farmer.photo ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}` : null,
+      pondImage: farmer.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${farmer.pondImage}` : null,
+      pondFiles: farmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`),
+      fishFiles: farmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`)
     };
-    
+
     res.json(formattedFarmer);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 // ----------------------------------------------------
-// 5️⃣ DELETE FARMER
-// ----------------------------------------------------
-export const deleteFarmer = async (req, res) => {
-  try {
-    const farmer = await Farmer.findByIdAndDelete(req.params.id);
-    if (!farmer) return res.status(404).json({ error: "Farmer not found" });
-    res.json({ message: "Farmer deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// ----------------------------------------------------
-// 6️⃣ UPDATE FARMER (WITH VALIDATION)
+// 5️⃣ UPDATE FARMER
 // ----------------------------------------------------
 export const updateFarmer = async (req, res) => {
   try {
     const farmer = await Farmer.findById(req.params.id);
-    if (!farmer) {
-      return res.status(404).json({ error: "Farmer not found" });
+    if (!farmer) return res.status(404).json({ error: "Farmer not found" });
+
+    const requiredFields = ['name', 'contact', 'age', 'gender', 'village', 'adhar', 'familyMembers', 'familyOccupation'];
+    const missingFields = requiredFields.filter(f => req.body[f] !== undefined && (!req.body[f] || req.body[f].toString().trim() === ''));
+    if (missingFields.length > 0) return res.status(400).json({ error: `Required fields cannot be empty: ${missingFields.join(', ')}` });
+
+    // Aadhaar validation
+    if (req.body.adhar && !/^\d{12}$/.test(req.body.adhar.toString().trim())) {
+      return res.status(400).json({ error: "Aadhar number must be exactly 12 digits" });
     }
 
-    // -----------------------------
-    // ✅ VALIDATION: REQUIRED FIELDS
-    // -----------------------------
-    const requiredFields = [
-      'name', 'contact', 'age', 'gender', 'village',
-      'adhar', 'familyMembers', 'familyOccupation'
-    ];
-    
-    const missingFields = [];
-    requiredFields.forEach(field => {
-      if (req.body[field] !== undefined && 
-          (!req.body[field] || req.body[field].toString().trim() === '')) {
-        missingFields.push(field);
-      }
-    });
-    
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Required fields cannot be empty: ${missingFields.join(', ')}`
-      });
-    }
-
-    // -----------------------------
-    // ✅ VALIDATION: AADHAR NUMBER
-    // -----------------------------
-    if (req.body.adhar) {
-      const adharStr = req.body.adhar.toString().trim();
-      if (adharStr.length !== 12 || !/^\d+$/.test(adharStr)) {
-        return res.status(400).json({
-          error: "Aadhar number must be exactly 12 digits"
-        });
-      }
-    }
-
-    // 🔒 SAFE BODY UPDATE
+    // Update fields
     Object.keys(req.body).forEach(key => {
-      if (
-        !["userId", "ponds", "farmerId", "photo"].includes(key) &&
-        req.body[key] !== ""
-      ) {
+      if (!["userId", "ponds", "farmerId"].includes(key) && req.body[key] !== "") {
         farmer[key] = req.body[key];
       }
     });
 
-    // 🔒 SAFE PHOTO UPDATE - ✅ FIXED: Store only filename
-    if (req.files?.photo?.[0]) {
-      farmer.photo = req.files.photo[0].filename; // ✅ Only filename, no path prefix
-    }
-
-    // Other files
-    if (req.files?.pondImage)
-      farmer.pondImage = req.files.pondImage[0].filename;
-
-    if (req.files?.pondFiles)
-      farmer.pondFiles.push(...req.files.pondFiles.map(f => f.filename));
-
-    if (req.files?.fishFiles)
-      farmer.fishFiles.push(...req.files.fishFiles.map(f => f.filename));
+    // Files update
+    if (req.files?.photo?.[0]) farmer.photo = req.files.photo[0].filename;
+    if (req.files?.pondImage?.[0]) farmer.pondImage = req.files.pondImage[0].filename;
+    if (req.files?.pondFiles) farmer.pondFiles.push(...req.files.pondFiles.map(f => f.filename));
+    if (req.files?.fishFiles) farmer.fishFiles.push(...req.files.fishFiles.map(f => f.filename));
 
     await farmer.save();
-    
-    // Format photo URL for response
+
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      photo: farmer.photo ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}` : null,
+      pondImage: farmer.pondImage ? `${req.protocol}://${req.get("host")}/uploads/${farmer.pondImage}` : null,
+      pondFiles: farmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`),
+      fishFiles: farmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`)
     };
-    
+
     res.status(200).json(formattedFarmer);
 
   } catch (err) {
@@ -1592,256 +1496,46 @@ export const updateFarmer = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 7️⃣ ADD POND (WITH VALIDATION) - UPDATE IN ROUTES
+// 6️⃣ ADD POND TO EXISTING FARMER
 // ----------------------------------------------------
-export const addPondWithValidation = async (req, res) => {
+export const addPondToFarmer = async (req, res) => {
   try {
-    const { farmerId } = req.params;
-    const pondData = req.body;
+    const farmer = await Farmer.findById(req.params.id);
+    if (!farmer) return res.status(404).json({ error: "Farmer not found" });
 
-    // Find farmer
-    const farmer = await Farmer.findById(farmerId);
-    if (!farmer) {
-      return res.status(404).json({ error: "Farmer not found" });
-    }
+    const pondNumber = farmer.ponds.length + 1;
 
-    // -----------------------------
-    // ✅ POND REQUIRED FIELDS VALIDATION
-    // -----------------------------
-    const pondRequiredFields = [
-      'pondArea', 'pondDepth', 'species', 'dateOfStocking',
-      'qtySeedInitially', 'currentQty', 'waterTemperature',
-      'pH', 'DO', 'sourceOfWater'
-    ];
-    
-    const missingPondFields = [];
-    pondRequiredFields.forEach(field => {
-      if (!pondData[field] || pondData[field].toString().trim() === '') {
-        missingPondFields.push(field);
-      }
-    });
-    
-    if (missingPondFields.length > 0) {
-      return res.status(400).json({
-        error: `Pond required fields are missing: ${missingPondFields.join(', ')}`
-      });
-    }
-
-    // -----------------------------
-    // ✅ VALIDATE NUMERIC FIELDS
-    // -----------------------------
-    if (pondData.pondArea && isNaN(parseFloat(pondData.pondArea))) {
-      return res.status(400).json({ error: "Pond area must be a number" });
-    }
-    
-    if (pondData.pondDepth && isNaN(parseFloat(pondData.pondDepth))) {
-      return res.status(400).json({ error: "Pond depth must be a number" });
-    }
-    
-    // ✅ REMOVED: Strict numeric validation for qtySeedInitially and currentQty
-    
-    if (pondData.waterTemperature && isNaN(parseFloat(pondData.waterTemperature))) {
-      return res.status(400).json({ error: "Water temperature must be a number" });
-    }
-    
-    if (pondData.pH && isNaN(parseFloat(pondData.pH))) {
-      return res.status(400).json({ error: "pH must be a number" });
-    }
-    
-    if (pondData.DO && isNaN(parseFloat(pondData.DO))) {
-      return res.status(400).json({ error: "DO must be a number" });
-    }
-
-    // ✅ ADDED: Optional safe check for length (allow numbers + text like: 1100, 13kg, 12 kg)
-    if (pondData.qtySeedInitially && pondData.qtySeedInitially.length > 20) {
-      return res.status(400).json({ error: "Initial seed quantity is too long" });
-    }
-
-    if (pondData.currentQty && pondData.currentQty.length > 20) {
-      return res.status(400).json({ error: "Current quantity is too long" });
-    }
-
-    // Create pond number
-    const pondNumber = farmer.ponds.length > 0 
-      ? Math.max(...farmer.ponds.map(p => p.pondNumber)) + 1 
-      : 1;
-    
-    const pondId = `${farmer.farmerId}-P${String(pondNumber).padStart(3, '0')}`;
-
-    // Create new pond object
     const newPond = {
-      pondId,
+      pondId: `POND-${farmer._id}-${String(pondNumber).padStart(3, "0")}`,
       pondNumber,
-      ...pondData,
-      pondImage: req.files?.pondImage?.[0]?.filename || "",
-      pondFiles: req.files?.pondFiles?.map(f => f.filename) || [],
-      fishFiles: req.files?.fishFiles?.map(f => f.filename) || [],
-      createdAt: new Date(),
-      updatedAt: new Date()
+      pondArea: req.body.pondArea || "",
+      pondDepth: req.body.pondDepth || "",
+      overflow: req.body.overflow || "",
+      receivesSunlight: req.body.receivesSunlight || "",
+      treesOnBanks: req.body.treesOnBanks || "",
+      neighbourhood: req.body.neighbourhood || "",
+      wastewaterEnters: req.body.wastewaterEnters || ""
     };
 
-    // Add pond to farmer
     farmer.ponds.push(newPond);
     farmer.pondCount = farmer.ponds.length;
 
-    await farmer.save();
-
-    // Format photo URL for response
-    const formattedFarmer = {
-      ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
-    };
-
-    res.json({ success: true, farmer: formattedFarmer });
-
-  } catch (err) {
-    console.error("ADD POND ERROR:", err);
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// ----------------------------------------------------
-// 8️⃣ UPDATE POND (WITH VALIDATION) - UPDATE IN ROUTES
-// ----------------------------------------------------
-export const updatePondWithValidation = async (req, res) => {
-  try {
-    const { farmerId, pondId } = req.params;
-    const updateData = req.body;
-
-    // Find farmer
-    const farmer = await Farmer.findById(farmerId);
-    if (!farmer) {
-      return res.status(404).json({ error: "Farmer not found" });
-    }
-
-    // Find pond
-    const pondIndex = farmer.ponds.findIndex(p => p.pondId === pondId);
-    if (pondIndex === -1) {
-      return res.status(404).json({ error: "Pond not found" });
-    }
-
-    const oldPond = farmer.ponds[pondIndex].toObject();
-
-    // -----------------------------
-    // ✅ POND REQUIRED FIELDS VALIDATION (for update)
-    // -----------------------------
-    const pondRequiredFields = [
-      'pondArea', 'pondDepth', 'species', 'dateOfStocking',
-      'qtySeedInitially', 'currentQty', 'waterTemperature',
-      'pH', 'DO', 'sourceOfWater'
-    ];
-    
-    const missingPondFields = [];
-    pondRequiredFields.forEach(field => {
-      if (updateData[field] !== undefined && 
-          (!updateData[field] || updateData[field].toString().trim() === '')) {
-        missingPondFields.push(field);
-      }
-    });
-    
-    if (missingPondFields.length > 0) {
-      return res.status(400).json({
-        error: `Pond required fields cannot be empty: ${missingPondFields.join(', ')}`
-      });
-    }
-
-    // -----------------------------
-    // ✅ VALIDATE NUMERIC FIELDS
-    // -----------------------------
-    if (updateData.pondArea && isNaN(parseFloat(updateData.pondArea))) {
-      return res.status(400).json({ error: "Pond area must be a number" });
-    }
-    
-    if (updateData.pondDepth && isNaN(parseFloat(updateData.pondDepth))) {
-      return res.status(400).json({ error: "Pond depth must be a number" });
-    }
-    
-    // ✅ REMOVED: Strict numeric validation for qtySeedInitially and currentQty
-    
-    if (updateData.waterTemperature && isNaN(parseFloat(updateData.waterTemperature))) {
-      return res.status(400).json({ error: "Water temperature must be a number" });
-    }
-    
-    if (updateData.pH && isNaN(parseFloat(updateData.pH))) {
-      return res.status(400).json({ error: "pH must be a number" });
-    }
-    
-    if (updateData.DO && isNaN(parseFloat(updateData.DO))) {
-      return res.status(400).json({ error: "DO must be a number" });
-    }
-
-    // ✅ ADDED: Optional safe check for length (allow numbers + text like: 1100, 13kg, 12 kg)
-    if (updateData.qtySeedInitially && updateData.qtySeedInitially.length > 20) {
-      return res.status(400).json({ error: "Initial seed quantity is too long" });
-    }
-
-    if (updateData.currentQty && updateData.currentQty.length > 20) {
-      return res.status(400).json({ error: "Current quantity is too long" });
-    }
-
-    // Convert dates
-    if (updateData.dateOfStocking) {
-      updateData.dateOfStocking = new Date(updateData.dateOfStocking);
-    }
-    if (updateData.farmObservedDate) {
-      updateData.farmObservedDate = new Date(updateData.farmObservedDate);
-    }
-
-    // Track changes for history
-    const changes = {};
-    Object.keys(updateData).forEach(key => {
-      if (oldPond[key] != updateData[key]) {
-        changes[`pond.${key}`] = {
-          old: oldPond[key] || "N/A",
-          new: updateData[key]
-        };
-      }
-    });
-
-    // Add to update history if changes exist
-    if (Object.keys(changes).length > 0) {
-      farmer.updates.push({
-        snapshot: {
-          pondId: oldPond.pondId,
-          pondNumber: oldPond.pondNumber
-        },
-        changes,
-        createdAt: new Date()
-      });
-    }
-
-    // Update pond
-    farmer.ponds[pondIndex] = {
-      ...oldPond,
-      pondId: oldPond.pondId, // Never change
-      pondNumber: oldPond.pondNumber, // Never change
-      ...updateData,
-      pondImage: req.files?.pondImage?.[0]?.filename || oldPond.pondImage,
-      pondFiles: req.files?.pondFiles 
-        ? req.files.pondFiles.map(f => f.filename) 
-        : oldPond.pondFiles,
-      fishFiles: req.files?.fishFiles 
-        ? req.files.fishFiles.map(f => f.filename) 
-        : oldPond.fishFiles,
-      updatedAt: new Date()
-    };
+    // Pond files
+    if (req.files?.pondFiles) farmer.pondFiles.push(...req.files.pondFiles.map(f => f.filename));
+    if (req.files?.fishFiles) farmer.fishFiles.push(...req.files.fishFiles.map(f => f.filename));
 
     await farmer.save();
 
-    // Format photo URL for response
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      pondFiles: farmer.pondFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`),
+      fishFiles: farmer.fishFiles.map(f => `${req.protocol}://${req.get("host")}/uploads/${f}`)
     };
 
-    res.json({ success: true, farmer: formattedFarmer });
+    res.status(200).json(formattedFarmer);
 
   } catch (err) {
-    console.error("UPDATE POND ERROR:", err);
+    console.error("🔥 ADD POND ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 };

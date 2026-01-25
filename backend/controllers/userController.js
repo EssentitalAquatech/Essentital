@@ -52,21 +52,7 @@ export const updatePassword = async (req, res) => {
   }
 };
 
-// Update photo
-// export const updatePhoto = async (req, res) => {
-//   try {
-//     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
-//     const user = await User.findByIdAndUpdate(
-//       req.params.id,
-//       { photo: `/${req.file.path}` },
-//       { new: true }
-//     );
-//     res.json(user);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
 
 
 export const updatePhoto = async (req, res) => {
