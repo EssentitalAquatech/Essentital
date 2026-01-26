@@ -179,3 +179,74 @@
 
 
 
+
+
+
+
+
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// ROUTES
+import userRoutes from "./routes/userRoutes.js";
+import dealerRoutes from "./routes/dealerRoutes.js";
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 10000;
+
+// ===== FIX __dirname (ES MODULE) =====
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ===== MIDDLEWARES =====
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ CORRECT CORS CONFIG
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://essentital.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: false
+  })
+);
+
+// ✅ Preflight support (IMPORTANT)
+app.options("*", cors());
+
+// ===== DATABASE =====
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ Mongo Error:", err));
+
+// ===== API ROUTES =====
+app.use("/api/user", userRoutes);
+app.use("/api/dealers", dealerRoutes);
+
+// ===== FRONTEND (BUILD) =====
+const frontendPath = path.join(__dirname, "frontend", "dist");
+app.use(express.static(frontendPath));
+
+// ✅ SAFE FALLBACK (API SAFE)
+app.use((req, res) => {
+  if (req.originalUrl.startsWith("/api")) {
+    return res.status(404).json({ message: "API route not found" });
+  }
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
+
+// ===== SERVER START =====
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
