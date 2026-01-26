@@ -238,7 +238,7 @@ app.use("/api/dealers", dealerRoutes);
 const frontendPath = path.join(__dirname, "frontend", "dist");
 app.use(express.static(frontendPath));
 
-// ✅ SAFE FALLBACK (API SAFE)
+//  SAFE FALLBACK (API SAFE)
 app.use((req, res) => {
   if (req.originalUrl.startsWith("/api")) {
     return res.status(404).json({ message: "API route not found" });
@@ -246,7 +246,7 @@ app.use((req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
-// ===== SERVER START =====
+// =====SERVER START =====
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
