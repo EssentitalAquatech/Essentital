@@ -1,18 +1,6 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// // niche vala sahi hai
 
 // import Farmer from "../models/farmerModel.js";
 // import AccessRequest from "../models/accessRequestModel.js";
@@ -409,13 +397,7 @@
 //       return res.status(400).json({ error: "Pond depth must be a number" });
 //     }
     
-//     if (pondData.qtySeedInitially && isNaN(parseInt(pondData.qtySeedInitially))) {
-//       return res.status(400).json({ error: "Initial seed quantity must be a number" });
-//     }
-    
-//     if (pondData.currentQty && isNaN(parseInt(pondData.currentQty))) {
-//       return res.status(400).json({ error: "Current quantity must be a number" });
-//     }
+//     // ✅ REMOVED: Strict numeric validation for qtySeedInitially and currentQty
     
 //     if (pondData.waterTemperature && isNaN(parseFloat(pondData.waterTemperature))) {
 //       return res.status(400).json({ error: "Water temperature must be a number" });
@@ -427,6 +409,15 @@
     
 //     if (pondData.DO && isNaN(parseFloat(pondData.DO))) {
 //       return res.status(400).json({ error: "DO must be a number" });
+//     }
+
+//     // ✅ ADDED: Optional safe check for length (allow numbers + text like: 1100, 13kg, 12 kg)
+//     if (pondData.qtySeedInitially && pondData.qtySeedInitially.length > 20) {
+//       return res.status(400).json({ error: "Initial seed quantity is too long" });
+//     }
+
+//     if (pondData.currentQty && pondData.currentQty.length > 20) {
+//       return res.status(400).json({ error: "Current quantity is too long" });
 //     }
 
 //     // Create pond number
@@ -526,13 +517,7 @@
 //       return res.status(400).json({ error: "Pond depth must be a number" });
 //     }
     
-//     if (updateData.qtySeedInitially && isNaN(parseInt(updateData.qtySeedInitially))) {
-//       return res.status(400).json({ error: "Initial seed quantity must be a number" });
-//     }
-    
-//     if (updateData.currentQty && isNaN(parseInt(updateData.currentQty))) {
-//       return res.status(400).json({ error: "Current quantity must be a number" });
-//     }
+//     // ✅ REMOVED: Strict numeric validation for qtySeedInitially and currentQty
     
 //     if (updateData.waterTemperature && isNaN(parseFloat(updateData.waterTemperature))) {
 //       return res.status(400).json({ error: "Water temperature must be a number" });
@@ -544,6 +529,15 @@
     
 //     if (updateData.DO && isNaN(parseFloat(updateData.DO))) {
 //       return res.status(400).json({ error: "DO must be a number" });
+//     }
+
+//     // ✅ ADDED: Optional safe check for length (allow numbers + text like: 1100, 13kg, 12 kg)
+//     if (updateData.qtySeedInitially && updateData.qtySeedInitially.length > 20) {
+//       return res.status(400).json({ error: "Initial seed quantity is too long" });
+//     }
+
+//     if (updateData.currentQty && updateData.currentQty.length > 20) {
+//       return res.status(400).json({ error: "Current quantity is too long" });
 //     }
 
 //     // Convert dates
@@ -613,10 +607,56 @@
 
 
 
-// niche vala sahi hai
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // uper vala sahi hai 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
+
+// ✅ HELPER FUNCTION FOR IMAGE URL
+const getImageUrl = (photoPath, req) => {
+  if (!photoPath || photoPath.trim() === "") return null;
+  
+  // Remove duplicate "uploads/" prefix if exists
+  let cleanPath = photoPath;
+  if (cleanPath.startsWith("uploads/")) {
+    cleanPath = cleanPath.replace(/^uploads\//, '');
+  }
+  
+  // Return full URL
+  return `${req.protocol}://${req.get("host")}/uploads/${cleanPath}`;
+};
 
 // ----------------------------------------------------
 // 1️⃣ GET FARMERS BY AGENT (With Access Control)
@@ -626,7 +666,7 @@ export const getFarmersByAgent = async (req, res) => {
     const { agentId, viewerId } = req.query;
 
     const allFarmers = await Farmer.find({ createdBy: agentId })
-      .select("name contact village photo _id") // ✅ PHOTO FIELD ADDED
+      .select("name contact village photo _id")
       .sort({ name: 1 });
 
     const farmersWithAccess = await Promise.all(
@@ -642,9 +682,7 @@ export const getFarmersByAgent = async (req, res) => {
           return { 
             ...fullFarmer.toObject(), 
             accessApproved: true,
-            photo: fullFarmer.photo
-              ? `${req.protocol}://${req.get("host")}/uploads/${fullFarmer.photo}`
-              : null // ✅ PHOTO URL FORMATTED
+            photo: getImageUrl(fullFarmer.photo, req) // ✅ UPDATED
           };
         }
 
@@ -653,9 +691,7 @@ export const getFarmersByAgent = async (req, res) => {
           name: farmer.name,
           contact: farmer.contact,
           village: farmer.village,
-          photo: farmer.photo
-            ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-            : null, // ✅ PHOTO URL FORMATTED
+          photo: getImageUrl(farmer.photo, req), // ✅ UPDATED
           accessApproved: false,
         };
       })
@@ -719,10 +755,10 @@ export const addFarmer = async (req, res) => {
     }
 
     // -----------------------------
-    // FILES
+    // FILES - STORE ONLY FILENAME, NOT PATH
     // -----------------------------
     const photo = req.files?.photo?.[0]
-      ? `uploads/${req.files.photo[0].filename}`
+      ? req.files.photo[0].filename // ✅ STORE ONLY FILENAME
       : "";
 
     const pondImage = req.files?.pondImage?.[0]?.filename || "";
@@ -730,7 +766,7 @@ export const addFarmer = async (req, res) => {
     const fishFiles = req.files?.fishFiles?.map(f => f.filename) || [];
 
     // -----------------------------
-    // ✅ FIX 1: SAFE POND COUNT
+    // ✅ SAFE POND COUNT
     // -----------------------------
     const totalPonds = parseInt(pondCount || 0);
     let pondsArray = [];
@@ -742,7 +778,7 @@ export const addFarmer = async (req, res) => {
           .substring(2, 7)}`;
 
         pondsArray.push({
-          pondId: tempPondId, // ✅ never null
+          pondId: tempPondId,
           pondNumber: i,
           pondArea: req.body[`pondArea${i}`] || "",
           pondDepth: req.body[`pondDepth${i}`] || "",
@@ -756,7 +792,7 @@ export const addFarmer = async (req, res) => {
     }
 
     // -----------------------------
-    // 2️⃣ CREATE FARMER
+    // CREATE FARMER
     // -----------------------------
     const newFarmer = new Farmer({
       userId,
@@ -770,17 +806,17 @@ export const addFarmer = async (req, res) => {
       adhar,
       familyMembers,
       familyOccupation,
-      photo,
+      photo, // ✅ STORED AS FILENAME ONLY
       pondImage,
       pondFiles,
       fishFiles,
       ...(pondsArray.length > 0 && { ponds: pondsArray })
     });
 
-    await newFarmer.save(); // ✅ FIRST SAVE
+    await newFarmer.save();
 
     // -----------------------------
-    // 3️⃣ FINAL POND IDS
+    // FINAL POND IDS
     // -----------------------------
     if (newFarmer.ponds && newFarmer.ponds.length > 0) {
       newFarmer.ponds = newFarmer.ponds.map((p, i) => ({
@@ -788,10 +824,16 @@ export const addFarmer = async (req, res) => {
         pondId: `POND-${newFarmer.farmerId}-${String(i + 1).padStart(3, "0")}`
       }));
 
-      await newFarmer.save(); // ✅ SECOND SAVE
+      await newFarmer.save();
     }
 
-    res.status(201).json(newFarmer);
+    // ✅ RETURN FORMATTED RESPONSE WITH FULL IMAGE URL
+    const formattedFarmer = {
+      ...newFarmer.toObject(),
+      photo: getImageUrl(newFarmer.photo, req)
+    };
+
+    res.status(201).json(formattedFarmer);
 
   } catch (err) {
     console.error("🔥 ADD FARMER ERROR:", err);
@@ -828,9 +870,7 @@ export const getFarmers = async (req, res) => {
     // Format photo URLs for all farmers
     const formattedFarmers = farmers.map(farmer => ({
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED FOR ALL FARMERS
+      photo: getImageUrl(farmer.photo, req) // ✅ UPDATED
     }));
 
     res.status(200).json(formattedFarmers);
@@ -852,9 +892,7 @@ export const getFarmerById = async (req, res) => {
     // Format photo URL
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      photo: getImageUrl(farmer.photo, req) // ✅ UPDATED
     };
     
     res.json(formattedFarmer);
@@ -920,7 +958,7 @@ export const updateFarmer = async (req, res) => {
       }
     }
 
-    // 🔒 SAFE BODY UPDATE
+    // UPDATE BODY FIELDS
     Object.keys(req.body).forEach(key => {
       if (
         !["userId", "ponds", "farmerId", "photo"].includes(key) &&
@@ -930,9 +968,9 @@ export const updateFarmer = async (req, res) => {
       }
     });
 
-    // 🔒 SAFE PHOTO UPDATE
+    // UPDATE PHOTO - STORE ONLY FILENAME
     if (req.files?.photo?.[0]) {
-      farmer.photo = `uploads/${req.files.photo[0].filename}`;
+      farmer.photo = req.files.photo[0].filename; // ✅ STORE ONLY FILENAME
     }
 
     // Other files
@@ -950,9 +988,7 @@ export const updateFarmer = async (req, res) => {
     // Format photo URL for response
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      photo: getImageUrl(farmer.photo, req) // ✅ UPDATED
     };
     
     res.status(200).json(formattedFarmer);
@@ -964,7 +1000,7 @@ export const updateFarmer = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 7️⃣ ADD POND (WITH VALIDATION) - UPDATE IN ROUTES
+// 7️⃣ ADD POND (WITH VALIDATION)
 // ----------------------------------------------------
 export const addPondWithValidation = async (req, res) => {
   try {
@@ -977,9 +1013,7 @@ export const addPondWithValidation = async (req, res) => {
       return res.status(404).json({ error: "Farmer not found" });
     }
 
-    // -----------------------------
-    // ✅ POND REQUIRED FIELDS VALIDATION
-    // -----------------------------
+    // VALIDATION
     const pondRequiredFields = [
       'pondArea', 'pondDepth', 'species', 'dateOfStocking',
       'qtySeedInitially', 'currentQty', 'waterTemperature',
@@ -997,40 +1031,6 @@ export const addPondWithValidation = async (req, res) => {
       return res.status(400).json({
         error: `Pond required fields are missing: ${missingPondFields.join(', ')}`
       });
-    }
-
-    // -----------------------------
-    // ✅ VALIDATE NUMERIC FIELDS
-    // -----------------------------
-    if (pondData.pondArea && isNaN(parseFloat(pondData.pondArea))) {
-      return res.status(400).json({ error: "Pond area must be a number" });
-    }
-    
-    if (pondData.pondDepth && isNaN(parseFloat(pondData.pondDepth))) {
-      return res.status(400).json({ error: "Pond depth must be a number" });
-    }
-    
-    // ✅ REMOVED: Strict numeric validation for qtySeedInitially and currentQty
-    
-    if (pondData.waterTemperature && isNaN(parseFloat(pondData.waterTemperature))) {
-      return res.status(400).json({ error: "Water temperature must be a number" });
-    }
-    
-    if (pondData.pH && isNaN(parseFloat(pondData.pH))) {
-      return res.status(400).json({ error: "pH must be a number" });
-    }
-    
-    if (pondData.DO && isNaN(parseFloat(pondData.DO))) {
-      return res.status(400).json({ error: "DO must be a number" });
-    }
-
-    // ✅ ADDED: Optional safe check for length (allow numbers + text like: 1100, 13kg, 12 kg)
-    if (pondData.qtySeedInitially && pondData.qtySeedInitially.length > 20) {
-      return res.status(400).json({ error: "Initial seed quantity is too long" });
-    }
-
-    if (pondData.currentQty && pondData.currentQty.length > 20) {
-      return res.status(400).json({ error: "Current quantity is too long" });
     }
 
     // Create pond number
@@ -1061,9 +1061,7 @@ export const addPondWithValidation = async (req, res) => {
     // Format photo URL for response
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      photo: getImageUrl(farmer.photo, req) // ✅ UPDATED
     };
 
     res.json({ success: true, farmer: formattedFarmer });
@@ -1075,7 +1073,7 @@ export const addPondWithValidation = async (req, res) => {
 };
 
 // ----------------------------------------------------
-// 8️⃣ UPDATE POND (WITH VALIDATION) - UPDATE IN ROUTES
+// 8️⃣ UPDATE POND (WITH VALIDATION)
 // ----------------------------------------------------
 export const updatePondWithValidation = async (req, res) => {
   try {
@@ -1096,9 +1094,7 @@ export const updatePondWithValidation = async (req, res) => {
 
     const oldPond = farmer.ponds[pondIndex].toObject();
 
-    // -----------------------------
-    // ✅ POND REQUIRED FIELDS VALIDATION (for update)
-    // -----------------------------
+    // VALIDATION
     const pondRequiredFields = [
       'pondArea', 'pondDepth', 'species', 'dateOfStocking',
       'qtySeedInitially', 'currentQty', 'waterTemperature',
@@ -1117,48 +1113,6 @@ export const updatePondWithValidation = async (req, res) => {
       return res.status(400).json({
         error: `Pond required fields cannot be empty: ${missingPondFields.join(', ')}`
       });
-    }
-
-    // -----------------------------
-    // ✅ VALIDATE NUMERIC FIELDS
-    // -----------------------------
-    if (updateData.pondArea && isNaN(parseFloat(updateData.pondArea))) {
-      return res.status(400).json({ error: "Pond area must be a number" });
-    }
-    
-    if (updateData.pondDepth && isNaN(parseFloat(updateData.pondDepth))) {
-      return res.status(400).json({ error: "Pond depth must be a number" });
-    }
-    
-    // ✅ REMOVED: Strict numeric validation for qtySeedInitially and currentQty
-    
-    if (updateData.waterTemperature && isNaN(parseFloat(updateData.waterTemperature))) {
-      return res.status(400).json({ error: "Water temperature must be a number" });
-    }
-    
-    if (updateData.pH && isNaN(parseFloat(updateData.pH))) {
-      return res.status(400).json({ error: "pH must be a number" });
-    }
-    
-    if (updateData.DO && isNaN(parseFloat(updateData.DO))) {
-      return res.status(400).json({ error: "DO must be a number" });
-    }
-
-    // ✅ ADDED: Optional safe check for length (allow numbers + text like: 1100, 13kg, 12 kg)
-    if (updateData.qtySeedInitially && updateData.qtySeedInitially.length > 20) {
-      return res.status(400).json({ error: "Initial seed quantity is too long" });
-    }
-
-    if (updateData.currentQty && updateData.currentQty.length > 20) {
-      return res.status(400).json({ error: "Current quantity is too long" });
-    }
-
-    // Convert dates
-    if (updateData.dateOfStocking) {
-      updateData.dateOfStocking = new Date(updateData.dateOfStocking);
-    }
-    if (updateData.farmObservedDate) {
-      updateData.farmObservedDate = new Date(updateData.farmObservedDate);
     }
 
     // Track changes for history
@@ -1187,8 +1141,8 @@ export const updatePondWithValidation = async (req, res) => {
     // Update pond
     farmer.ponds[pondIndex] = {
       ...oldPond,
-      pondId: oldPond.pondId, // Never change
-      pondNumber: oldPond.pondNumber, // Never change
+      pondId: oldPond.pondId,
+      pondNumber: oldPond.pondNumber,
       ...updateData,
       pondImage: req.files?.pondImage?.[0]?.filename || oldPond.pondImage,
       pondFiles: req.files?.pondFiles 
@@ -1205,9 +1159,7 @@ export const updatePondWithValidation = async (req, res) => {
     // Format photo URL for response
     const formattedFarmer = {
       ...farmer.toObject(),
-      photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED
+      photo: getImageUrl(farmer.photo, req) // ✅ UPDATED
     };
 
     res.json({ success: true, farmer: formattedFarmer });
@@ -1217,25 +1169,4 @@ export const updatePondWithValidation = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// uper vala sahi hai 
-
-
-
-
 
