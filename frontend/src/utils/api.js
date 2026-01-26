@@ -48,11 +48,6 @@
 
 
 
-
-
-
-
-
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
@@ -75,3 +70,7 @@ export const getImageUrl = (path) => {
 
 export { BASE_URL };
 export default api;
+
+
+
+
