@@ -184,11 +184,6 @@
 
 
 
-
-
-
-
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -205,7 +200,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ===== FIX FOR __dirname (ES MODULE) =====
+// ===== FIX __dirname (ES MODULE) =====
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -213,15 +208,21 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ✅ CORRECT CORS CONFIG
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://essentital-fgb8.vercel.app"
+      "https://essentital.vercel.app"
     ],
-    credentials: false,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: false
   })
 );
+
+// ✅ Preflight support (IMPORTANT)
+app.options("*", cors());
 
 // ===== DATABASE =====
 mongoose
@@ -237,12 +238,11 @@ app.use("/api/dealers", dealerRoutes);
 const frontendPath = path.join(__dirname, "frontend", "dist");
 app.use(express.static(frontendPath));
 
-// ⚠️ IMPORTANT SAFE FALLBACK (NO API BREAK)
+// ✅ SAFE FALLBACK (API SAFE)
 app.use((req, res) => {
   if (req.originalUrl.startsWith("/api")) {
     return res.status(404).json({ message: "API route not found" });
   }
-
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
