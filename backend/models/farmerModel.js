@@ -184,8 +184,6 @@
 
 
 
-
-
 import mongoose from "mongoose";
 import Counter from "./counterModel.js";
 
@@ -271,7 +269,7 @@ const farmerUpdateSchema = new mongoose.Schema({
    FARMER SCHEMA
 ================================ */
 const farmerSchema = new mongoose.Schema({
-  farmerId: { type: String, unique: true, required: true },
+  farmerId: { type: String, unique: true, required: true, index: true },
 
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -297,26 +295,45 @@ const farmerSchema = new mongoose.Schema({
   fishFiles: { type: [Buffer], required: true },
 
   /* Update history */
-  updates: { type: [farmerUpdateSchema], required: true }
+  updates: { type: [farmerUpdateSchema], default: [] }
 
 }, { timestamps: true });
 
 /* ===============================
-   AUTO FARMER ID GENERATION
+   AUTO FARMER ID GENERATION (FIXED)
 ================================ */
-farmerSchema.pre("save", async function () {
-  if (this.farmerId) return;
+farmerSchema.pre("save", async function (next) {
+  try {
+    console.log("🔄 PRE-SAVE HOOK TRIGGERED - FARMER");
+    console.log("Current farmerId:", this.farmerId);
+    
+    // If farmerId already exists, skip generation
+    if (this.farmerId && this.farmerId.startsWith('FAR-')) {
+      console.log("✅ farmerId already exists:", this.farmerId);
+      return next();
+    }
 
-  const year = new Date().getFullYear();
+    console.log("⏳ Generating new farmerId...");
+    const year = new Date().getFullYear();
 
-  const counter = await Counter.findOneAndUpdate(
-    { id: "farmer" },
-    { $inc: { seq: 1 } },
-    { new: true, upsert: true }
-  );
+    // Find and increment counter
+    const counter = await Counter.findOneAndUpdate(
+      { id: "farmer" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
 
-  const serial = String(counter.seq).padStart(5, "0");
-  this.farmerId = `FAR-${year}-${serial}`;
+    console.log("Counter result:", counter);
+
+    const serial = String(counter.seq).padStart(5, "0");
+    this.farmerId = `FAR-${year}-${serial}`;
+    
+    console.log("✅ Generated farmerId:", this.farmerId);
+    next();
+  } catch (error) {
+    console.error("❌ PRE-SAVE HOOK ERROR:", error);
+    next(error);
+  }
 });
 
 /* ===============================
