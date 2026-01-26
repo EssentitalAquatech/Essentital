@@ -251,6 +251,11 @@ import {
 const router = express.Router();
 
 /* ===============================
+   GET FARMERS
+================================ */
+router.get("/all", getFarmers);
+
+/* ===============================
    GET FARMERS BY AGENT (WITH ACCESS CONTROL)
 ================================ */
 router.get("/by-agent", getFarmersByAgent);
@@ -274,10 +279,7 @@ router.post(
   addFarmer
 );
 
-/* ===============================
-   GET FARMERS
-================================ */
-router.get("/all", getFarmers);
+
 
 /* ===============================
    UPDATE FARMER

@@ -176,11 +176,8 @@
 
 
 
-
-
-
 //buffer ke liye
-
+// models/farmerModel.js
 import mongoose from "mongoose";
 import Counter from "./counterModel.js";
 
@@ -188,90 +185,79 @@ import Counter from "./counterModel.js";
    POND SCHEMA
 ================================ */
 const PondSchema = new mongoose.Schema({
-  pondId: { type: String, required: true, index: true },
-  pondNumber: { type: Number, required: true, immutable: true },
+  pondId: { type: String, required: true },
+  pondNumber: { type: Number, required: true },
 
   pondArea: { type: String, required: true },
-  pondAreaUnit: { type: String, required: true, default: "acre" },
+  pondAreaUnit: { type: String, default: "acre" },
   pondDepth: { type: String, required: true },
-  pondImage: { type: Buffer, required: true },
 
-  overflow: { type: String, required: true },
-  receivesSunlight: { type: String, required: true },
-  treesOnBanks: { type: String, required: true },
-  neighbourhood: { type: String, required: true },
-  wastewaterEnters: { type: String, required: true },
+  pondImage: { type: Buffer }, // ❌ removed required
+
+  overflow: { type: String, default: "No" },
+  receivesSunlight: { type: String, default: "Yes" },
+  treesOnBanks: { type: String, default: "No" },
+  neighbourhood: { type: String, default: "Agriculture Farm" },
+  wastewaterEnters: { type: String, default: "No" },
 
   species: { type: String, required: true },
   dateOfStocking: { type: Date, required: true },
   qtySeedInitially: { type: String, required: true },
   currentQty: { type: String, required: true },
-  avgSize: { type: String, required: true },
+  avgSize: { type: String, default: ">200gram" },
 
-  feedType: { type: String, required: true },
-  feedOther: { type: String, required: true },
-  feedFreq: { type: String, required: true },
-  feedQtyPerDay: { type: String, required: true },
-  feedTime: { type: String, required: true },
-  recentFeedChanges: { type: String, required: true },
-  reducedAppetite: { type: String, required: true },
+  feedType: { type: String, default: "Market Feed" },
+  feedOther: { type: String, default: "" },
+  feedFreq: { type: String, default: "Once a day" },
+  feedQtyPerDay: { type: String, default: "" },
+  feedTime: { type: String, default: "6:00 am-10:00am" },
+  recentFeedChanges: { type: String, default: "" },
+  reducedAppetite: { type: String, default: "No" },
 
   waterTemperature: { type: String, required: true },
   pH: { type: String, required: true },
   DO: { type: String, required: true },
-  ammoniaLevel: { type: String, required: true },
-  phytoplanktonLevel: { type: String, required: true },
-  waterHardness: { type: String, required: true },
-  algaeBloom: { type: String, required: true },
-  pondWaterColor: { type: String, required: true },
-  sourceOfWater: { type: String, required: true },
 
-  diseaseSymptoms: { type: String, required: true },
-  symptomsObserved: { type: String, required: true },
-  fishDeaths: { type: String, required: true },
-  symptomsAffect: { type: String, required: true },
+  ammoniaLevel: { type: String, default: "Medium" },
+  phytoplanktonLevel: { type: String, default: "Medium" },
+  waterHardness: { type: String, default: "1" },
+  algaeBloom: { type: String, default: "No" },
+  pondWaterColor: { type: String, default: "Light Green" },
+  sourceOfWater: { type: String, default: "Rainwater" },
+
+  diseaseSymptoms: { type: String, default: "No" },
+  symptomsObserved: { type: String, default: "" },
+  fishDeaths: { type: String, default: "" },
+  symptomsAffect: { type: String, default: "All" },
 
   farmObservedDate: { type: Date, required: true },
   farmObservedTime: { type: String, required: true },
 
-  lastSpecies: { type: String, required: true },
-  lastHarvestComplete: { type: String, required: true },
-  recentRainFlood: { type: String, required: true },
-  pesticideRunoff: { type: String, required: true },
-  constructionNear: { type: String, required: true },
-  suddenTempChange: { type: String, required: true },
+  lastSpecies: { type: String, default: "" },
+  lastHarvestComplete: { type: String, default: "Yes" },
+  recentRainFlood: { type: String, default: "No" },
+  pesticideRunoff: { type: String, default: "No" },
+  constructionNear: { type: String, default: "No" },
+  suddenTempChange: { type: String, default: "No" },
 
-  notes: { type: String, required: true },
+  notes: { type: String, default: "" },
 
-  pondFiles: { type: [Buffer], required: true },
-  fishFiles: { type: [Buffer], required: true },
+  pondFiles: { type: [Buffer], default: [] },
+  fishFiles: { type: [Buffer], default: [] },
 
-  updatedAt: { type: Date, default: Date.now, required: true },
-  createdAt: { type: Date, default: Date.now, required: true }
-}, { _id: false });
-
-/* ===============================
-   FARMER UPDATE LOG SCHEMA
-================================ */
-const farmerUpdateSchema = new mongoose.Schema({
-  snapshot: { type: Object, required: true },
-  changes: { type: Object, required: true },
-  pondFiles: { type: [Buffer], required: true },
-  fishFiles: { type: [Buffer], required: true },
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  createdAt: { type: Date, default: Date.now, required: true }
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 }, { _id: false });
 
 /* ===============================
    FARMER SCHEMA
 ================================ */
 const farmerSchema = new mongoose.Schema({
-  farmerId: { type: String, unique: true, required: true, index: true },
+  farmerId: { type: String, unique: true, index: true },
 
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 
-  /* Farmer Basic Details */
   name: { type: String, required: true },
   contact: { type: String, required: true },
   age: { type: String, required: true },
@@ -281,63 +267,43 @@ const farmerSchema = new mongoose.Schema({
   familyOccupation: { type: String, required: true },
   village: { type: String, required: true },
 
-  pondCount: { type: Number, default: 0, required: true },
+  pondCount: { type: Number, default: 0 },
   photo: { type: Buffer, required: true },
 
-  /* PONDS ARRAY */
-  ponds: { type: [PondSchema], required: true },
+  ponds: { type: [PondSchema], default: [] },
 
-  /* Farmer level files */
-  pondFiles: { type: [Buffer], required: true },
-  fishFiles: { type: [Buffer], required: true },
+  pondFiles: { type: [Buffer], default: [] },
+  fishFiles: { type: [Buffer], default: [] },
 
-  /* Update history */
-  updates: { type: [farmerUpdateSchema], default: [] }
-
+  updates: { type: Array, default: [] }
 }, { timestamps: true });
 
 /* ===============================
-   SIMPLIFIED PRE-SAVE HOOK (FIXED)
+   PRE SAVE – ID GENERATION (ONLY PLACE)
 ================================ */
-farmerSchema.pre("save", async function (next) {
-  try {
-    console.log("🔄 PRE-SAVE HOOK TRIGGERED");
-    
-    // Only generate farmerId if it doesn't exist
-    if (!this.farmerId || !this.farmerId.startsWith('FAR-')) {
-      console.log("⏳ Generating new farmerId...");
-      const year = new Date().getFullYear();
+farmerSchema.pre("save", async function () {
+  if (!this.farmerId) {
+    const year = new Date().getFullYear();
 
-      const counter = await Counter.findOneAndUpdate(
-        { id: "farmer" },
-        { $inc: { seq: 1 } },
-        { new: true, upsert: true }
-      );
+    const counter = await Counter.findOneAndUpdate(
+      { id: "farmer" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
 
-      const serial = String(counter.seq).padStart(5, "0");
-      this.farmerId = `FAR-${year}-${serial}`;
-      console.log("✅ Generated farmerId:", this.farmerId);
-    } else {
-      console.log("✅ farmerId already exists:", this.farmerId);
-    }
-    
-    next(); // ✅ FIXED: Call next() here
-  } catch (error) {
-    console.error("❌ PRE-SAVE HOOK ERROR:", error);
-    next(error); // ✅ FIXED: Pass error to next()
+    this.farmerId = `FAR-${year}-${String(counter.seq).padStart(5, "0")}`;
   }
 });
 
 /* ===============================
-   HELPER: GET FARMER BY _id OR farmerId
+   HELPER
 ================================ */
-farmerSchema.statics.getFarmerByAnyId = async function(farmerId) {
-  if (mongoose.Types.ObjectId.isValid(farmerId)) {
-    const farmer = await this.findById(farmerId);
-    if (farmer) return farmer;
+farmerSchema.statics.getFarmerByAnyId = async function (id) {
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    const doc = await this.findById(id);
+    if (doc) return doc;
   }
-  return await this.findOne({ farmerId });
+  return this.findOne({ farmerId: id });
 };
 
-const Farmer = mongoose.model("Farmer", farmerSchema);
-export default Farmer;
+export default mongoose.model("Farmer", farmerSchema);
