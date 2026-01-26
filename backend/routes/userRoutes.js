@@ -389,7 +389,7 @@
 
 // routes/userRoutes.js
 import express from "express";
-import upload from "../middleware/upload.js"; // ✅ Use the same upload (memory storage)
+import upload from "../middlewares/upload.js"; // ✅ Use the same upload (memory storage)
 
 // ⭐ IMPORT AUTH MIDDLEWARE
 import authMiddleware from "../middlewares/authMiddleware.js"
