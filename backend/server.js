@@ -95,12 +95,6 @@
 
 
 
-
-
-// ==========================
-// server.js
-// ==========================
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -135,7 +129,7 @@ const PORT = process.env.PORT || 2008;
 // ===== CORS =====
 app.use(
   cors({
-    origin: ["https://essentital-fgb8.vercel.app"], // your frontend URL
+    origin: ["https://essentital-fgb8.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -150,7 +144,7 @@ app.use(express.urlencoded({ extended: true }));
 // ===== STATIC UPLOADS =====
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ===== DATABASE CONNECT =====
+// ===== DATABASE =====
 dbConnect();
 
 // ===== API ROUTES =====
@@ -164,7 +158,7 @@ app.use("/api/notification", notificationRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/admin", adminLoginRoutes); // admin login routes
+app.use("/api/admin", adminLoginRoutes);
 
 // ===== FRONTEND (PRODUCTION) =====
 if (process.env.NODE_ENV === "production") {
@@ -173,7 +167,7 @@ if (process.env.NODE_ENV === "production") {
   // Serve static files
   app.use(express.static(frontendPath));
 
-  // SPA fallback — catch-all route
+  // SPA fallback route
   app.get("*", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
