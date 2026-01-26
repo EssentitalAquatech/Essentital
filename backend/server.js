@@ -97,7 +97,9 @@
 
 
 
-
+// ==========================
+// server.js
+// ==========================
 
 import express from "express";
 import cors from "cors";
@@ -105,7 +107,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// ===== ENV (TOP PE) =====
+// ===== ENV =====
 dotenv.config();
 
 // ===== FIX __dirname =====
@@ -130,23 +132,25 @@ import userRoutes from "./routes/userRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 2008;
 
-
-// ✅ CORS FIRST
-app.use(cors({
-  origin: ["https://essentital-fgb8.vercel.app"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+// ===== CORS =====
+app.use(
+  cors({
+    origin: ["https://essentital-fgb8.vercel.app"], // your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.options("*", cors());
 
+// ===== BODY PARSERS =====
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ===== STATIC UPLOADS =====
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
-// ===== DATABASE =====
+// ===== DATABASE CONNECT =====
 dbConnect();
 
 // ===== API ROUTES =====
@@ -160,13 +164,17 @@ app.use("/api/notification", notificationRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/admin", adminLoginRoutes);
+app.use("/api/admin", adminLoginRoutes); // admin login routes
 
-// ===== FRONTEND =====
+// ===== FRONTEND (PRODUCTION) =====
 if (process.env.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "../frontend/dist");
+
+  // Serve static files
   app.use(express.static(frontendPath));
-  app.use((req, res) => {
+
+  // SPA fallback — catch-all route
+  app.get("*", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
