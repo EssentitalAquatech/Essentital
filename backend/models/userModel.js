@@ -65,54 +65,25 @@
 
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
-  {
-    name: String,
-    mobile: String,
-    email: String,
-    age: Number,
-    address: String,
 
-    role: { type: String, default: "agent" },
-
-    // ⭐⭐⭐ ADD THIS FIELD (MOST IMPORTANT)
-    lastLogin: {
-      type: Date,
-      default: null,
-    },
-
-    // ⭐ IMAGE BUFFER FIELDS
-    profilePic: {
-      data: Buffer,
-      contentType: String,
-    },
-
-    aadharFront: {
-      data: Buffer,
-      contentType: String,
-    },
-
-    aadharBack: {
-      data: Buffer,
-      contentType: String,
-    },
-
-    panCard: {
-      data: Buffer,
-      contentType: String,
-    },
-
-    savingAccountImage: {
-      data: Buffer,
-      contentType: String,
-    },
-
-    accountNumber: String,
-    ifsc: String,
-
-    password: String,
-  },
-  { timestamps: true }
-);
+const userSchema = new mongoose.Schema({
+  name: String,
+  mobile: String,
+  email: String,
+  age: Number,
+  address: String,
+  role: { type: String, default: "agent" },
+  profilePic: { data: Buffer, contentType: String },
+  aadharFront: { data: Buffer, contentType: String },
+  aadharBack: { data: Buffer, contentType: String },
+  panCard: { data: Buffer, contentType: String },
+  savingAccountImage: { data: Buffer, contentType: String },
+  accountNumber: String,
+  ifsc: String,
+  password: String,
+}, { timestamps: true });
 
 export default mongoose.model("User", userSchema);
+
+
+

@@ -386,10 +386,9 @@
 
 
 
-
 // routes/userRoutes.js
 import express from "express";
-import upload from "../middlewares/upload.js"; // ✅ Use the same upload (memory storage)
+import upload from "../middlewares/uploads.js"; // ✅ Memory storage for buffer uploads
 
 // ⭐ IMPORT AUTH MIDDLEWARE
 import authMiddleware from "../middlewares/authMiddleware.js"
@@ -414,7 +413,7 @@ const router = express.Router();
 // ⭐ ALL ROUTES
 // ======================
 
-// ✅ SIGNUP (WITH MEMORY STORAGE - NO DISK)
+// ✅ SIGNUP (MULTIPLE FILES → BUFFER STORAGE)
 router.post(
   "/signup",
   upload.fields([
@@ -427,23 +426,26 @@ router.post(
   signup
 );
 
-// LOGIN - No auth required
+// ✅ LOGIN - No auth required
 router.post("/login", login);
 
-// GET ALL USERS - No auth required
+// ✅ GET ALL USERS - No auth required
 router.get("/", getAllUsers);
 
 // 🔒 PROTECTED ROUTES
 router.get("/:id", authMiddleware, getUser);
 router.put("/:id", authMiddleware, updateProfile);
 router.put("/password/:id", authMiddleware, updatePassword);
-router.put("/photo/:id", authMiddleware, upload.single("photo"), updatePhoto);
+
+// ✅ UPDATE PHOTO (BUFFER STORAGE)
+router.put(
+  "/photo/:id",
+  authMiddleware,
+  upload.single("photo"),
+  updatePhoto
+);
 
 export default router;
-
-
-
-
 
 
 

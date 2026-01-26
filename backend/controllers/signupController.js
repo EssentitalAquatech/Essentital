@@ -106,57 +106,36 @@
 
 
 
-
-// controllers/signupController.js
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
-/* =========================
-   SIGNUP CONTROLLER (BUFFER BASED)
-========================= */
 export const signup = async (req, res) => {
   try {
     console.log("📨 SIGNUP REQUEST STARTED");
     console.log("Files received:", req.files ? Object.keys(req.files) : "No files");
 
-    const {
-      name,
-      email,
-      password,
-      mobile,
-      age,
-      address,
-      accountNumber,
-      ifsc,
-    } = req.body;
+    const { name, email, password, mobile, age, address, accountNumber, ifsc } = req.body;
 
-    // ❌ Check required fields
     if (!name || !email || !password || !mobile) {
       return res.status(400).json({ message: "All required fields missing" });
     }
 
-    // ❌ Check existing user
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+    if (existingUser) return res.status(400).json({ message: "User already exists" });
 
-    // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Helper function to get file from multer memory storage
+    // Helper to get buffer object
     const getFileObject = (fileArray) => {
       if (!fileArray || !fileArray[0]) return null;
-      
       const file = fileArray[0];
       return {
-        data: file.buffer, // ✅ Buffer directly from memory
+        data: file.buffer,
         contentType: file.mimetype,
         filename: file.originalname
       };
     };
 
-    // ✅ Create user with BUFFER DATA
     const user = new User({
       name,
       email,
@@ -166,8 +145,6 @@ export const signup = async (req, res) => {
       accountNumber,
       ifsc,
       password: hashedPassword,
-
-      // ✅ ALL IMAGES AS BUFFER (NO FILE SYSTEM)
       profilePic: getFileObject(req.files?.profile),
       aadharFront: getFileObject(req.files?.aadharFront),
       aadharBack: getFileObject(req.files?.aadharBack),
@@ -177,27 +154,18 @@ export const signup = async (req, res) => {
 
     await user.save();
 
-    // ❌ Remove password from response
     const userResponse = user.toObject();
     delete userResponse.password;
-
-    // ✅ Remove buffer data from response (optional - reduce size)
     delete userResponse.profilePic?.data;
     delete userResponse.aadharFront?.data;
     delete userResponse.aadharBack?.data;
     delete userResponse.panCard?.data;
     delete userResponse.savingAccountImage?.data;
 
-    res.status(201).json({
-      message: "Signup successful",
-      user: userResponse,
-    });
+    res.status(201).json({ message: "Signup successful", user: userResponse });
 
   } catch (error) {
     console.error("❌ SIGNUP ERROR:", error);
-    res.status(500).json({
-      message: "Signup failed",
-      error: error.message,
-    });
+    res.status(500).json({ message: "Signup failed", error: error.message });
   }
 };
