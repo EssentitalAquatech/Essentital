@@ -179,23 +179,15 @@
 
 
 
+//buffer ke liye
+
+
 
 
 
 
 import mongoose from "mongoose";
 import Counter from "./counterModel.js";
-
-/* ===============================
-   HELPER: GET FARMER BY _id OR farmerId
-================================ */
-export async function getFarmerByAnyId(farmerId) {
-  if (mongoose.Types.ObjectId.isValid(farmerId)) {
-    const farmer = await Farmer.findById(farmerId);
-    if (farmer) return farmer;
-  }
-  return await Farmer.findOne({ farmerId });
-}
 
 /* ===============================
    POND SCHEMA
@@ -207,7 +199,7 @@ const PondSchema = new mongoose.Schema({
   pondArea: { type: String, required: true },
   pondAreaUnit: { type: String, required: true, default: "acre" },
   pondDepth: { type: String, required: true },
-  pondImage: { type: String, required: true },
+  pondImage: { type: Buffer, required: true },
 
   overflow: { type: String, required: true },
   receivesSunlight: { type: String, required: true },
@@ -256,8 +248,8 @@ const PondSchema = new mongoose.Schema({
 
   notes: { type: String, required: true },
 
-  pondFiles: { type: [String], required: true },
-  fishFiles: { type: [String], required: true },
+  pondFiles: { type: [Buffer], required: true },
+  fishFiles: { type: [Buffer], required: true },
 
   updatedAt: { type: Date, default: Date.now, required: true },
   createdAt: { type: Date, default: Date.now, required: true }
@@ -269,8 +261,8 @@ const PondSchema = new mongoose.Schema({
 const farmerUpdateSchema = new mongoose.Schema({
   snapshot: { type: Object, required: true },
   changes: { type: Object, required: true },
-  pondFiles: { type: [String], required: true },
-  fishFiles: { type: [String], required: true },
+  pondFiles: { type: [Buffer], required: true },
+  fishFiles: { type: [Buffer], required: true },
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createdAt: { type: Date, default: Date.now, required: true }
 }, { _id: false });
@@ -295,14 +287,14 @@ const farmerSchema = new mongoose.Schema({
   village: { type: String, required: true },
 
   pondCount: { type: Number, default: 0, required: true },
-  photo: { type: String, required: true },
+  photo: { type: Buffer, required: true },
 
   /* PONDS ARRAY */
   ponds: { type: [PondSchema], required: true },
 
   /* Farmer level files */
-  pondFiles: { type: [String], required: true },
-  fishFiles: { type: [String], required: true },
+  pondFiles: { type: [Buffer], required: true },
+  fishFiles: { type: [Buffer], required: true },
 
   /* Update history */
   updates: { type: [farmerUpdateSchema], required: true }
@@ -327,19 +319,16 @@ farmerSchema.pre("save", async function () {
   this.farmerId = `FAR-${year}-${serial}`;
 });
 
+/* ===============================
+   HELPER: GET FARMER BY _id OR farmerId
+================================ */
+farmerSchema.statics.getFarmerByAnyId = async function(farmerId) {
+  if (mongoose.Types.ObjectId.isValid(farmerId)) {
+    const farmer = await this.findById(farmerId);
+    if (farmer) return farmer;
+  }
+  return await this.findOne({ farmerId });
+};
+
 const Farmer = mongoose.model("Farmer", farmerSchema);
 export default Farmer;
-
-
-
-// //ye bhi sahi hai 
-
-
-
-
-
-
-
-
-
-

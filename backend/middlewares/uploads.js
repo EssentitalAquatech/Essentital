@@ -69,9 +69,10 @@
 
 
 // middlewares/uploads.js
+// middlewares/uploads.js
 import multer from "multer";
 
-// MEMORY STORAGE
+// MEMORY STORAGE FOR BUFFER HANDLING
 const storage = multer.memoryStorage();
 
 // FILE FILTER (images/videos)
@@ -83,10 +84,16 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage, fileFilter });
+// Create multer instance with memory storage
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB limit
+  }
+});
 
 export default upload;
-
 
 
 

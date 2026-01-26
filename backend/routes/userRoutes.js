@@ -388,7 +388,7 @@
 
 // routes/userRoutes.js
 import express from "express";
-import upload from "../middlewares/upload.js"; // ✅ Memory storage for buffer uploads
+import upload from "../middlewares/uploads.js"; // ✅ Memory storage for buffer uploads
 
 // ⭐ IMPORT AUTH MIDDLEWARE
 import authMiddleware from "../middlewares/authMiddleware.js"
