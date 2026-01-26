@@ -182,8 +182,6 @@
 //buffer ke liye
 
 
-
-
 import mongoose from "mongoose";
 import Counter from "./counterModel.js";
 
@@ -300,7 +298,7 @@ const farmerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 /* ===============================
-   AUTO FARMER ID GENERATION (FIXED)
+   AUTO FARMER ID GENERATION (FIXED - SIMPLIFIED)
 ================================ */
 farmerSchema.pre("save", async function (next) {
   try {
