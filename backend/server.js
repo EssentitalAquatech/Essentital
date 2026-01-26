@@ -130,14 +130,21 @@ import userRoutes from "./routes/userRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 2008;
 
-// ===== MIDDLEWARE =====
-app.use(cors({ origin: "*" }));
+
+// ✅ CORS FIRST
+app.use(cors({
+  origin: ["https://essentital-fgb8.vercel.app"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+app.options("*", cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ===== STATIC UPLOADS =====
-// ✅ CORRECT: Serve from "uploads" directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // ===== DATABASE =====
 dbConnect();
