@@ -181,7 +181,6 @@
 
 //buffer ke liye
 
-
 import mongoose from "mongoose";
 import Counter from "./counterModel.js";
 
@@ -298,39 +297,34 @@ const farmerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 /* ===============================
-   AUTO FARMER ID GENERATION (FIXED - SIMPLIFIED)
+   SIMPLIFIED PRE-SAVE HOOK (FIXED)
 ================================ */
 farmerSchema.pre("save", async function (next) {
   try {
-    console.log("🔄 PRE-SAVE HOOK TRIGGERED - FARMER");
-    console.log("Current farmerId:", this.farmerId);
+    console.log("🔄 PRE-SAVE HOOK TRIGGERED");
     
-    // If farmerId already exists, skip generation
-    if (this.farmerId && this.farmerId.startsWith('FAR-')) {
+    // Only generate farmerId if it doesn't exist
+    if (!this.farmerId || !this.farmerId.startsWith('FAR-')) {
+      console.log("⏳ Generating new farmerId...");
+      const year = new Date().getFullYear();
+
+      const counter = await Counter.findOneAndUpdate(
+        { id: "farmer" },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+      );
+
+      const serial = String(counter.seq).padStart(5, "0");
+      this.farmerId = `FAR-${year}-${serial}`;
+      console.log("✅ Generated farmerId:", this.farmerId);
+    } else {
       console.log("✅ farmerId already exists:", this.farmerId);
-      return next();
     }
-
-    console.log("⏳ Generating new farmerId...");
-    const year = new Date().getFullYear();
-
-    // Find and increment counter
-    const counter = await Counter.findOneAndUpdate(
-      { id: "farmer" },
-      { $inc: { seq: 1 } },
-      { new: true, upsert: true }
-    );
-
-    console.log("Counter result:", counter);
-
-    const serial = String(counter.seq).padStart(5, "0");
-    this.farmerId = `FAR-${year}-${serial}`;
     
-    console.log("✅ Generated farmerId:", this.farmerId);
-    next();
+    next(); // ✅ FIXED: Call next() here
   } catch (error) {
     console.error("❌ PRE-SAVE HOOK ERROR:", error);
-    next(error);
+    next(error); // ✅ FIXED: Pass error to next()
   }
 });
 

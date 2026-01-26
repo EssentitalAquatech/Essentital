@@ -639,8 +639,6 @@
 
 //buffer version 
 
-
-
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 import Counter from "../models/counterModel.js";
@@ -690,7 +688,7 @@ export const getFarmersByAgent = async (req, res) => {
 };
 
 // ---------------------------
-// ADD FARMER (Buffer Files) - FIXED FARMER ID ISSUE
+// ADD FARMER (Buffer Files) - FIXED VERSION
 // ---------------------------
 export const addFarmer = async (req, res) => {
   try {
@@ -710,18 +708,15 @@ export const addFarmer = async (req, res) => {
 
     // Files in Buffer
     const photo = req.files?.photo?.[0]?.buffer || null;
-    const pondImage = req.files?.pondImage?.[0]?.buffer || null;
-    const pondFiles = req.files?.pondFiles?.map(f => f.buffer) || [];
-    const fishFiles = req.files?.fishFiles?.map(f => f.buffer) || [];
 
     // Validate required files
     if (!photo) return res.status(400).json({ error: "Farmer photo is required" });
 
-    // Pond array
+    // Pond array - FIXED: ponds को required field है, इसलिए empty array दें
     const totalPonds = parseInt(pondCount || 0);
-    const pondsArray = [];
+    const pondsArray = []; // ✅ Empty array for now
     
-    // ✅ FIX 1: MANUALLY GENERATE FARMER ID FIRST
+    // ✅ GENERATE FARMER ID
     const year = new Date().getFullYear();
     const counter = await Counter.findOneAndUpdate(
       { id: "farmer" },
@@ -733,66 +728,72 @@ export const addFarmer = async (req, res) => {
     
     console.log("✅ Generated farmerId:", farmerId);
 
-    // Create ponds with proper pondId
-    for (let i = 1; i <= totalPonds; i++) {
-      const pondData = {
-        pondId: `${farmerId}-P${i}`,
-        pondNumber: i,
-        pondArea: req.body[`pondArea${i}`] || "",
-        pondAreaUnit: req.body[`pondAreaUnit${i}`] || "acre",
-        pondDepth: req.body[`pondDepth${i}`] || "",
-        pondImage: pondImage || Buffer.from([]),
-        overflow: req.body[`overflow${i}`] || "",
-        receivesSunlight: req.body[`receivesSunlight${i}`] || "",
-        treesOnBanks: req.body[`treesOnBanks${i}`] || "",
-        neighbourhood: req.body[`neighbourhood${i}`] || "",
-        wastewaterEnters: req.body[`wastewaterEnters${i}`] || "",
-        species: req.body[`species${i}`] || "",
-        dateOfStocking: req.body[`dateOfStocking${i}`] || new Date(),
-        qtySeedInitially: req.body[`qtySeedInitially${i}`] || "",
-        currentQty: req.body[`currentQty${i}`] || "",
-        avgSize: req.body[`avgSize${i}`] || "",
-        feedType: req.body[`feedType${i}`] || "",
-        feedOther: req.body[`feedOther${i}`] || "",
-        feedFreq: req.body[`feedFreq${i}`] || "",
-        feedQtyPerDay: req.body[`feedQtyPerDay${i}`] || "",
-        feedTime: req.body[`feedTime${i}`] || "",
-        recentFeedChanges: req.body[`recentFeedChanges${i}`] || "",
-        reducedAppetite: req.body[`reducedAppetite${i}`] || "",
-        waterTemperature: req.body[`waterTemperature${i}`] || "",
-        pH: req.body[`pH${i}`] || "",
-        DO: req.body[`DO${i}`] || "",
-        ammoniaLevel: req.body[`ammoniaLevel${i}`] || "",
-        phytoplanktonLevel: req.body[`phytoplanktonLevel${i}`] || "",
-        waterHardness: req.body[`waterHardness${i}`] || "",
-        algaeBloom: req.body[`algaeBloom${i}`] || "",
-        pondWaterColor: req.body[`pondWaterColor${i}`] || "",
-        sourceOfWater: req.body[`sourceOfWater${i}`] || "",
-        diseaseSymptoms: req.body[`diseaseSymptoms${i}`] || "",
-        symptomsObserved: req.body[`symptomsObserved${i}`] || "",
-        fishDeaths: req.body[`fishDeaths${i}`] || "",
-        symptomsAffect: req.body[`symptomsAffect${i}`] || "",
-        farmObservedDate: req.body[`farmObservedDate${i}`] || new Date(),
-        farmObservedTime: req.body[`farmObservedTime${i}`] || "",
-        lastSpecies: req.body[`lastSpecies${i}`] || "",
-        lastHarvestComplete: req.body[`lastHarvestComplete${i}`] || "",
-        recentRainFlood: req.body[`recentRainFlood${i}`] || "",
-        pesticideRunoff: req.body[`pesticideRunoff${i}`] || "",
-        constructionNear: req.body[`constructionNear${i}`] || "",
-        suddenTempChange: req.body[`suddenTempChange${i}`] || "",
-        notes: req.body[`notes${i}`] || "",
-        pondFiles: pondFiles,
-        fishFiles: fishFiles,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
+    // Create ponds if any (for future use when pondCount > 0)
+    if (totalPonds > 0) {
+      const pondImage = req.files?.pondImage?.[0]?.buffer || null;
+      const pondFiles = req.files?.pondFiles?.map(f => f.buffer) || [];
+      const fishFiles = req.files?.fishFiles?.map(f => f.buffer) || [];
       
-      pondsArray.push(pondData);
+      for (let i = 1; i <= totalPonds; i++) {
+        const pondData = {
+          pondId: `${farmerId}-P${i}`,
+          pondNumber: i,
+          pondArea: req.body[`pondArea${i}`] || "",
+          pondAreaUnit: req.body[`pondAreaUnit${i}`] || "acre",
+          pondDepth: req.body[`pondDepth${i}`] || "",
+          pondImage: pondImage || Buffer.from([]),
+          overflow: req.body[`overflow${i}`] || "No",
+          receivesSunlight: req.body[`receivesSunlight${i}`] || "Yes",
+          treesOnBanks: req.body[`treesOnBanks${i}`] || "No",
+          neighbourhood: req.body[`neighbourhood${i}`] || "Agriculture Farm",
+          wastewaterEnters: req.body[`wastewaterEnters${i}`] || "No",
+          species: req.body[`species${i}`] || "",
+          dateOfStocking: req.body[`dateOfStocking${i}`] || new Date(),
+          qtySeedInitially: req.body[`qtySeedInitially${i}`] || "",
+          currentQty: req.body[`currentQty${i}`] || "",
+          avgSize: req.body[`avgSize${i}`] || ">200gram",
+          feedType: req.body[`feedType${i}`] || "Market Feed",
+          feedOther: req.body[`feedOther${i}`] || "",
+          feedFreq: req.body[`feedFreq${i}`] || "Once a day",
+          feedQtyPerDay: req.body[`feedQtyPerDay${i}`] || "",
+          feedTime: req.body[`feedTime${i}`] || "6:00 am-10:00am",
+          recentFeedChanges: req.body[`recentFeedChanges${i}`] || "",
+          reducedAppetite: req.body[`reducedAppetite${i}`] || "No",
+          waterTemperature: req.body[`waterTemperature${i}`] || "",
+          pH: req.body[`pH${i}`] || "",
+          DO: req.body[`DO${i}`] || "",
+          ammoniaLevel: req.body[`ammoniaLevel${i}`] || "Medium",
+          phytoplanktonLevel: req.body[`phytoplanktonLevel${i}`] || "Medium",
+          waterHardness: req.body[`waterHardness${i}`] || "1",
+          algaeBloom: req.body[`algaeBloom${i}`] || "No",
+          pondWaterColor: req.body[`pondWaterColor${i}`] || "Light Green",
+          sourceOfWater: req.body[`sourceOfWater${i}`] || "Rainwater",
+          diseaseSymptoms: req.body[`diseaseSymptoms${i}`] || "No",
+          symptomsObserved: req.body[`symptomsObserved${i}`] || "",
+          fishDeaths: req.body[`fishDeaths${i}`] || "",
+          symptomsAffect: req.body[`symptomsAffect${i}`] || "All",
+          farmObservedDate: req.body[`farmObservedDate${i}`] || new Date(),
+          farmObservedTime: req.body[`farmObservedTime${i}`] || "",
+          lastSpecies: req.body[`lastSpecies${i}`] || "",
+          lastHarvestComplete: req.body[`lastHarvestComplete${i}`] || "Yes",
+          recentRainFlood: req.body[`recentRainFlood${i}`] || "No",
+          pesticideRunoff: req.body[`pesticideRunoff${i}`] || "No",
+          constructionNear: req.body[`constructionNear${i}`] || "No",
+          suddenTempChange: req.body[`suddenTempChange${i}`] || "No",
+          notes: req.body[`notes${i}`] || "",
+          pondFiles: pondFiles,
+          fishFiles: fishFiles,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        pondsArray.push(pondData);
+      }
     }
 
-    // ✅ FIX 2: CREATE FARMER WITH PRE-GENERATED FARMER ID
+    // ✅ CREATE FARMER WITH PROPER STRUCTURE
     const newFarmer = new Farmer({
-      farmerId: farmerId, // ✅ Manually set farmerId
+      farmerId: farmerId, // ✅ Set farmerId manually
       userId,
       createdBy: userId,
       name, 
@@ -804,17 +805,19 @@ export const addFarmer = async (req, res) => {
       adhar, 
       familyMembers, 
       familyOccupation,
-      photo, 
-      pondFiles, 
-      fishFiles,
-      ponds: pondsArray,
-      updates: []
+      photo,
+      pondFiles: totalPonds > 0 ? (req.files?.pondFiles?.map(f => f.buffer) || []) : [],
+      fishFiles: totalPonds > 0 ? (req.files?.fishFiles?.map(f => f.buffer) || []) : [],
+      ponds: pondsArray, // ✅ Required field - can be empty array
+      updates: [] // ✅ Empty array
     });
 
     console.log("📋 Farmer object before save:", {
       farmerId: newFarmer.farmerId,
       name: newFarmer.name,
-      pondCount: newFarmer.pondCount
+      pondCount: newFarmer.pondCount,
+      hasPhoto: !!newFarmer.photo,
+      pondsCount: newFarmer.ponds.length
     });
 
     await newFarmer.save();
@@ -850,6 +853,17 @@ export const getFarmers = async (req, res) => {
       if (farmerObj.photo) {
         farmerObj.photo = `data:image/jpeg;base64,${farmerObj.photo.toString('base64')}`;
       }
+      
+      // Convert pond images
+      if (farmerObj.ponds && farmerObj.ponds.length > 0) {
+        farmerObj.ponds = farmerObj.ponds.map(pond => {
+          if (pond.pondImage && Buffer.isBuffer(pond.pondImage)) {
+            pond.pondImage = `data:image/jpeg;base64,${pond.pondImage.toString('base64')}`;
+          }
+          return pond;
+        });
+      }
+      
       return farmerObj;
     });
     
