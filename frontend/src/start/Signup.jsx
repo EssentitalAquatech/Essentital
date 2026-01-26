@@ -238,6 +238,7 @@
 
 
 //niche vala sahi hai --
+
 // import api from "../utils/api";
 // import React, { useState } from "react";
 // import { useNavigate, Link } from "react-router-dom";
@@ -510,15 +511,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
 import api from "../utils/api";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -527,8 +519,8 @@ import "./Signup.css";
 
 function Signup() {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     name: "",
@@ -550,75 +542,179 @@ function Signup() {
     savingImg: null,
   });
 
+  // ✅ File validation
+  const validateFiles = () => {
+    const newErrors = {};
+    const requiredFiles = ["aadharFront", "aadharBack", "pan", "savingImg"];
+    
+    requiredFiles.forEach(fileName => {
+      if (!files[fileName]) {
+        newErrors[fileName] = `Please upload ${fileName.replace(/([A-Z])/g, ' $1')}`;
+      } else {
+        // Check file size (5MB limit)
+        if (files[fileName].size > 5 * 1024 * 1024) {
+          newErrors[fileName] = "File size must be less than 5MB";
+        }
+        
+        // Check file type
+        if (!files[fileName].type.startsWith('image/')) {
+          newErrors[fileName] = "Only image files are allowed";
+        }
+      }
+    });
+    
+    return newErrors;
+  };
+
   const handleInput = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
   const handleFile = (e) => {
-    setFiles({ ...files, [e.target.name]: e.target.files[0] });
+    const { name, files: selectedFiles } = e.target;
+    if (selectedFiles && selectedFiles[0]) {
+      setFiles({ ...files, [name]: selectedFiles[0] });
+      
+      // Clear file error
+      if (errors[name]) {
+        setErrors({ ...errors, [name]: "" });
+      }
+    }
   };
 
+  const handleSignup = async (e) => {
+    e.preventDefault();
 
-// React Signup Component में handleSignup function update करें
-const handleSignup = async (e) => {
-  e.preventDefault();
+    // ✅ Clear previous errors
+    setErrors({});
 
-  // Validation checks
-  if (formData.accountNumber !== formData.confirmAccountNumber) {
-    alert("Account numbers do not match");
-    return;
-  }
+    // ✅ Validate account numbers
+    if (formData.accountNumber !== formData.confirmAccountNumber) {
+      setErrors({ accountNumber: "Account numbers do not match" });
+      alert("Account numbers do not match");
+      return;
+    }
 
-  // Check if all required files are uploaded
-  const requiredFiles = ["aadharFront", "aadharBack", "pan", "savingImg"];
-  const missingFiles = requiredFiles.filter(fileName => !files[fileName]);
-  
-  if (missingFiles.length > 0) {
-    alert(`Please upload: ${missingFiles.join(", ")}`);
-    return;
-  }
+    // ✅ Validate required files
+    const fileErrors = validateFiles();
+    if (Object.keys(fileErrors).length > 0) {
+      setErrors(fileErrors);
+      
+      // Show first error
+      const firstError = Object.values(fileErrors)[0];
+      alert(firstError);
+      return;
+    }
 
-  setLoading(true);
-
-  try {
-    const form = new FormData();
-
-    // Add all form data
-    Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value);
-    });
-
-    // Add all files
-    Object.entries(files).forEach(([key, value]) => {
-      if (value) {
-        form.append(key, value);
-      }
-    });
-
-    const response = await api.post(
-      "/api/user/signup",
-      form,
-      { 
-        headers: { 
-          "Content-Type": "multipart/form-data" 
-        } 
-      }
-    );
-
-    // ✅ Success - redirect to login
-    alert("Signup successful! You can now login.");
-    navigate("/login");
+    // ✅ Validate required fields
+    const requiredFields = ["name", "mobile", "email", "age", "address", "accountNumber", "ifsc", "password"];
+    const missingFields = requiredFields.filter(field => !formData[field]);
     
-  } catch (error) {
-    console.error("Signup Error:", error);
-    const errorMessage = error.response?.data?.message || 
-                        error.response?.data?.error || 
-                        "Signup failed. Please try again.";
-    alert(errorMessage);
-  } finally {
-    setLoading(false);
-  }
-};
+    if (missingFields.length > 0) {
+      alert(`Please fill all required fields: ${missingFields.join(", ")}`);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      console.log("📤 Starting signup...");
+      
+      const form = new FormData();
+
+      // Add form data
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== "") {
+          form.append(key, value);
+        }
+      });
+
+      // Add files
+      Object.entries(files).forEach(([key, value]) => {
+        if (value) {
+          console.log(`📄 Adding file ${key}: ${value.name}`);
+          form.append(key, value);
+        }
+      });
+
+      console.log("📨 Sending signup request...");
+
+      const response = await api.post(
+        "/api/user/signup",
+        form,
+        { 
+          headers: { 
+            "Content-Type": "multipart/form-data",
+          } 
+        }
+      );
+
+      console.log("✅ Signup successful:", response.data);
+
+      // ✅ Show success message
+      alert("🎉 Signup successful! Your account has been created. Please login with your credentials.");
+      
+      // ✅ Clear form
+      setFormData({
+        name: "",
+        mobile: "",
+        email: "",
+        age: "",
+        address: "",
+        accountNumber: "",
+        confirmAccountNumber: "",
+        ifsc: "",
+        password: "",
+      });
+      
+      setFiles({
+        profile: null,
+        aadharFront: null,
+        aadharBack: null,
+        pan: null,
+        savingImg: null,
+      });
+
+      // ✅ Redirect to login
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+
+    } catch (error) {
+      console.error("❌ Signup Error:", error);
+      
+      let errorMessage = "Signup failed. Please try again.";
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
+      
+      // Set specific errors if available
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ File preview function (optional)
+  const getFilePreview = (file) => {
+    if (!file) return null;
+    return URL.createObjectURL(file);
+  };
 
   return (
     <div className="signup-page-body">
@@ -651,23 +747,27 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="name"
             required
+            value={formData.name}
             onChange={handleInput}
           />
 
           <label className="signup-form-label">Mobile No *</label>
           <input
-            type="number"
+            type="tel"
             className="signup-input-field"
             name="mobile"
             required
+            value={formData.mobile}
             onChange={handleInput}
           />
 
-          <label className="signup-form-label">Email</label>
+          <label className="signup-form-label">Email *</label>
           <input
             type="email"
             className="signup-input-field"
             name="email"
+            required
+            value={formData.email}
             onChange={handleInput}
           />
 
@@ -679,6 +779,11 @@ const handleSignup = async (e) => {
             accept="image/*"
             onChange={handleFile}
           />
+          {files.profile && (
+            <small className="text-success">
+              ✓ Selected: {files.profile.name}
+            </small>
+          )}
 
           <label className="signup-form-label">Age *</label>
           <input
@@ -686,6 +791,8 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="age"
             required
+            min="18"
+            value={formData.age}
             onChange={handleInput}
           />
 
@@ -695,6 +802,7 @@ const handleSignup = async (e) => {
             name="address"
             rows="3"
             required
+            value={formData.address}
             onChange={handleInput}
           />
 
@@ -704,8 +812,17 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="aadharFront"
             required
+            accept="image/*"
             onChange={handleFile}
           />
+          {files.aadharFront && (
+            <small className="text-success">
+              ✓ Selected: {files.aadharFront.name}
+            </small>
+          )}
+          {errors.aadharFront && (
+            <small className="text-danger">{errors.aadharFront}</small>
+          )}
 
           <label className="signup-form-label">Aadhar Back *</label>
           <input
@@ -713,8 +830,17 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="aadharBack"
             required
+            accept="image/*"
             onChange={handleFile}
           />
+          {files.aadharBack && (
+            <small className="text-success">
+              ✓ Selected: {files.aadharBack.name}
+            </small>
+          )}
+          {errors.aadharBack && (
+            <small className="text-danger">{errors.aadharBack}</small>
+          )}
 
           <label className="signup-form-label">PAN Card *</label>
           <input
@@ -722,8 +848,17 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="pan"
             required
+            accept="image/*"
             onChange={handleFile}
           />
+          {files.pan && (
+            <small className="text-success">
+              ✓ Selected: {files.pan.name}
+            </small>
+          )}
+          {errors.pan && (
+            <small className="text-danger">{errors.pan}</small>
+          )}
 
           <label className="signup-form-label">Account Number *</label>
           <input
@@ -731,8 +866,12 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="accountNumber"
             required
+            value={formData.accountNumber}
             onChange={handleInput}
           />
+          {errors.accountNumber && (
+            <small className="text-danger">{errors.accountNumber}</small>
+          )}
 
           <label className="signup-form-label">Confirm Account Number *</label>
           <input
@@ -740,6 +879,7 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="confirmAccountNumber"
             required
+            value={formData.confirmAccountNumber}
             onChange={handleInput}
           />
 
@@ -749,6 +889,7 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="ifsc"
             required
+            value={formData.ifsc}
             onChange={handleInput}
           />
 
@@ -758,8 +899,17 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="savingImg"
             required
+            accept="image/*"
             onChange={handleFile}
           />
+          {files.savingImg && (
+            <small className="text-success">
+              ✓ Selected: {files.savingImg.name}
+            </small>
+          )}
+          {errors.savingImg && (
+            <small className="text-danger">{errors.savingImg}</small>
+          )}
 
           <label className="signup-form-label">Password *</label>
           <input
@@ -767,6 +917,8 @@ const handleSignup = async (e) => {
             className="signup-input-field"
             name="password"
             required
+            minLength="6"
+            value={formData.password}
             onChange={handleInput}
           />
 
@@ -787,6 +939,15 @@ const handleSignup = async (e) => {
               "Sign Up"
             )}
           </button>
+
+          <div className="text-center mt-3">
+            <p>
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary">
+                Login here
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
     </div>
@@ -794,3 +955,20 @@ const handleSignup = async (e) => {
 }
 
 export default Signup;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -93,7 +93,7 @@
 
 
 
-//uper vala sahi hai
+// // uper vala sahi hai
 
 
 
@@ -102,17 +102,23 @@
 
 
 
-// controllers/userController.js
+
+
+
+
+
+// controllers/signupController.js
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
-import fs from "fs";
-import path from "path";
 
 /* =========================
-   SIGNUP CONTROLLER
+   SIGNUP CONTROLLER (BUFFER BASED)
 ========================= */
 export const signup = async (req, res) => {
   try {
+    console.log("📨 SIGNUP REQUEST STARTED");
+    console.log("Files received:", req.files ? Object.keys(req.files) : "No files");
+
     const {
       name,
       email,
@@ -124,86 +130,58 @@ export const signup = async (req, res) => {
       ifsc,
     } = req.body;
 
-    console.log("Signup Request Body:", req.body);
-    console.log("Signup Request Files:", req.files);
-
     // ❌ Check required fields
-    const requiredFields = ["name", "email", "password", "mobile", "age", "address", "accountNumber", "ifsc"];
-    const missingFields = requiredFields.filter(field => !req.body[field]);
-    
-    if (missingFields.length > 0) {
-      return res.status(400).json({ 
-        message: "Missing required fields", 
-        missingFields 
-      });
+    if (!name || !email || !password || !mobile) {
+      return res.status(400).json({ message: "All required fields missing" });
     }
 
     // ❌ Check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists with this email" });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Helper function to convert image to buffer
-    const getFileBuffer = (file) => {
-      if (!file) return null;
-      try {
-        const filePath = path.join(process.cwd(), file.path);
-        return {
-          data: fs.readFileSync(filePath),
-          contentType: file.mimetype,
-        };
-      } catch (error) {
-        console.error(`Error reading file ${file.path}:`, error);
-        return null;
-      }
+    // ✅ Helper function to get file from multer memory storage
+    const getFileObject = (fileArray) => {
+      if (!fileArray || !fileArray[0]) return null;
+      
+      const file = fileArray[0];
+      return {
+        data: file.buffer, // ✅ Buffer directly from memory
+        contentType: file.mimetype,
+        filename: file.originalname
+      };
     };
 
-    // ✅ Get file buffers
-    const profilePic = req.files?.profile?.[0] ? getFileBuffer(req.files.profile[0]) : null;
-    const aadharFront = req.files?.aadharFront?.[0] ? getFileBuffer(req.files.aadharFront[0]) : null;
-    const aadharBack = req.files?.aadharBack?.[0] ? getFileBuffer(req.files.aadharBack[0]) : null;
-    const panCard = req.files?.pan?.[0] ? getFileBuffer(req.files.pan[0]) : null;
-    const savingAccountImage = req.files?.savingImg?.[0] ? getFileBuffer(req.files.savingImg[0]) : null;
-
-    // ✅ Create user
+    // ✅ Create user with BUFFER DATA
     const user = new User({
       name,
       email,
       mobile,
-      age: parseInt(age),
+      age: age ? parseInt(age) : null,
       address,
       accountNumber,
       ifsc,
       password: hashedPassword,
-      profilePic,
-      aadharFront,
-      aadharBack,
-      panCard,
-      savingAccountImage,
+
+      // ✅ ALL IMAGES AS BUFFER (NO FILE SYSTEM)
+      profilePic: getFileObject(req.files?.profile),
+      aadharFront: getFileObject(req.files?.aadharFront),
+      aadharBack: getFileObject(req.files?.aadharBack),
+      panCard: getFileObject(req.files?.pan),
+      savingAccountImage: getFileObject(req.files?.savingImg),
     });
 
     await user.save();
 
-    // ❌ Delete temporary files
-    if (req.files) {
-      Object.values(req.files).forEach(fileArray => {
-        fileArray.forEach(file => {
-          try {
-            fs.unlinkSync(file.path);
-          } catch (error) {
-            console.error(`Error deleting temp file ${file.path}:`, error);
-          }
-        });
-      });
-    }
-
     // ❌ Remove password from response
     const userResponse = user.toObject();
     delete userResponse.password;
+
+    // ✅ Remove buffer data from response (optional - reduce size)
     delete userResponse.profilePic?.data;
     delete userResponse.aadharFront?.data;
     delete userResponse.aadharBack?.data;
@@ -216,23 +194,7 @@ export const signup = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("SIGNUP ERROR 🔥", error);
-    
-    // Delete any uploaded files if error occurred
-    if (req.files) {
-      Object.values(req.files).forEach(fileArray => {
-        fileArray.forEach(file => {
-          try {
-            if (fs.existsSync(file.path)) {
-              fs.unlinkSync(file.path);
-            }
-          } catch (err) {
-            console.error(`Error cleaning up file ${file.path}:`, err);
-          }
-        });
-      });
-    }
-    
+    console.error("❌ SIGNUP ERROR:", error);
     res.status(500).json({
       message: "Signup failed",
       error: error.message,

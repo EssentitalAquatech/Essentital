@@ -279,7 +279,7 @@
 
 
 
-//uper vala sahi hai
+// uper vala sahi hai
 
 
 
@@ -288,7 +288,7 @@
 
 
 
-//niche vala code login dubara na ho uske liye hai --
+// niche vala code login dubara na ho uske liye hai --
 
 // import express from "express";
 // import multer from "multer";
@@ -387,33 +387,12 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// routes/userRoutes.js
 import express from "express";
-import multer from "multer";
+import upload from "../middleware/upload.js"; // ✅ Use the same upload (memory storage)
 
 // ⭐ IMPORT AUTH MIDDLEWARE
-import authMiddleware from "../middlewares/authMiddleware.js";
+import authMiddleware from "../middlewares/authMiddleware.js"
 
 // ⭐ IMPORT SIGNUP CONTROLLER
 import { signup } from "../controllers/signupController.js";
@@ -432,35 +411,13 @@ import { login } from "../controllers/loginController.js";
 const router = express.Router();
 
 // ======================
-// ⭐ MULTER CONFIG
-// ======================
-
-// 🔹 1. Disk storage for signup (multiple files)
-const diskStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
-
-// 🔹 2. Memory storage for profile photo updates
-const memoryStorage = multer.memoryStorage();
-
-// 🔹 Create two different upload instances
-const uploadDisk = multer({ storage: diskStorage });
-const uploadMemory = multer({ storage: memoryStorage });
-
-// ======================
 // ⭐ ALL ROUTES
 // ======================
 
-// ✅ SIGNUP (With Files – DISK STORAGE) - No auth required
+// ✅ SIGNUP (WITH MEMORY STORAGE - NO DISK)
 router.post(
   "/signup",
-  uploadDisk.fields([
+  upload.fields([
     { name: "profile", maxCount: 1 },
     { name: "aadharFront", maxCount: 1 },
     { name: "aadharBack", maxCount: 1 },
@@ -470,32 +427,23 @@ router.post(
   signup
 );
 
-// ✅ LOGIN - No auth required
+// LOGIN - No auth required
 router.post("/login", login);
 
-// ✅ GET ALL USERS - No auth required (or add auth if needed)
+// GET ALL USERS - No auth required
 router.get("/", getAllUsers);
 
-// 🔒 PROTECTED ROUTES (All require authentication)
-
-// ✅ GET USER BY ID (PROTECTED)
+// 🔒 PROTECTED ROUTES
 router.get("/:id", authMiddleware, getUser);
-
-// ✅ UPDATE PROFILE (NAME) (PROTECTED)
 router.put("/:id", authMiddleware, updateProfile);
-
-// ✅ UPDATE PASSWORD (PROTECTED)
 router.put("/password/:id", authMiddleware, updatePassword);
-
-// ✅ UPDATE PHOTO (PROTECTED) - Using memory storage
-router.put(
-  "/photo/:id",
-  authMiddleware,
-  uploadMemory.single("photo"),
-  updatePhoto
-);
+router.put("/photo/:id", authMiddleware, upload.single("photo"), updatePhoto);
 
 export default router;
+
+
+
+
 
 
 
