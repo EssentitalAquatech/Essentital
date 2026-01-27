@@ -6783,6 +6783,8 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./mainPage.css";
+// jahan tu <img> use kar raha hai
+import api, { getImageUrl } from "../utils/api"; // path check kar le
 
 // Import Lucide icons
 import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2 } from "lucide-react";
