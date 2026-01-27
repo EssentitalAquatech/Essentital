@@ -6778,7 +6778,7 @@
 
 //buffer ke liye
 import React, { useState, useEffect } from "react";
-import api from "../utils/api";
+// import api from "../utils/api";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "bootstrap/dist/css/bootstrap.min.css";

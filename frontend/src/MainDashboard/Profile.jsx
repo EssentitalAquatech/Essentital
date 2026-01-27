@@ -739,7 +739,8 @@ function Profile() {
           
           <div className="mobile-profile">
             <img
-              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              // src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              src={getImageUrl(userId, "profile")}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -755,7 +756,8 @@ function Profile() {
         <div className="sidebar-close-container">
           <div className="profile-sidebar-section">
             <img
-              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              // src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              src={getImageUrl(userId, "profile")}
               alt="User"
               className="profile-sidebar-pic"
               onError={(e) => {
@@ -866,7 +868,8 @@ function Profile() {
             <h4>{t("profileImage")}</h4>
             <div className="profile-image-section">
               <img
-                src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+                // src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+                src={getImageUrl(userId, "profile")}
                 alt="User"
                 onError={(e) => {
                   e.target.src = "/profile.png";
