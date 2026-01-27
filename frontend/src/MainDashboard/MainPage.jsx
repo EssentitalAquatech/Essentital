@@ -7532,7 +7532,8 @@ function MainPage() {
           
           <div className="mobile-profile">
             <img
-              src={photo}
+              // src={photo}
+              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -7549,7 +7550,8 @@ function MainPage() {
         <div className="sidebar-close-container">
           <div className="profile-section text-center mb-4">
             <img
-              src={photo}
+              // src={photo}
+              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
               alt="User"
               className="profile-pic"
               onError={(e) => {
