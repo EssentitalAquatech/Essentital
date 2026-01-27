@@ -91,7 +91,8 @@ function HelpCenter() {
           
           <div className="mobile-profile">
             <img
-              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              // src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              src={getImageUrl(userId, "profile")}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -107,7 +108,8 @@ function HelpCenter() {
         <div className="sidebar-close-container">
           <div className="help-center-sidebar-section">
             <img
-              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              // src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              src={getImageUrl(userId, "profile")}
               alt="User"
               className="profile-pic"
               onError={(e) => {

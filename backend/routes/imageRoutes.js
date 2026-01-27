@@ -75,7 +75,8 @@
 
 
 
-// routes/imageRoutes.js
+// // routes/imageRoutes.js
+
 import express from "express";
 import User from "../models/userModel.js";
 
@@ -144,7 +145,5 @@ export default router;
 
 
 
-
-
-
+//ye uper vala buffer ke liye sahi hai 
 

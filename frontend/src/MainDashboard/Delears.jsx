@@ -2621,7 +2621,8 @@ function DealersPage() {
           
           <div className="mobile-profile">
             <img
-              src={getImageUrl(`/api/images/${userId}/profile`)}
+              // src={getImageUrl(`/api/images/${userId}/profile`)}
+              src={getImageUrl(userId, "profile")}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -2637,7 +2638,8 @@ function DealersPage() {
         <div className="sidebar-close-container">
           <div className="dealers-user-section">
             <img
-              src={getImageUrl(`/api/images/${userId}/profile`)}
+              // src={getImageUrl(`/api/images/${userId}/profile`)}
+              src={getImageUrl(userId, "profile")}
               alt="User"
               className="dealers-user-img"
               onError={(e) => {

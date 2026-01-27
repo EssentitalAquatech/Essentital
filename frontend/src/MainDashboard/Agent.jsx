@@ -900,7 +900,8 @@ function Agent() {
           
           <div className="mobile-profile">
             <img
-              src={getImageUrl(`/api/images/${userId}/profile`)}
+              // src={getImageUrl(`/api/images/${userId}/profile`)}
+              src={getImageUrl(userId, "profile")}
               alt={username}
               className="mobile-profile-pic"
               onError={(e) => {
@@ -916,7 +917,8 @@ function Agent() {
         <div className="sidebar-close-container">
           <div className="agent-left-profile-section">
             <img
-              src={getImageUrl(`/api/images/${userId}/profile`)}
+              // src={getImageUrl(`/api/images/${userId}/profile`)}
+              src={getImageUrl(userId, "profile")}
               alt={username}
               className="agent-left-profile-pic"
               onError={(e) => {
