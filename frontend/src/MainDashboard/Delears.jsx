@@ -1538,41 +1538,727 @@
 
 
 
+//ye niche vala sahi hai
+
+// import React, { useState, useEffect } from "react";
+// import { useNavigate, Link } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import api, { getImageUrl } from "../utils/api";
+// import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader, Search } from "lucide-react";
+// import "./Dealers.css";
+
+// function DealersPage() {
+//   const { t, i18n } = useTranslation();
+  
+//   // Mobile state
+//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+//   const [isMobile, setIsMobile] = useState(false);
+  
+//   // User state
+//   const [username, setUsername] = useState("");
+//   const [photo, setPhoto] = useState("/default-profile.png");
+//   const [selectedLang, setSelectedLang] = useState(localStorage.getItem("lang") || "en");
+//   const userId = localStorage.getItem("userId");
+  
+//   // Dealers state
+//   const [dealers, setDealers] = useState([]);
+//   const [showForm, setShowForm] = useState(false);
+//   const [dealerName, setDealerName] = useState("");
+//   const [contact, setContact] = useState("");
+//   const [gstNumber, setGstNumber] = useState("");
+//   const [image, setImage] = useState(null);
+//   const [shopAddress, setShopAddress] = useState("");
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [searchResult, setSearchResult] = useState([]);
+//   const [isSearching, setIsSearching] = useState(false);
+  
+//   // Form validation errors
+//   const [formErrors, setFormErrors] = useState({
+//     dealerName: "",
+//     contact: "",
+//     gstNumber: "",
+//     shopAddress: "",
+//     image: ""
+//   });
+  
+//   // Loading states
+//   const [loadingSave, setLoadingSave] = useState(false);
+//   const [loadingLanguage, setLoadingLanguage] = useState(false);
+//   const [loadingSidebar, setLoadingSidebar] = useState(false);
+//   const [loadingCard, setLoadingCard] = useState({});
+  
+//   const navigate = useNavigate();
+
+//   // Check if mobile view
+//   useEffect(() => {
+//     const checkMobile = () => {
+//       setIsMobile(window.innerWidth <= 991);
+//     };
+    
+//     checkMobile();
+//     window.addEventListener('resize', checkMobile);
+    
+//     return () => window.removeEventListener('resize', checkMobile);
+//   }, []);
+
+//   // Close sidebar when clicking outside on mobile
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (isMobile && isSidebarOpen && 
+//           !event.target.closest('.dealers-sidebar') && 
+//           !event.target.closest('.mobile-menu-toggle')) {
+//         setIsSidebarOpen(false);
+//       }
+//     };
+
+//     document.addEventListener('click', handleClickOutside);
+//     return () => document.removeEventListener('click', handleClickOutside);
+//   }, [isMobile, isSidebarOpen]);
+
+//   // Close sidebar when route changes
+//   useEffect(() => {
+//     setIsSidebarOpen(false);
+//   }, [window.location.pathname]);
+
+//   const changeLanguage = async (lang) => {
+//     setLoadingLanguage(true);
+//     try {
+//       await new Promise(resolve => setTimeout(resolve, 300));
+//       i18n.changeLanguage(lang);
+//       localStorage.setItem("lang", lang);
+//       setSelectedLang(lang);
+//       setDealers((prev) => [...prev]);
+//     } finally {
+//       setLoadingLanguage(false);
+//     }
+//   };
+
+//   // Fetch user data
+//   useEffect(() => {
+//     api
+//       .get(`/api/user/${userId}`)
+//       .then((res) => {
+//         const data = res.data;
+//         setUsername(data.name || localStorage.getItem("username") || "");
+//         setPhoto(data.photo ? getImageUrl(data.photo) : "/default-profile.png");
+//       })
+//       .catch(() => {
+//         setUsername(localStorage.getItem("username") || "");
+//         setPhoto(localStorage.getItem("photo") || "/default-profile.png");
+//       });
+//   }, [userId]);
+
+//   const fetchDealers = async () => {
+//     try {
+//       const res = await api.get(
+//         `/api/dealers?userId=${userId}`
+//       );
+//       setDealers(res.data);
+//       setSearchResult(res.data);
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchDealers();
+//   }, []);
+
+//   // Validate form fields
+//   const validateForm = () => {
+//     const errors = {
+//       dealerName: "",
+//       contact: "",
+//       gstNumber: "",
+//       shopAddress: "",
+//       image: ""
+//     };
+//     let isValid = true;
+
+//     if (!dealerName.trim()) {
+//       errors.dealerName = t("dealerNameRequired");
+//       isValid = false;
+//     }
+
+//     if (!contact.trim()) {
+//       errors.contact = t("contactRequired");
+//       isValid = false;
+//     } else if (!/^\d{10}$/.test(contact.trim())) {
+//       errors.contact = t("validContact");
+//       isValid = false;
+//     }
+
+//     if (!gstNumber.trim()) {
+//       errors.gstNumber = t("gstNumberRequired");
+//       isValid = false;
+//     }
+
+//     if (!shopAddress.trim()) {
+//       errors.shopAddress = t("shopAddressRequired");
+//       isValid = false;
+//     }
+
+//     if (!image) {
+//       errors.image = t("imageRequired");
+//       isValid = false;
+//     }
+
+//     setFormErrors(errors);
+//     return isValid;
+//   };
+
+//   const handleAddDealer = async () => {
+//     // Validate form first
+//     if (!validateForm()) {
+//       return;
+//     }
+
+//     setLoadingSave(true);
+//     const formData = new FormData();
+//     formData.append("name", dealerName);
+//     formData.append("contact", contact);
+//     formData.append("gstNumber", gstNumber);
+//     formData.append("shopAddress", shopAddress);
+//     formData.append("image", image);
+//     formData.append("userId", userId);
+
+//     try {
+//       await api.post("/api/dealers", formData);
+
+//       // Reset form
+//       setDealerName("");
+//       setContact("");
+//       setGstNumber("");
+//       setShopAddress("");
+//       setImage(null);
+//       setFormErrors({
+//         dealerName: "",
+//         contact: "",
+//         gstNumber: "",
+//         shopAddress: "",
+//         image: ""
+//       });
+//       setShowForm(false);
+//       fetchDealers();
+//     } catch (err) {
+//       console.log(err);
+//       alert(t("errorAddingDealer"));
+//     } finally {
+//       setLoadingSave(false);
+//     }
+//   };
+
+//   // Handle input changes and clear errors
+//   const handleInputChange = (field, value) => {
+//     switch (field) {
+//       case 'dealerName':
+//         setDealerName(value);
+//         if (value.trim()) setFormErrors({...formErrors, dealerName: ""});
+//         break;
+//       case 'contact':
+//         setContact(value);
+//         if (value.trim()) setFormErrors({...formErrors, contact: ""});
+//         break;
+//       case 'gstNumber':
+//         setGstNumber(value);
+//         if (value.trim()) setFormErrors({...formErrors, gstNumber: ""});
+//         break;
+//       case 'shopAddress':
+//         setShopAddress(value);
+//         if (value.trim()) setFormErrors({...formErrors, shopAddress: ""});
+//         break;
+//     }
+//   };
+
+//   const handleCardClick = async (dealer) => {
+//     setLoadingCard(prev => ({ ...prev, [dealer._id]: true }));
+//     try {
+//       await new Promise(resolve => setTimeout(resolve, 300));
+//       localStorage.setItem("selectedDealerName", dealer.name);
+//       localStorage.setItem("selectedDealerAddress", dealer.shopAddress);
+//       navigate(`/dealer-shop/${dealer._id}`);
+//     } finally {
+//       setLoadingCard(prev => ({ ...prev, [dealer._id]: false }));
+//     }
+//   };
+
+//   const getGreeting = () => {
+//     let greeting = "Hello";
+//     if (selectedLang === "hi") greeting = "नमस्ते";
+//     else if (selectedLang === "bn") greeting = "হ্যালো";
+//     return `${greeting}, ${username}`;
+//   };
+
+//   // ================= SEARCH LOGIC (FIXED) =================
+
+//   // Handle search when button is clicked
+//   const handleSearch = () => {
+//     const normalizedQuery = searchQuery.trim().toLowerCase();
+
+//     if (normalizedQuery === "") {
+//       setSearchResult(dealers);
+//       setIsSearching(false);
+//       return;
+//     }
+
+//     const filtered = dealers.filter((d) =>
+//       d.name?.toLowerCase().includes(normalizedQuery)
+//     );
+
+//     setSearchResult(filtered);
+//     setIsSearching(true);
+//   };
+
+//   // Clear search
+//   const handleClearSearch = () => {
+//     setSearchQuery("");
+//     setSearchResult(dealers);
+//     setIsSearching(false);
+//   };
+
+//   // Handle Enter key
+//   const handleKeyPress = (e) => {
+//     if (e.key === "Enter") {
+//       handleSearch();
+//     }
+//   };
+
+//   // Update search result when dealers or query changes
+//   useEffect(() => {
+//     const normalizedQuery = searchQuery.trim().toLowerCase();
+
+//     if (isSearching && normalizedQuery !== "") {
+//       const filtered = dealers.filter((d) =>
+//         d.name?.toLowerCase().includes(normalizedQuery)
+//       );
+//       setSearchResult(filtered);
+//     } else {
+//       setSearchResult(dealers);
+//     }
+//   }, [dealers, searchQuery, isSearching]);
+
+//   return (
+//     <div className="dealers-container">
+//       {/* ================= MOBILE NAVBAR ================= */}
+//       {isMobile && (
+//         <div className="mobile-navbar">
+//           <button 
+//             className="mobile-menu-toggle"
+//             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+//             aria-label="Toggle menu"
+//             disabled={loadingSidebar}
+//           >
+//             {loadingSidebar ? (
+//               <Loader size={24} className="spinner" />
+//             ) : isSidebarOpen ? (
+//               <X size={24} />
+//             ) : (
+//               <Menu size={24} />
+//             )}
+//           </button>
+          
+//           <div className="mobile-logo">
+//             <h3>{t("dealers")}</h3>
+//           </div>
+          
+//           <div className="mobile-profile">
+//             <img
+//               src={getImageUrl(`/api/images/${userId}/profile`)}
+//               alt="User"
+//               className="mobile-profile-pic"
+//               onError={(e) => {
+//                 e.target.src = "/profile.png";
+//               }}
+//             />
+//           </div>
+//         </div>
+//       )}
+
+//       {/* ================= SIDEBAR ================= */}
+//       <div className={`dealers-sidebar ${isMobile ? (isSidebarOpen ? 'mobile-open' : 'mobile-closed') : ''}`}>
+//         <div className="sidebar-close-container">
+//           <div className="dealers-user-section">
+//             <img
+//               src={getImageUrl(`/api/images/${userId}/profile`)}
+//               alt="User"
+//               className="dealers-user-img"
+//               onError={(e) => {
+//                 e.target.src = "/profile.png";
+//               }}
+//             />
+//             <h5 className="dealers-username">{username || "User"}</h5>
+//           </div>
+
+          
+//         </div>
+
+//         <ul className="dealers-nav-links">
+//           <li className="dealers-nav-item">
+//             <Link to="/profile" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
+//                <User size={18} />  {t("profile")}
+//             </Link>
+//           </li>
+//           <li className="dealers-nav-item">
+//             <Link to="/dashboard" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
+//                <Home size={18} />  {t("dashboard")}
+//             </Link>
+//           </li>
+//           <li className="dealers-nav-item">
+//             <Link to="/helpcenter" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
+//                <HelpCircle size={18} />  {t("helpCenter")}
+//             </Link>
+//           </li>
+//           <li className="dealers-nav-item">
+//             <Link to="/dealers" className="dealers-nav-link active" onClick={() => setIsSidebarOpen(false)}>
+//              <ShoppingBag size={18} />    {t("dealers")}
+//             </Link>
+//           </li>
+//           <li className="dealers-nav-item">
+//             <Link to="/agents" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
+//             <Users size={18} />     {t("agents")}
+//             </Link>
+//           </li>
+//         </ul>
+
+//         {/* ================= LANGUAGE ================= */}
+//         <div className="dealers-language-section">
+//           <h6 className="dealers-language-label">{t("chooseLanguage")}</h6>
+//           <div className="dealers-language-select-wrapper">
+//             <select
+//               value={i18n.language}
+//               onChange={(e) => changeLanguage(e.target.value)}
+//               className="dealers-language-select"
+//               disabled={loadingLanguage}
+//             >
+//               <option value="en">English</option>
+//               <option value="hi">हिन्दी</option>
+//               <option value="bn">বাংলা</option>
+//               <option value="as">অসমীয়া</option>
+//               <option value="ta">தமிழ்</option>
+//               <option value="kn">ಕನ್ನಡ</option>
+//               <option value="mr">मराठी</option>
+//             </select>
+//             {loadingLanguage && (
+//               <Loader size={16} className="language-spinner" />
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= OVERLAY FOR MOBILE ================= */}
+//       {isMobile && isSidebarOpen && (
+//         <div 
+//           className="sidebar-overlay"
+//           onClick={() => setIsSidebarOpen(false)}
+//         ></div>
+//       )}
+
+//       {/* ================= RIGHT CONTENT ================= */}
+//       <div className={`dealers-main-content ${isMobile ? 'mobile-view' : ''}`}>
+//         <h5 className="dealers-greeting">{getGreeting()}</h5>
+
+//         <div className="dealers-count-section">
+//           <h3 className="dealers-count">
+//             {isSearching 
+//               ? `${t("searchResults")}: ${searchResult.length}` 
+//               : `${t("totalDealers")}: ${dealers.length}`
+//             }
+//           </h3>
+//           <button 
+//             onClick={() => setShowForm(!showForm)} 
+//             className="dealers-add-btn"
+//             disabled={loadingSave}
+//           >
+//             {loadingSave ? (
+//               <>
+//                 <Loader size={16} className="spinner" />
+//                 {t("loading")}
+//               </>
+//             ) : (
+//               t("addNewDealer")
+//             )}
+//           </button>
+//         </div>
+
+//         {showForm && (
+//           <div className="dealers-form-container">
+//             <div>
+//               <h4 className="dealers-form-title">{t("addNewDealer")}</h4>
+
+//               <div className="dealers-form-group">
+//                 <label className="dealers-form-label">{t("dealerName")}:</label>
+//                 <input 
+//                   type="text" 
+//                   value={dealerName} 
+//                   onChange={(e) => handleInputChange('dealerName', e.target.value)} 
+//                   className={`dealers-form-input ${formErrors.dealerName ? 'error-input' : ''}`}
+//                   required
+//                   disabled={loadingSave}
+//                 />
+//                 {formErrors.dealerName && (
+//                   <div className="error-message">{formErrors.dealerName}</div>
+//                 )}
+//               </div>
+
+//               <div className="dealers-form-group">
+//                 <label className="dealers-form-label">{t("contactNumber")}:</label>
+//                 <input 
+//                   type="text" 
+//                   value={contact} 
+//                   onChange={(e) => handleInputChange('contact', e.target.value)} 
+//                   className={`dealers-form-input ${formErrors.contact ? 'error-input' : ''}`}
+//                   required
+//                   disabled={loadingSave}
+//                 />
+//                 {formErrors.contact && (
+//                   <div className="error-message">{formErrors.contact}</div>
+//                 )}
+//               </div>
+
+//               <div className="dealers-form-group">
+//                 <label className="dealers-form-label">{t("shopAddress")}:</label>
+//                 <input 
+//                   type="text" 
+//                   value={shopAddress} 
+//                   onChange={(e) => handleInputChange('shopAddress', e.target.value)} 
+//                   className={`dealers-form-input ${formErrors.shopAddress ? 'error-input' : ''}`}
+//                   required
+//                   disabled={loadingSave}
+//                 />
+//                 {formErrors.shopAddress && (
+//                   <div className="error-message">{formErrors.shopAddress}</div>
+//                 )}
+//               </div>
+
+//               <div className="dealers-form-group">
+//                 <label className="dealers-form-label">{t("gstNumber")}:</label>
+//                 <input 
+//                   type="text" 
+//                   value={gstNumber} 
+//                   onChange={(e) => handleInputChange('gstNumber', e.target.value)} 
+//                   className={`dealers-form-input ${formErrors.gstNumber ? 'error-input' : ''}`}
+//                   required
+//                   disabled={loadingSave}
+//                 />
+//                 {formErrors.gstNumber && (
+//                   <div className="error-message">{formErrors.gstNumber}</div>
+//                 )}
+//               </div>
+
+//               <div className="dealers-form-group">
+//                 <label className="dealers-form-label">{t("profileimage")}:</label>
+//                 <input 
+//                   type="file" 
+//                   onChange={(e) => {
+//                     setImage(e.target.files[0]);
+//                     if (e.target.files[0]) setFormErrors({...formErrors, image: ""});
+//                   }} 
+//                   className={`dealers-form-input ${formErrors.image ? 'error-input' : ''}`}
+//                   required
+//                   disabled={loadingSave}
+//                 />
+//                 {formErrors.image && (
+//                   <div className="error-message">{formErrors.image}</div>
+//                 )}
+//               </div>
+
+//               <div className="dealers-form-buttons">
+//                 <button 
+//                   onClick={() => {
+//                     setShowForm(false);
+//                     setFormErrors({
+//                       dealerName: "",
+//                       contact: "",
+//                       gstNumber: "",
+//                       shopAddress: "",
+//                       image: ""
+//                     });
+//                   }} 
+//                   className="dealers-cancel-btn"
+//                   disabled={loadingSave}
+//                 >
+//                   {t("cancel")}
+//                 </button>
+
+//                 <button 
+//                   onClick={handleAddDealer} 
+//                   className="dealers-submit-btn"
+//                   disabled={loadingSave}
+//                 >
+//                   {loadingSave ? (
+//                     <>
+//                       <Loader size={16} className="spinner" />
+//                       {t("saving")}
+//                     </>
+//                   ) : (
+//                     t("addDealer")
+//                   )}
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+
+//         <div className="dealers-search-container">
+//           <div className="search-wrapper">
+//             <input
+//               type="text"
+//               placeholder={t("searchDealer")}
+//               value={searchQuery}
+//               onChange={(e) => setSearchQuery(e.target.value)}
+//               className="dealers-search-input"
+//               onKeyPress={handleKeyPress}
+//             />
+//             <button 
+//               onClick={handleSearch}
+//               className="search-button"
+//               aria-label={t("search")}
+//             >
+//               <Search size={20} />
+//               <span className="search-button-text">{t("search")}</span>
+//             </button>
+//             {isSearching && (
+//               <button 
+//                 onClick={handleClearSearch}
+//                 className="clear-search-button"
+//                 aria-label={t("clearSearch")}
+//               >
+//                 {t("clearSearch")}
+//               </button>
+//             )}
+//           </div>
+//         </div>
+
+//         <div className="dealers-list-container">
+//           {searchResult.length > 0 ? (
+//             searchResult.map((dealer) => (
+//               <div 
+//                 key={dealer._id} 
+//                 className="dealers-card"
+//                 onClick={() => handleCardClick(dealer)}
+//               >
+//                 {dealer.image && (
+//                   // <img
+//                   //   src={getImageUrl(dealer.image)}
+//                   //   alt={dealer.name}
+//                   //   className="dealers-card-img"
+//                   //   onError={(e) => {
+//                   //     e.target.src = "/no-image.png";
+//                   //   }}
+//                   // />
+
+//   <img
+//     src={getImageUrl(dealer.image)}
+//     alt={dealer.name}
+//     className="dealers-card-img"
+//     loading="lazy"
+//     onError={(e) => {
+//       e.target.src = "/no-image.png";
+//       e.target.onerror = null;
+//     }}
+//   />
+// )}
 
 
+
+              
+//                 <div className="dealers-card-content">
+//                   <h5 className="dealers-card-title">
+//                     <span className="dealers-card-label">{t("dealerName")}:</span> {dealer.name}
+//                   </h5>
+//                   <p className="dealers-card-text">
+//                     <span className="dealers-card-label">{t("contactNumber")}:</span> {dealer.contact}
+//                   </p>
+//                   <p className="dealers-card-text">
+//                     <span className="dealers-card-label">{t("shopAddress")}:</span> {dealer.shopAddress}
+//                   </p>
+//                   <p className="dealers-card-text">
+//                     <span className="dealers-card-label">{t("gstNumber")}:</span> {dealer.gstNumber}
+//                   </p>
+//                   {loadingCard[dealer._id] && (
+//                     <div className="card-loader-overlay">
+//                       <Loader size={24} className="spinner" />
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))
+//           ) : isSearching ? (
+//             <p className="dealers-empty-state">{t("noSearchResults")}</p>
+//           ) : (
+//             <p className="dealers-empty-state">{t("noDealersFound")}</p>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default DealersPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//buffer
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api, { getImageUrl } from "../utils/api";
-import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader, Search } from "lucide-react";
+import {
+  Menu,
+  X,
+  Home,
+  User,
+  HelpCircle,
+  ShoppingBag,
+  Users,
+  Loader,
+  Search
+} from "lucide-react";
 import "./Dealers.css";
 
 function DealersPage() {
   const { t, i18n } = useTranslation();
-  
-  // Mobile state
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  
-  // User state
-  const [username, setUsername] = useState("");
-  const [photo, setPhoto] = useState("/default-profile.png");
-  const [selectedLang, setSelectedLang] = useState(localStorage.getItem("lang") || "en");
+  const navigate = useNavigate();
+
+  // ================= USER =================
   const userId = localStorage.getItem("userId");
-  
-  // Dealers state
+  const [username, setUsername] = useState("");
+
+  // ================= UI STATES =================
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState(
+    localStorage.getItem("lang") || "en"
+  );
+
+  // ================= DEALERS =================
   const [dealers, setDealers] = useState([]);
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  // ================= FORM =================
   const [showForm, setShowForm] = useState(false);
   const [dealerName, setDealerName] = useState("");
   const [contact, setContact] = useState("");
   const [gstNumber, setGstNumber] = useState("");
-  const [image, setImage] = useState(null);
   const [shopAddress, setShopAddress] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  
-  // Form validation errors
+  const [image, setImage] = useState(null);
+
   const [formErrors, setFormErrors] = useState({
     dealerName: "",
     contact: "",
@@ -1580,83 +2266,35 @@ function DealersPage() {
     shopAddress: "",
     image: ""
   });
-  
-  // Loading states
-  const [loadingSave, setLoadingSave] = useState(false);
-  const [loadingLanguage, setLoadingLanguage] = useState(false);
-  const [loadingSidebar, setLoadingSidebar] = useState(false);
-  const [loadingCard, setLoadingCard] = useState({});
-  
-  const navigate = useNavigate();
 
-  // Check if mobile view
+  // ================= LOADING =================
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingCard, setLoadingCard] = useState({});
+
+  // ================= RESPONSIVE =================
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 991);
-    };
-    
+    const checkMobile = () => setIsMobile(window.innerWidth <= 991);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isMobile && isSidebarOpen && 
-          !event.target.closest('.dealers-sidebar') && 
-          !event.target.closest('.mobile-menu-toggle')) {
-        setIsSidebarOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [isMobile, isSidebarOpen]);
-
-  // Close sidebar when route changes
-  useEffect(() => {
-    setIsSidebarOpen(false);
-  }, [window.location.pathname]);
-
-  const changeLanguage = async (lang) => {
-    setLoadingLanguage(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      i18n.changeLanguage(lang);
-      localStorage.setItem("lang", lang);
-      setSelectedLang(lang);
-      setDealers((prev) => [...prev]);
-    } finally {
-      setLoadingLanguage(false);
-    }
-  };
-
-  // Fetch user data
+  // ================= USER DATA =================
   useEffect(() => {
     api
       .get(`/api/user/${userId}`)
-      .then((res) => {
-        const data = res.data;
-        setUsername(data.name || localStorage.getItem("username") || "");
-        setPhoto(data.photo ? getImageUrl(data.photo) : "/default-profile.png");
-      })
-      .catch(() => {
-        setUsername(localStorage.getItem("username") || "");
-        setPhoto(localStorage.getItem("photo") || "/default-profile.png");
-      });
+      .then((res) => setUsername(res.data?.name || "User"))
+      .catch(() => setUsername("User"));
   }, [userId]);
 
+  // ================= FETCH DEALERS =================
   const fetchDealers = async () => {
     try {
-      const res = await api.get(
-        `/api/dealers?userId=${userId}`
-      );
+      const res = await api.get(`/api/dealers?userId=${userId}`);
       setDealers(res.data);
       setSearchResult(res.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -1664,8 +2302,9 @@ function DealersPage() {
     fetchDealers();
   }, []);
 
-  // Validate form fields
+  // ================= FORM VALIDATION =================
   const validateForm = () => {
+    let valid = true;
     const errors = {
       dealerName: "",
       contact: "",
@@ -1673,47 +2312,42 @@ function DealersPage() {
       shopAddress: "",
       image: ""
     };
-    let isValid = true;
 
     if (!dealerName.trim()) {
       errors.dealerName = t("dealerNameRequired");
-      isValid = false;
+      valid = false;
     }
 
-    if (!contact.trim()) {
-      errors.contact = t("contactRequired");
-      isValid = false;
-    } else if (!/^\d{10}$/.test(contact.trim())) {
+    if (!/^\d{10}$/.test(contact)) {
       errors.contact = t("validContact");
-      isValid = false;
+      valid = false;
     }
 
     if (!gstNumber.trim()) {
       errors.gstNumber = t("gstNumberRequired");
-      isValid = false;
+      valid = false;
     }
 
     if (!shopAddress.trim()) {
       errors.shopAddress = t("shopAddressRequired");
-      isValid = false;
+      valid = false;
     }
 
     if (!image) {
       errors.image = t("imageRequired");
-      isValid = false;
+      valid = false;
     }
 
     setFormErrors(errors);
-    return isValid;
+    return valid;
   };
 
+  // ================= ADD DEALER =================
   const handleAddDealer = async () => {
-    // Validate form first
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setLoadingSave(true);
+
     const formData = new FormData();
     formData.append("name", dealerName);
     formData.append("contact", contact);
@@ -1724,467 +2358,129 @@ function DealersPage() {
 
     try {
       await api.post("/api/dealers", formData);
-
-      // Reset form
+      setShowForm(false);
       setDealerName("");
       setContact("");
       setGstNumber("");
       setShopAddress("");
       setImage(null);
-      setFormErrors({
-        dealerName: "",
-        contact: "",
-        gstNumber: "",
-        shopAddress: "",
-        image: ""
-      });
-      setShowForm(false);
       fetchDealers();
     } catch (err) {
-      console.log(err);
       alert(t("errorAddingDealer"));
     } finally {
       setLoadingSave(false);
     }
   };
 
-  // Handle input changes and clear errors
-  const handleInputChange = (field, value) => {
-    switch (field) {
-      case 'dealerName':
-        setDealerName(value);
-        if (value.trim()) setFormErrors({...formErrors, dealerName: ""});
-        break;
-      case 'contact':
-        setContact(value);
-        if (value.trim()) setFormErrors({...formErrors, contact: ""});
-        break;
-      case 'gstNumber':
-        setGstNumber(value);
-        if (value.trim()) setFormErrors({...formErrors, gstNumber: ""});
-        break;
-      case 'shopAddress':
-        setShopAddress(value);
-        if (value.trim()) setFormErrors({...formErrors, shopAddress: ""});
-        break;
-    }
-  };
-
-  const handleCardClick = async (dealer) => {
-    setLoadingCard(prev => ({ ...prev, [dealer._id]: true }));
-    try {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      localStorage.setItem("selectedDealerName", dealer.name);
-      localStorage.setItem("selectedDealerAddress", dealer.shopAddress);
-      navigate(`/dealer-shop/${dealer._id}`);
-    } finally {
-      setLoadingCard(prev => ({ ...prev, [dealer._id]: false }));
-    }
-  };
-
-  const getGreeting = () => {
-    let greeting = "Hello";
-    if (selectedLang === "hi") greeting = "नमस्ते";
-    else if (selectedLang === "bn") greeting = "হ্যালো";
-    return `${greeting}, ${username}`;
-  };
-
-  // ================= SEARCH LOGIC (FIXED) =================
-
-  // Handle search when button is clicked
+  // ================= SEARCH =================
   const handleSearch = () => {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
-
-    if (normalizedQuery === "") {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) {
       setSearchResult(dealers);
       setIsSearching(false);
       return;
     }
-
-    const filtered = dealers.filter((d) =>
-      d.name?.toLowerCase().includes(normalizedQuery)
+    setSearchResult(
+      dealers.filter((d) => d.name?.toLowerCase().includes(q))
     );
-
-    setSearchResult(filtered);
     setIsSearching(true);
   };
 
-  // Clear search
-  const handleClearSearch = () => {
-    setSearchQuery("");
-    setSearchResult(dealers);
-    setIsSearching(false);
+  // ================= CARD CLICK =================
+  const handleCardClick = (dealer) => {
+    setLoadingCard((p) => ({ ...p, [dealer._id]: true }));
+    setTimeout(() => {
+      navigate(`/dealer-shop/${dealer._id}`);
+      setLoadingCard((p) => ({ ...p, [dealer._id]: false }));
+    }, 300);
   };
 
-  // Handle Enter key
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
-
-  // Update search result when dealers or query changes
-  useEffect(() => {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
-
-    if (isSearching && normalizedQuery !== "") {
-      const filtered = dealers.filter((d) =>
-        d.name?.toLowerCase().includes(normalizedQuery)
-      );
-      setSearchResult(filtered);
-    } else {
-      setSearchResult(dealers);
-    }
-  }, [dealers, searchQuery, isSearching]);
-
+  // ================= RENDER =================
   return (
     <div className="dealers-container">
-      {/* ================= MOBILE NAVBAR ================= */}
+      {/* ===== MOBILE NAV ===== */}
       {isMobile && (
         <div className="mobile-navbar">
-          <button 
-            className="mobile-menu-toggle"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            aria-label="Toggle menu"
-            disabled={loadingSidebar}
-          >
-            {loadingSidebar ? (
-              <Loader size={24} className="spinner" />
-            ) : isSidebarOpen ? (
-              <X size={24} />
-            ) : (
-              <Menu size={24} />
-            )}
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            {isSidebarOpen ? <X /> : <Menu />}
           </button>
-          
-          <div className="mobile-logo">
-            <h3>{t("dealers")}</h3>
-          </div>
-          
-          <div className="mobile-profile">
-            <img
-              src={getImageUrl(`/api/images/${userId}/profile`)}
-              alt="User"
-              className="mobile-profile-pic"
-              onError={(e) => {
-                e.target.src = "/profile.png";
-              }}
-            />
-          </div>
+          <h3>{t("dealers")}</h3>
         </div>
       )}
 
-      {/* ================= SIDEBAR ================= */}
-      <div className={`dealers-sidebar ${isMobile ? (isSidebarOpen ? 'mobile-open' : 'mobile-closed') : ''}`}>
-        <div className="sidebar-close-container">
-          <div className="dealers-user-section">
-            <img
-              src={getImageUrl(`/api/images/${userId}/profile`)}
-              alt="User"
-              className="dealers-user-img"
-              onError={(e) => {
-                e.target.src = "/profile.png";
-              }}
-            />
-            <h5 className="dealers-username">{username || "User"}</h5>
-          </div>
-
-          
-        </div>
-
-        <ul className="dealers-nav-links">
-          <li className="dealers-nav-item">
-            <Link to="/profile" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
-               <User size={18} />  {t("profile")}
-            </Link>
-          </li>
-          <li className="dealers-nav-item">
-            <Link to="/dashboard" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
-               <Home size={18} />  {t("dashboard")}
-            </Link>
-          </li>
-          <li className="dealers-nav-item">
-            <Link to="/helpcenter" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
-               <HelpCircle size={18} />  {t("helpCenter")}
-            </Link>
-          </li>
-          <li className="dealers-nav-item">
-            <Link to="/dealers" className="dealers-nav-link active" onClick={() => setIsSidebarOpen(false)}>
-             <ShoppingBag size={18} />    {t("dealers")}
-            </Link>
-          </li>
-          <li className="dealers-nav-item">
-            <Link to="/agents" className="dealers-nav-link" onClick={() => setIsSidebarOpen(false)}>
-            <Users size={18} />     {t("agents")}
-            </Link>
-          </li>
-        </ul>
-
-        {/* ================= LANGUAGE ================= */}
-        <div className="dealers-language-section">
-          <h6 className="dealers-language-label">{t("chooseLanguage")}</h6>
-          <div className="dealers-language-select-wrapper">
-            <select
-              value={i18n.language}
-              onChange={(e) => changeLanguage(e.target.value)}
-              className="dealers-language-select"
-              disabled={loadingLanguage}
-            >
-              <option value="en">English</option>
-              <option value="hi">हिन्दी</option>
-              <option value="bn">বাংলা</option>
-              <option value="as">অসমীয়া</option>
-              <option value="ta">தமிழ்</option>
-              <option value="kn">ಕನ್ನಡ</option>
-              <option value="mr">मराठी</option>
-            </select>
-            {loadingLanguage && (
-              <Loader size={16} className="language-spinner" />
-            )}
-          </div>
-        </div>
+      {/* ===== SIDEBAR ===== */}
+      <div className={`dealers-sidebar ${isSidebarOpen ? "open" : ""}`}>
+        <h5>{username}</h5>
+        <Link to="/dashboard"><Home /> {t("dashboard")}</Link>
+        <Link to="/dealers"><ShoppingBag /> {t("dealers")}</Link>
+        <Link to="/agents"><Users /> {t("agents")}</Link>
+        <Link to="/profile"><User /> {t("profile")}</Link>
+        <Link to="/helpcenter"><HelpCircle /> {t("helpCenter")}</Link>
       </div>
 
-      {/* ================= OVERLAY FOR MOBILE ================= */}
-      {isMobile && isSidebarOpen && (
-        <div 
-          className="sidebar-overlay"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
+      {/* ===== MAIN ===== */}
+      <div className="dealers-main-content">
+        <h3>{t("totalDealers")}: {searchResult.length}</h3>
 
-      {/* ================= RIGHT CONTENT ================= */}
-      <div className={`dealers-main-content ${isMobile ? 'mobile-view' : ''}`}>
-        <h5 className="dealers-greeting">{getGreeting()}</h5>
+        <button onClick={() => setShowForm(!showForm)}>
+          {t("addNewDealer")}
+        </button>
 
-        <div className="dealers-count-section">
-          <h3 className="dealers-count">
-            {isSearching 
-              ? `${t("searchResults")}: ${searchResult.length}` 
-              : `${t("totalDealers")}: ${dealers.length}`
-            }
-          </h3>
-          <button 
-            onClick={() => setShowForm(!showForm)} 
-            className="dealers-add-btn"
-            disabled={loadingSave}
-          >
-            {loadingSave ? (
-              <>
-                <Loader size={16} className="spinner" />
-                {t("loading")}
-              </>
-            ) : (
-              t("addNewDealer")
-            )}
-          </button>
-        </div>
-
+        {/* ===== FORM ===== */}
         {showForm && (
           <div className="dealers-form-container">
-            <div>
-              <h4 className="dealers-form-title">{t("addNewDealer")}</h4>
+            <input placeholder={t("dealerName")} value={dealerName}
+              onChange={(e) => setDealerName(e.target.value)} />
+            <input placeholder={t("contactNumber")} value={contact}
+              onChange={(e) => setContact(e.target.value)} />
+            <input placeholder={t("gstNumber")} value={gstNumber}
+              onChange={(e) => setGstNumber(e.target.value)} />
+            <input placeholder={t("shopAddress")} value={shopAddress}
+              onChange={(e) => setShopAddress(e.target.value)} />
+            <input type="file" onChange={(e) => setImage(e.target.files[0])} />
 
-              <div className="dealers-form-group">
-                <label className="dealers-form-label">{t("dealerName")}:</label>
-                <input 
-                  type="text" 
-                  value={dealerName} 
-                  onChange={(e) => handleInputChange('dealerName', e.target.value)} 
-                  className={`dealers-form-input ${formErrors.dealerName ? 'error-input' : ''}`}
-                  required
-                  disabled={loadingSave}
-                />
-                {formErrors.dealerName && (
-                  <div className="error-message">{formErrors.dealerName}</div>
-                )}
-              </div>
-
-              <div className="dealers-form-group">
-                <label className="dealers-form-label">{t("contactNumber")}:</label>
-                <input 
-                  type="text" 
-                  value={contact} 
-                  onChange={(e) => handleInputChange('contact', e.target.value)} 
-                  className={`dealers-form-input ${formErrors.contact ? 'error-input' : ''}`}
-                  required
-                  disabled={loadingSave}
-                />
-                {formErrors.contact && (
-                  <div className="error-message">{formErrors.contact}</div>
-                )}
-              </div>
-
-              <div className="dealers-form-group">
-                <label className="dealers-form-label">{t("shopAddress")}:</label>
-                <input 
-                  type="text" 
-                  value={shopAddress} 
-                  onChange={(e) => handleInputChange('shopAddress', e.target.value)} 
-                  className={`dealers-form-input ${formErrors.shopAddress ? 'error-input' : ''}`}
-                  required
-                  disabled={loadingSave}
-                />
-                {formErrors.shopAddress && (
-                  <div className="error-message">{formErrors.shopAddress}</div>
-                )}
-              </div>
-
-              <div className="dealers-form-group">
-                <label className="dealers-form-label">{t("gstNumber")}:</label>
-                <input 
-                  type="text" 
-                  value={gstNumber} 
-                  onChange={(e) => handleInputChange('gstNumber', e.target.value)} 
-                  className={`dealers-form-input ${formErrors.gstNumber ? 'error-input' : ''}`}
-                  required
-                  disabled={loadingSave}
-                />
-                {formErrors.gstNumber && (
-                  <div className="error-message">{formErrors.gstNumber}</div>
-                )}
-              </div>
-
-              <div className="dealers-form-group">
-                <label className="dealers-form-label">{t("profileimage")}:</label>
-                <input 
-                  type="file" 
-                  onChange={(e) => {
-                    setImage(e.target.files[0]);
-                    if (e.target.files[0]) setFormErrors({...formErrors, image: ""});
-                  }} 
-                  className={`dealers-form-input ${formErrors.image ? 'error-input' : ''}`}
-                  required
-                  disabled={loadingSave}
-                />
-                {formErrors.image && (
-                  <div className="error-message">{formErrors.image}</div>
-                )}
-              </div>
-
-              <div className="dealers-form-buttons">
-                <button 
-                  onClick={() => {
-                    setShowForm(false);
-                    setFormErrors({
-                      dealerName: "",
-                      contact: "",
-                      gstNumber: "",
-                      shopAddress: "",
-                      image: ""
-                    });
-                  }} 
-                  className="dealers-cancel-btn"
-                  disabled={loadingSave}
-                >
-                  {t("cancel")}
-                </button>
-
-                <button 
-                  onClick={handleAddDealer} 
-                  className="dealers-submit-btn"
-                  disabled={loadingSave}
-                >
-                  {loadingSave ? (
-                    <>
-                      <Loader size={16} className="spinner" />
-                      {t("saving")}
-                    </>
-                  ) : (
-                    t("addDealer")
-                  )}
-                </button>
-              </div>
-            </div>
+            <button onClick={handleAddDealer} disabled={loadingSave}>
+              {loadingSave ? <Loader className="spinner" /> : t("addDealer")}
+            </button>
           </div>
         )}
 
+        {/* ===== SEARCH ===== */}
         <div className="dealers-search-container">
-          <div className="search-wrapper">
-            <input
-              type="text"
-              placeholder={t("searchDealer")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="dealers-search-input"
-              onKeyPress={handleKeyPress}
-            />
-            <button 
-              onClick={handleSearch}
-              className="search-button"
-              aria-label={t("search")}
-            >
-              <Search size={20} />
-              <span className="search-button-text">{t("search")}</span>
-            </button>
-            {isSearching && (
-              <button 
-                onClick={handleClearSearch}
-                className="clear-search-button"
-                aria-label={t("clearSearch")}
-              >
-                {t("clearSearch")}
-              </button>
-            )}
-          </div>
+          <input
+            placeholder={t("searchDealer")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button onClick={handleSearch}><Search /></button>
         </div>
 
+        {/* ===== DEALER LIST ===== */}
         <div className="dealers-list-container">
-          {searchResult.length > 0 ? (
-            searchResult.map((dealer) => (
-              <div 
-                key={dealer._id} 
-                className="dealers-card"
-                onClick={() => handleCardClick(dealer)}
-              >
-                {dealer.image && (
-                  // <img
-                  //   src={getImageUrl(dealer.image)}
-                  //   alt={dealer.name}
-                  //   className="dealers-card-img"
-                  //   onError={(e) => {
-                  //     e.target.src = "/no-image.png";
-                  //   }}
-                  // />
-<img
-  src={getImageUrl(dealer.image)}
-  alt={dealer.name}
-  className="dealers-card-img"
-  loading="lazy"
-  onError={(e) => {
-    e.target.src = "/no-image.png";
-    e.target.onerror = null;
-  }}
-/>
+          {searchResult.map((dealer) => (
+            <div
+              key={dealer._id}
+              className="dealers-card"
+              onClick={() => handleCardClick(dealer)}
+            >
+              <img
+                src={getImageUrl(dealer.image)}
+                alt={dealer.name}
+                className="dealers-card-img"
+                onError={(e) => (e.target.src = "/no-image.png")}
+              />
 
+              <h5>{dealer.name}</h5>
+              <p>{dealer.contact}</p>
+              <p>{dealer.shopAddress}</p>
 
-                )}
-                <div className="dealers-card-content">
-                  <h5 className="dealers-card-title">
-                    <span className="dealers-card-label">{t("dealerName")}:</span> {dealer.name}
-                  </h5>
-                  <p className="dealers-card-text">
-                    <span className="dealers-card-label">{t("contactNumber")}:</span> {dealer.contact}
-                  </p>
-                  <p className="dealers-card-text">
-                    <span className="dealers-card-label">{t("shopAddress")}:</span> {dealer.shopAddress}
-                  </p>
-                  <p className="dealers-card-text">
-                    <span className="dealers-card-label">{t("gstNumber")}:</span> {dealer.gstNumber}
-                  </p>
-                  {loadingCard[dealer._id] && (
-                    <div className="card-loader-overlay">
-                      <Loader size={24} className="spinner" />
-                    </div>
-                  )}
+              {loadingCard[dealer._id] && (
+                <div className="card-loader">
+                  <Loader className="spinner" />
                 </div>
-              </div>
-            ))
-          ) : isSearching ? (
-            <p className="dealers-empty-state">{t("noSearchResults")}</p>
-          ) : (
-            <p className="dealers-empty-state">{t("noDealersFound")}</p>
-          )}
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
