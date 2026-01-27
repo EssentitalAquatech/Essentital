@@ -1108,7 +1108,8 @@ function Agent() {
                 style={{ cursor: "pointer" }}
               >
                 <img
-                  src={getImageUrl(`/api/images/${u._id}/profile`)}
+                  // src={getImageUrl(`/api/images/${u._id}/profile`)}
+                   src={getImageUrl(userId, "profile")}
                   alt={u.name}
                   className="agent-user-img"
                   onError={(e) => {

@@ -276,7 +276,9 @@ function App() {
         {/* ADMIN (OPTIONAL PROTECTION LATER) */}
         <Route path="/adminDashboard" element={<AdminDashboard />} />
         <Route path="/weather-dashboard" element={<AdminWeather />} />
-        <Route path="/orders-dashboard/:dealerId" element={<OrdersDashboard />} />
+        {/* <Route path="/orders-dashboard/:dealerId" element={<OrdersDashboard />} /> */}
+        <Route path="/orders-dashboard" element={<OrdersDashboard />} />
+
         <Route path="/admin/adminDashboard" element={<AdminDashboard />} />
         <Route path="/astronomical-dashboard" element={<Astronomical />} />
 
