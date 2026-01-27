@@ -78,10 +78,17 @@ const dealerUpdateSchema = new mongoose.Schema(
       required: true
     },
 
-    image: {
-      data: Buffer,
-      contentType: String
-    },
+   image: {
+  data: {
+    type: Buffer,
+    required: true
+  },
+  contentType: {
+    type: String,
+    required: true
+  }
+}
+,
 
     createdAt: {
       type: Date,

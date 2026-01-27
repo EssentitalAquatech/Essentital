@@ -169,6 +169,11 @@ export const addDealer = async (req, res) => {
   try {
     const { name, contact, gstNumber, shopAddress, userId } = req.body;
 
+    // 🔴 REQUIRED CHECK
+    if (!name || !contact || !gstNumber || !shopAddress || !userId) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
     if (!req.file) {
       return res.status(400).json({ error: "Image is required" });
     }
@@ -187,10 +192,13 @@ export const addDealer = async (req, res) => {
 
     await dealer.save();
     res.status(201).json(dealer);
+
   } catch (err) {
+    console.error("ADD DEALER ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // ⭐ UPDATE DEALER (WITH HISTORY)
 export const updateDealer = async (req, res) => {
