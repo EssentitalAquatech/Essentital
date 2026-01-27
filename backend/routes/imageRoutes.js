@@ -70,6 +70,11 @@
 
 
 
+
+
+
+
+
 // routes/imageRoutes.js
 import express from "express";
 import User from "../models/userModel.js";
@@ -133,3 +138,13 @@ router.get("/:userId/:imageType", async (req, res) => {
 });
 
 export default router;
+
+
+
+
+
+
+
+
+
+

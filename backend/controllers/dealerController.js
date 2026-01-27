@@ -135,7 +135,6 @@
 //buffer
 
 
-
 import Dealer from "../models/dealerModel.js";
 
 // ⭐ GET DEALERS
@@ -169,8 +168,8 @@ export const addDealer = async (req, res) => {
   try {
     const { name, contact, gstNumber, shopAddress, userId } = req.body;
 
-    // 🔴 REQUIRED CHECK
-    if (!name || !contact || !gstNumber || !shopAddress || !userId) {
+    // Validate required fields
+    if (!name || !contact || !gstNumber || !shopAddress) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -178,6 +177,12 @@ export const addDealer = async (req, res) => {
       return res.status(400).json({ error: "Image is required" });
     }
 
+    // Validate userId
+    if (!userId) {
+      return res.status(400).json({ error: "UserId is required" });
+    }
+
+    // Create new dealer
     const dealer = new Dealer({
       name,
       contact,
@@ -191,39 +196,80 @@ export const addDealer = async (req, res) => {
     });
 
     await dealer.save();
-    res.status(201).json(dealer);
+    
+    // Return without the image buffer to reduce response size
+    const dealerResponse = dealer.toObject();
+    delete dealerResponse.image;
+    
+    res.status(201).json({
+      ...dealerResponse,
+      message: "Dealer added successfully"
+    });
 
   } catch (err) {
     console.error("ADD DEALER ERROR:", err);
-    res.status(500).json({ error: err.message });
+    
+    // Handle specific MongoDB errors
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ 
+        error: Object.values(err.errors).map(e => e.message).join(', ') 
+      });
+    }
+    
+    if (err.code === 11000) {
+      return res.status(400).json({ 
+        error: "Duplicate field value entered" 
+      });
+    }
+    
+    res.status(500).json({ 
+      error: err.message || "Server error occurred" 
+    });
   }
 };
-
 
 // ⭐ UPDATE DEALER (WITH HISTORY)
 export const updateDealer = async (req, res) => {
   try {
-    const dealer = await Dealer.findById(req.params.id);
+    const { id } = req.params;
+    const { name, contact, gstNumber, shopAddress, userId } = req.body;
+
+    // Find dealer
+    const dealer = await Dealer.findById(id);
     if (!dealer) {
       return res.status(404).json({ error: "Dealer not found" });
+    }
+
+    // Verify ownership (optional security check)
+    if (userId && dealer.createdBy.toString() !== userId) {
+      return res.status(403).json({ error: "Unauthorized to update this dealer" });
     }
 
     const oldSnapshot = dealer.toObject();
     const changes = {};
 
-    Object.keys(req.body).forEach((key) => {
-      if (dealer[key] !== req.body[key]) {
-        changes[key] = { old: dealer[key], new: req.body[key] };
+    // Track changes for all fields
+    const updateFields = ['name', 'contact', 'gstNumber', 'shopAddress'];
+    updateFields.forEach((key) => {
+      if (req.body[key] !== undefined && dealer[key] !== req.body[key]) {
+        changes[key] = { 
+          old: dealer[key], 
+          new: req.body[key] 
+        };
         dealer[key] = req.body[key];
       }
     });
 
-    dealer.updates.push({
-      snapshot: oldSnapshot,
-      changes,
-      image: dealer.image
-    });
+    // Add to update history
+    if (Object.keys(changes).length > 0 || req.file) {
+      dealer.updates.push({
+        snapshot: oldSnapshot,
+        changes,
+        image: oldSnapshot.image
+      });
+    }
 
+    // Update image if new file uploaded
     if (req.file) {
       dealer.image = {
         data: req.file.buffer,
@@ -232,8 +278,24 @@ export const updateDealer = async (req, res) => {
     }
 
     await dealer.save();
-    res.status(200).json(dealer);
+    
+    // Return response without image buffer
+    const dealerResponse = dealer.toObject();
+    delete dealerResponse.image;
+    
+    res.status(200).json({
+      ...dealerResponse,
+      message: "Dealer updated successfully"
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("UPDATE DEALER ERROR:", err);
+    
+    if (err.name === 'CastError') {
+      return res.status(400).json({ error: "Invalid dealer ID" });
+    }
+    
+    res.status(500).json({ 
+      error: err.message || "Server error occurred" 
+    });
   }
 };

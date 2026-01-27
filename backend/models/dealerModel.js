@@ -60,7 +60,8 @@
 
 
 
-//buffer model -
+// //buffer model -
+
 import mongoose from "mongoose";
 
 // ------------------------------
@@ -155,3 +156,10 @@ const dealerSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("Dealer", dealerSchema);
+
+
+
+
+
+
+
