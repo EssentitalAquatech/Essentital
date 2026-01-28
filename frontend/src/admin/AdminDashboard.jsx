@@ -5476,6 +5476,8 @@ import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
+import { getProfileImage } from "../utils/profileImage";
+
 function AdminDashboard() {
   const [agents, setAgents] = useState([]);
   const [selectedAgent, setSelectedAgent] = useState(null);
@@ -6504,7 +6506,10 @@ const getFishFilesUrls = (fishFiles, pondId) => {
               <td>
                 {a.profilePic && (
                   <img
-                    src={getAgentImageUrl(a, "profile")}
+                    // src={getAgentImageUrl(a, "profile")}
+                      
+                      src={getProfileImage(a._id)}
+
                     alt="Profile"
                     className="table-image"
                     onClick={() => openModal(getAgentImageUrl(a, "profile"))}

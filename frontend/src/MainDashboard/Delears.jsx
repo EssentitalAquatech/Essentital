@@ -2219,6 +2219,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api, { getImageUrl } from "../utils/api";
 import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader, Search } from "lucide-react";
+import { getProfileImage } from "../utils/profileImage";
 import "./Dealers.css";
 
 function DealersPage() {
@@ -2622,7 +2623,8 @@ function DealersPage() {
           <div className="mobile-profile">
             <img
               // src={getImageUrl(`/api/images/${userId}/profile`)}
-              src={getImageUrl(userId, "profile")}
+              // src={getImageUrl(userId, "profile")}
+               src={getProfileImage(userId)}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -2639,7 +2641,8 @@ function DealersPage() {
           <div className="dealers-user-section">
             <img
               // src={getImageUrl(`/api/images/${userId}/profile`)}
-              src={getImageUrl(userId, "profile")}
+              // src={getImageUrl(userId, "profile")}
+               src={getProfileImage(userId)}
               alt="User"
               className="dealers-user-img"
               onError={(e) => {

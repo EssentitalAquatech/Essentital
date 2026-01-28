@@ -7,6 +7,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api, { getImageUrl } from "../utils/api";
+import { getProfileImage } from "../utils/profileImage";
 
 import { Headphones, Mail, Phone, Clock, FileText, Menu, X, ShoppingBag, Home, User, HelpCircle, Users  } from "lucide-react";
 import "./HelpCenter.css";
@@ -92,7 +93,8 @@ function HelpCenter() {
           <div className="mobile-profile">
             <img
               // src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
-              src={getImageUrl(userId, "profile")}
+              // src={getImageUrl(userId, "profile")}
+               src={getProfileImage(userId)}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -109,7 +111,8 @@ function HelpCenter() {
           <div className="help-center-sidebar-section">
             <img
               // src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
-              src={getImageUrl(userId, "profile")}
+              // src={getImageUrl(userId, "profile")}
+               src={getProfileImage(userId)}
               alt="User"
               className="profile-pic"
               onError={(e) => {

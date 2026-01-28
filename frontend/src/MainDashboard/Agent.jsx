@@ -673,6 +673,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api, { getImageUrl } from "../utils/api";
 import { Menu, X, User, Home, Users, HelpCircle, ShoppingBag, Bell } from "lucide-react";
+import { getProfileImage } from "../utils/profileImage";
 import "./Agent.css";
 
 function Agent() {
@@ -918,7 +919,8 @@ function Agent() {
           <div className="agent-left-profile-section">
             <img
               // src={getImageUrl(`/api/images/${userId}/profile`)}
-              src={getImageUrl(userId, "profile")}
+              // src={getImageUrl(userId, "profile")}
+               src={getProfileImage(userId)}
               alt={username}
               className="agent-left-profile-pic"
               onError={(e) => {
@@ -1109,7 +1111,8 @@ function Agent() {
               >
                 <img
                   // src={getImageUrl(`/api/images/${u._id}/profile`)}
-                   src={getImageUrl(userId, "profile")}
+                  //  src={getImageUrl(userId, "profile")}
+                   src={getProfileImage(userId)}
                   alt={u.name}
                   className="agent-user-img"
                   onError={(e) => {

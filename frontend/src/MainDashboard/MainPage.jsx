@@ -6783,6 +6783,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./mainPage.css";
+import { getProfileImage } from "../utils/profileImage";
 // jahan tu <img> use kar raha hai
 import api, { getImageUrl } from "../utils/api"; // path check kar le
 
@@ -7535,7 +7536,8 @@ function MainPage() {
           <div className="mobile-profile">
             <img
               // src={photo}
-                src={getImageUrl(userId, "profile")}
+                // src={getImageUrl(userId, "profile")}
+                src={getProfileImage(userId)}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -7553,7 +7555,8 @@ function MainPage() {
           <div className="profile-section text-center mb-4">
             <img
               // src={photo}
-                src={getImageUrl(userId, "profile")}
+                // src={getImageUrl(userId, "profile")}
+                src={getProfileImage(userId)}
               alt="User"
               className="profile-pic"
               onError={(e) => {

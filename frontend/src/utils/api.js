@@ -5,53 +5,6 @@
 
 
 
-// import axios from "axios";
-
-// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
-// const BASE_URL = import.meta.env.VITE_BASE_URL || API_URL;
-
-// const api = axios.create({
-//   baseURL: API_URL,
-//   withCredentials: false,
-// });
-
-// // ✅ UPDATED & IMPROVED IMAGE URL BUILDER
-// export const getImageUrl = (path) => {
-//   // fallback image
-//   if (!path) return "/profile.png";
-
-//   // already full URL
-//   if (path.startsWith("http://") || path.startsWith("https://")) {
-//     return path;
-//   }
-
-//   // normalize path - remove leading slash
-//   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-
-//   // Use BASE_URL which is now properly defined
-//   return `${BASE_URL.replace(/\/$/, "")}/${cleanPath}`;
-// };
-
-// // Export for use in other components
-// export { BASE_URL };
-// export default api;
-
-// //ye uper vala  sahi hai 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -82,6 +35,37 @@
 //   if (!dealerId) return "/no-image.png";
 //   return `${BASE_URL.replace(/\/$/, "")}/api/dealers/${dealerId}/image`;
 // };
+
+
+
+// // ✅ GET IMAGE URLs for buffers
+// export const getAgentImage = (agentId, imageType) => {
+//   return `${API_URL}/api/images/${agentId}/${imageType}`;
+// };
+
+// export const getFarmerImage = (farmerId) => {
+//   return `${API_URL}/api/images/farmer/photo/${farmerId}`;
+// };
+
+// export const getPondImage = (pondId) => {
+//   return `${API_URL}/api/images/pond/image/${pondId}`;
+// };
+
+// export const getDealerImage = (dealerId) => {
+//   return `${API_URL}/api/images/dealer/image/${dealerId}`;
+// };
+
+// export const getPondFile = (pondId, fileIndex) => {
+//   return `${API_URL}/api/images/pond/file/${pondId}/${fileIndex}`;
+// };
+
+// export const getFishFile = (pondId, fileIndex) => {
+//   return `${API_URL}/api/images/fish/file/${pondId}/${fileIndex}`;
+// };
+
+
+
+
 
 // // ✅ OLD PATH SUPPORT (backward compatibility)
 // export const getLegacyImageUrl = (path) => {
@@ -117,18 +101,6 @@
 //   }
 // );
 
-// // ✅ Response interceptor for handling errors
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response?.status === 401) {
-//       localStorage.removeItem("token");
-//       localStorage.removeItem("user");
-//       window.location.href = "/login";
-//     }
-//     return Promise.reject(error);
-//   }
-// );
 
 // // ==============================================
 // // DEALER API FUNCTIONS - ADD THESE
@@ -234,11 +206,7 @@
 // export default api;
 
 
-
-
-//uper vala sahi hai buffer image ke liye
-
-
+//uper vala sahi hai --
 
 
 
@@ -262,11 +230,12 @@ const api = axios.create({
   },
 });
 
-// ✅ UPDATED IMAGE URL BUILDER FOR BUFFER IMAGES
+// ✅ UPDATED IMAGE URL BUILDER FOR BUFFER IMAGES WITH CACHE BUSTING SUPPORT
 export const getImageUrl = (userId, imageType = "profile") => {
   if (!userId) return "/profile.png";
   
   // ✅ New format: /api/images/:userId/:imageType
+  // Timestamp client side se add hoga, isliye yahan se nahi
   return `${BASE_URL.replace(/\/$/, "")}/api/images/${userId}/${imageType}`;
 };
 
@@ -341,18 +310,6 @@ api.interceptors.request.use(
   }
 );
 
-// ✅ Response interceptor for handling errors
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response?.status === 401) {
-//       localStorage.removeItem("token");
-//       localStorage.removeItem("user");
-//       window.location.href = "/login";
-//     }
-//     return Promise.reject(error);
-//   }
-// );
 
 // ==============================================
 // DEALER API FUNCTIONS - ADD THESE
