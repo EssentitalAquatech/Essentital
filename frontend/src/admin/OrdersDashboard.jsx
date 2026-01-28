@@ -1523,8 +1523,536 @@
 
 
 
-// OrdersDashboard.jsx - FIXED VERSION (Weight Added, Revenue Width Reduced)
-import React, { useEffect, useState } from "react";
+// // OrdersDashboard.jsx - FIXED VERSION (Weight Added, Revenue Width Reduced)
+// import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import api from "../utils/api";
+// import "./OrdersDashboard.css";
+
+// const OrdersDashboard = () => {
+//   const navigate = useNavigate();
+
+//   const [allOrders, setAllOrders] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [expandedOrder, setExpandedOrder] = useState(null);
+//   const [deletingOrder, setDeletingOrder] = useState(null);
+//   const [selectedDealer, setSelectedDealer] = useState(null);
+//   const [dealersList, setDealersList] = useState([]);
+//   const [viewMode, setViewMode] = useState("all");
+//   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsMobile(window.innerWidth < 768);
+//     };
+
+//     window.addEventListener("resize", handleResize);
+//     return () => window.removeEventListener("resize", handleResize);
+//   }, []);
+
+//   useEffect(() => {
+//     fetchAllOrders();
+//     fetchAllDealers();
+//   }, [navigate]);
+
+
+
+
+//   const fetchAllOrders = async () => {
+//     setLoading(true);
+//     try {
+//       const res = await api.get("/api/orders");
+      
+//       if (res.data) {
+//         const sortedOrders = res.data.sort((a, b) => 
+//           new Date(b.createdAt) - new Date(a.createdAt)
+//         );
+//         setAllOrders(sortedOrders);
+//       } else {
+//         setAllOrders([]);
+//       }
+      
+//     } catch (err) {
+//       console.error("Error fetching all orders:", err);
+//       setAllOrders([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const fetchAllDealers = async () => {
+//     try {
+//       const res = await api.get("/api/dealers");
+//       setDealersList(res.data || []);
+//     } catch (err) {
+//       console.error("Error fetching dealers:", err);
+//     }
+//   };
+
+
+
+  
+//   const fetchDealerOrders = async (dealerId) => {
+//     setLoading(true);
+//     try {
+//       const res = await api.get(`/api/orders/dealer/${dealerId}`);
+      
+//       if (res.data) {
+//         const sortedOrders = res.data.sort((a, b) => 
+//           new Date(b.createdAt) - new Date(a.createdAt)
+//         );
+//         setAllOrders(sortedOrders);
+//       } else {
+//         setAllOrders([]);
+//       }
+      
+//     } catch (err) {
+//       console.error("Error fetching dealer orders:", err);
+//       setAllOrders([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleDealerSelect = (dealer) => {
+//     if (!dealer) {
+//       setViewMode("all");
+//       setSelectedDealer(null);
+//       fetchAllOrders();
+//       return;
+//     }
+    
+//     setSelectedDealer(dealer);
+//     setViewMode("dealer");
+//     fetchDealerOrders(dealer._id);
+//   };
+
+//   const handleDeleteOrder = async (orderId) => {
+//     if (!window.confirm("Are you sure you want to delete this order? This action cannot be undone.")) {
+//       return;
+//     }
+
+//     setDeletingOrder(orderId);
+//     try {
+//       await api.delete(`/api/orders/${orderId}`);
+      
+//       setAllOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
+      
+//       if (expandedOrder === orderId) {
+//         setExpandedOrder(null);
+//       }
+      
+//       alert("✅ Order deleted successfully!");
+//     } catch (err) {
+//       console.error("Error deleting order:", err);
+      
+//       if (err.response) {
+//         alert(`❌ Failed to delete order: ${err.response.data.message || 'Server error'}`);
+//       } else if (err.request) {
+//         alert("❌ Network error. Please check your connection.");
+//       } else {
+//         alert("❌ Failed to delete order. Please try again.");
+//       }
+//     } finally {
+//       setDeletingOrder(null);
+//     }
+//   };
+
+//   const filteredOrders = allOrders;
+
+//   const totalOrders = allOrders.length;
+//   const totalItems = allOrders.reduce((sum, order) => sum + (order.items?.length || 0), 0);
+//   const totalRevenue = allOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+
+//   const toggleOrderDetails = (orderId) => {
+//     setExpandedOrder(expandedOrder === orderId ? null : orderId);
+//   };
+
+//   // Safe function to get weight from item
+//   const getItemWeight = (item) => {
+//     return item.weight || item.itemWeight || "1kg";
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="ords-loading-container">
+//         <div className="ords-loading-spinner"></div>
+//         <h3>Loading Orders...</h3>
+//         <p>Please wait while we fetch all orders</p>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="ords-main-container">
+//       {/* Header Section */}
+//       <header className="ords-header">
+//         <div className="ords-header-content">
+//           <div className="ords-header-left">
+//             <h1 className="ords-title">
+//               <i className="ords-icon-orders"></i> Orders Dashboard
+//             </h1>
+//             <p className="ords-subtitle">
+//               {viewMode === "all" ? "All Dealers Orders" : `Orders for: ${selectedDealer?.name}`}
+//             </p>
+//           </div>
+//           <div className="ords-header-actions">
+//             <button 
+//               className="ords-btn-refresh"
+//               onClick={viewMode === "all" ? fetchAllOrders : () => fetchDealerOrders(selectedDealer?._id)}
+//               disabled={loading}
+//             >
+//               <i className="ords-icon-refresh"></i> {!isMobile && "Refresh"}
+//             </button>
+//             <button 
+//               className="ords-btn-back"
+//               onClick={() => navigate("/adminDashboard")}
+//             >
+//               <i className="ords-icon-back"></i> {!isMobile && "Back"}
+//             </button>
+//           </div>
+//         </div>
+//       </header>
+
+//       <div className="ords-dashboard-wrapper">
+//         {/* Sidebar - Always visible on desktop/tablet */}
+//         {!isMobile ? (
+//           <aside className="ords-sidebar">
+//             {/* Dealer Selector */}
+//             <div className="ords-sidebar-card">
+//               <h3 className="ords-sidebar-title">
+//                 <i className="ords-icon-filter"></i> Filter Orders
+//               </h3>
+//               <div className="ords-dealer-selector">
+//                 <button 
+//                   className={`ords-dealer-filter-btn ${viewMode === "all" ? "active" : ""}`}
+//                   onClick={() => handleDealerSelect(null)}
+//                 >
+//                   <i className="ords-icon-all"></i> All Orders
+//                 </button>
+                
+//                 <div className="ords-dealer-list">
+//                   <h4 className="ords-dealer-list-title">Select Dealer:</h4>
+//                   {dealersList.map(dealer => (
+//                     <button
+//                       key={dealer._id}
+//                       className={`ords-dealer-item ${selectedDealer?._id === dealer._id ? "active" : ""}`}
+//                       onClick={() => handleDealerSelect(dealer)}
+//                     >
+//                       <i className="ords-icon-dealer-small"></i>
+//                       <span className="ords-dealer-item-name">{dealer.name}</span>
+//                       <span className="ords-dealer-item-address">{dealer.shopAddress}</span>
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Stats Card */}
+//             <div className="ords-sidebar-card">
+//               <h3 className="ords-sidebar-title">
+//                 <i className="ords-icon-stats"></i> Order Statistics
+//               </h3>
+//               <div className="ords-stats-grid">
+//                 <div className="ords-stat-item">
+//                   <div className="ords-stat-value">{totalOrders}</div>
+//                   <div className="ords-stat-label">Total Orders</div>
+//                 </div>
+//                 <div className="ords-stat-item">
+//                   <div className="ords-stat-value">{totalItems}</div>
+//                   <div className="ords-stat-label">Items Sold</div>
+//                 </div>
+//                 <div className="ords-stat-item revenue-stat">
+//                   <div className="ords-stat-value revenue-value">₹{totalRevenue.toFixed(2)}</div>
+//                   <div className="ords-stat-label">Revenue</div>
+//                 </div>
+//               </div>
+//               {selectedDealer && (
+//                 <div className="ords-current-dealer">
+//                   <h4>Current Dealer:</h4>
+//                   <p className="ords-current-dealer-name">{selectedDealer.name}</p>
+//                   <p className="ords-current-dealer-address">{selectedDealer.shopAddress}</p>
+//                   <p className="ords-current-dealer-contact">{dealer.contact}</p>
+//                 </div>
+//               )}
+//             </div>
+//           </aside>
+//         ) : (
+//           /* Mobile Filters Section - Always visible on mobile */
+//           <div className="ords-mobile-filters">
+//             <div className="ords-mobile-filters-header">
+//               <h3 className="ords-mobile-filters-title">
+//                 <i className="ords-icon-filter"></i> Filter & Stats
+//               </h3>
+//             </div>
+            
+//             {/* Mobile Stats */}
+//             <div className="ords-mobile-stats">
+//               <div className="ords-mobile-stat">
+//                 <div className="ords-mobile-stat-value">{totalOrders}</div>
+//                 <div className="ords-mobile-stat-label">Orders</div>
+//               </div>
+//               <div className="ords-mobile-stat">
+//                 <div className="ords-mobile-stat-value">{totalItems}</div>
+//                 <div className="ords-mobile-stat-label">Items</div>
+//               </div>
+//               <div className="ords-mobile-stat revenue-stat-mobile">
+//                 <div className="ords-mobile-stat-value revenue-value-mobile">₹{totalRevenue.toFixed(2)}</div>
+//                 <div className="ords-mobile-stat-label">Revenue</div>
+//               </div>
+//             </div>
+            
+//             {/* Mobile Filter Buttons */}
+//             <div className="ords-mobile-filter-buttons">
+//               <button 
+//                 className={`ords-mobile-filter-btn ${viewMode === "all" ? "active" : ""}`}
+//                 onClick={() => handleDealerSelect(null)}
+//               >
+//                 <i className="ords-icon-all"></i> All Orders
+//               </button>
+              
+//               <div className="ords-mobile-dealers-scroll">
+//                 {dealersList.map(dealer => (
+//                   <button
+//                     key={dealer._id}
+//                     className={`ords-mobile-dealer-btn ${selectedDealer?._id === dealer._id ? "active" : ""}`}
+//                     onClick={() => handleDealerSelect(dealer)}
+//                   >
+//                     <i className="ords-icon-dealer-small"></i>
+//                     <span className="ords-mobile-dealer-name">{dealer.name}</span>
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+            
+//             {selectedDealer && (
+//               <div className="ords-mobile-selected-dealer">
+//                 <div className="ords-mobile-dealer-info">
+//                   <h4>Selected Dealer:</h4>
+//                   <p className="ords-mobile-dealer-name">{selectedDealer.name}</p>
+//                   <p className="ords-mobile-dealer-address">{selectedDealer.shopAddress}</p>
+//                 </div>
+//                 <button 
+//                   className="ords-mobile-clear-filter"
+//                   onClick={() => handleDealerSelect(null)}
+//                 >
+//                   Clear Filter
+//                 </button>
+//               </div>
+//             )}
+//           </div>
+//         )}
+
+//         {/* Main Content */}
+//         <main className="ords-main-content">
+//           {/* Info Stats Bar (Replaces Search Box) */}
+//           <div className="ords-info-stats">
+//             <i className="ords-icon-filter"></i>
+//             Showing {filteredOrders.length} of {totalOrders} orders
+//             {selectedDealer && ` (${selectedDealer.name})`}
+//           </div>
+
+//           {/* Orders List */}
+//           <div className="ords-orders-section">
+//             {filteredOrders.length === 0 ? (
+//               <div className="ords-empty-state">
+//                 <div className="ords-empty-icon">
+//                   <i className="ords-icon-empty"></i>
+//                 </div>
+//                 <h3>No Orders Found</h3>
+//                 <p>
+//                   {viewMode === "all" 
+//                     ? "No orders placed yet." 
+//                     : `No orders found for ${selectedDealer?.name}`
+//                   }
+//                 </p>
+//               </div>
+//             ) : (
+//               <div className="ords-orders-grid">
+//                 {filteredOrders.map((order) => (
+//                   <div 
+//                     key={order._id} 
+//                     className={`ords-order-card ${expandedOrder === order._id ? 'expanded' : ''}`}
+//                   >
+//                     <div 
+//                       className="ords-order-header"
+//                       onClick={() => toggleOrderDetails(order._id)}
+//                     >
+//                       <div className="ords-order-info">
+//                         <div className="ords-order-id">
+//                           <i className="ords-icon-order"></i>
+//                           <span className="ords-order-id-text">Order #{order._id?.substring(0, isMobile ? 6 : 8)}...</span>
+//                           {viewMode === "all" && order.dealerId && (
+//                             <span className="ords-dealer-badge-mini">
+//                               <i className="ords-icon-dealer-small"></i>
+//                               {isMobile ? "Dealer" : order.dealerId.name || "Dealer"}
+//                             </span>
+//                           )}
+//                         </div>
+//                         <div className="ords-order-date">
+//                           <i className="ords-icon-calendar"></i>
+//                           {new Date(order.createdAt).toLocaleDateString('en-IN', {
+//                             day: 'numeric',
+//                             month: 'short',
+//                             year: 'numeric'
+//                           })}
+//                         </div>
+//                       </div>
+//                       <div className="ords-order-summary">
+//                         <div className="ords-summary-item">
+//                           <span className="ords-summary-label">Items</span>
+//                           <span className="ords-summary-value">{order.items?.length || 0}</span>
+//                         </div>
+//                         <div className="ords-summary-item revenue-summary">
+//                           <span className="ords-summary-label">Total</span>
+//                           <span className="ords-summary-value ords-amount">
+//                             ₹{(order.totalAmount || 0).toFixed(2)}
+//                           </span>
+//                         </div>
+//                       </div>
+//                       <div className="ords-order-toggle">
+//                         <i className={`ords-icon-chevron ${expandedOrder === order._id ? 'up' : 'down'}`}></i>
+//                       </div>
+//                     </div>
+
+//                     {/* Expanded Order Details */}
+//                     {expandedOrder === order._id && (
+//                       <div className="ords-order-details">
+//                         <div className="ords-details-header">
+//                           <h4>Order Details</h4>
+//                           <div className="ords-order-time">
+//                             <i className="ords-icon-time"></i>
+//                             Placed: {new Date(order.createdAt).toLocaleTimeString()}
+//                             {viewMode === "all" && order.dealerId && (
+//                               <span className="ords-dealer-info-mini">
+//                                 | Dealer: {order.dealerId.name}
+//                               </span>
+//                             )}
+//                           </div>
+//                         </div>
+
+//                         {/* Items Table with Weight Column */}
+//                         <div className="ords-items-table-container">
+//                           <table className="ords-items-table">
+//                             <thead>
+//                               <tr>
+//                                 <th>Product</th>
+//                                 <th className="ords-text-center">Weight</th>
+//                                 <th className="ords-text-center">Qty</th>
+//                                 <th className="ords-text-right">Price</th>
+//                                 <th className="ords-text-right">Total</th>
+//                               </tr>
+//                             </thead>
+//                             <tbody>
+//                               {order.items?.map((item, index) => (
+//                                 <tr key={index}>
+//                                   <td>
+//                                     <div className="ords-product-cell">
+//                                       <span className="ords-product-name">{item.name}</span>
+//                                     </div>
+//                                   </td>
+//                                   <td className="ords-text-center">
+//                                     <span className="ords-weight-badge">{getItemWeight(item)}</span>
+//                                   </td>
+//                                   <td className="ords-text-center">
+//                                     <span className="ords-quantity-badge">{item.qty}</span>
+//                                   </td>
+//                                   <td className="ords-text-right">
+//                                     ₹{(item.price || 0).toFixed(2)}
+//                                   </td>
+//                                   <td className="ords-text-right ords-amount">
+//                                     ₹{((item.qty || 0) * (item.price || 0)).toFixed(2)}
+//                                   </td>
+//                                 </tr>
+//                               ))}
+//                             </tbody>
+//                             <tfoot>
+//                               <tr>
+//                                 <td colSpan="4" className="ords-text-right ords-total-label">
+//                                   Grand Total
+//                                 </td>
+//                                 <td className="ords-text-right ords-total-amount">
+//                                   ₹{(order.items?.reduce((sum, item) => sum + (item.qty || 0) * (item.price || 0), 0) || 0).toFixed(2)}
+//                                 </td>
+//                               </tr>
+//                             </tfoot>
+//                           </table>
+//                         </div>
+
+//                         {/* Order Footer with Actions */}
+//                         <div className="ords-order-footer">
+//                           <div className="ords-footer-actions">
+//                             <button 
+//                               className="ords-btn-delete"
+//                               onClick={(e) => {
+//                                 e.stopPropagation();
+//                                 handleDeleteOrder(order._id);
+//                               }}
+//                               disabled={deletingOrder === order._id}
+//                             >
+//                               {deletingOrder === order._id ? (
+//                                 <>
+//                                   <i className="ords-icon-spinner"></i> Deleting...
+//                                 </>
+//                               ) : (
+//                                 <>
+//                                   <i className="ords-icon-delete"></i> Delete Order
+//                                 </>
+//                               )}
+//                             </button>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     )}
+//                   </div>
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+//         </main>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OrdersDashboard;
+
+
+
+
+
+
+
+
+
+
+//ye uper vala code sahi hai 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// OrdersDashboard.jsx - COMPLETE VERSION
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import "./OrdersDashboard.css";
@@ -1552,14 +2080,7 @@ const OrdersDashboard = () => {
 
   useEffect(() => {
     fetchAllOrders();
-    fetchAllDealers();
   }, [navigate]);
-
-// useEffect(() => {
-//   fetchAllOrders();
-// }, []);
-
-
 
   const fetchAllOrders = async () => {
     setLoading(true);
@@ -1571,30 +2092,47 @@ const OrdersDashboard = () => {
           new Date(b.createdAt) - new Date(a.createdAt)
         );
         setAllOrders(sortedOrders);
+        
+        // Extract unique dealers from orders
+        const dealersWithOrders = [];
+        sortedOrders.forEach(order => {
+          if (order.dealerId && order.dealerId._id) {
+            // Check if dealer already exists in array
+            const existingDealer = dealersWithOrders.find(
+              dealer => dealer._id === order.dealerId._id
+            );
+            
+            if (!existingDealer && order.dealerId.name) {
+              dealersWithOrders.push({
+                _id: order.dealerId._id,
+                name: order.dealerId.name,
+                shopAddress: order.dealerId.shopAddress || "Address not available",
+                contact: order.dealerId.contact || "Contact not available",
+                gstNumber: order.dealerId.gstNumber || "GST not available",
+                email: order.dealerId.email || "Email not available",
+                orderCount: sortedOrders.filter(o => o.dealerId?._id === order.dealerId._id).length
+              });
+            }
+          }
+        });
+        
+        // Sort dealers by order count (descending)
+        dealersWithOrders.sort((a, b) => b.orderCount - a.orderCount);
+        setDealersList(dealersWithOrders);
       } else {
         setAllOrders([]);
+        setDealersList([]);
       }
       
     } catch (err) {
       console.error("Error fetching all orders:", err);
       setAllOrders([]);
+      setDealersList([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchAllDealers = async () => {
-    try {
-      const res = await api.get("/api/dealers");
-      setDealersList(res.data || []);
-    } catch (err) {
-      console.error("Error fetching dealers:", err);
-    }
-  };
-
-
-
-  
   const fetchDealerOrders = async (dealerId) => {
     setLoading(true);
     try {
@@ -1645,6 +2183,17 @@ const OrdersDashboard = () => {
         setExpandedOrder(null);
       }
       
+      // If we're in dealer view and all orders are deleted, refresh dealers list
+      if (selectedDealer) {
+        const remainingOrders = allOrders.filter(order => order._id !== orderId);
+        if (remainingOrders.length === 0 || 
+            !remainingOrders.some(order => order.dealerId?._id === selectedDealer._id)) {
+          fetchAllOrders();
+          setSelectedDealer(null);
+          setViewMode("all");
+        }
+      }
+      
       alert("✅ Order deleted successfully!");
     } catch (err) {
       console.error("Error deleting order:", err);
@@ -1660,6 +2209,21 @@ const OrdersDashboard = () => {
       setDeletingOrder(null);
     }
   };
+
+  // Calculate dealer stats
+  const dealerStats = useMemo(() => {
+    if (!selectedDealer) return null;
+    
+    const dealerOrders = allOrders.filter(order => order.dealerId?._id === selectedDealer._id);
+    const totalRevenue = dealerOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+    const totalItems = dealerOrders.reduce((sum, order) => sum + (order.items?.length || 0), 0);
+    
+    return {
+      totalOrders: dealerOrders.length,
+      totalRevenue,
+      totalItems
+    };
+  }, [selectedDealer, allOrders]);
 
   const filteredOrders = allOrders;
 
@@ -1724,29 +2288,54 @@ const OrdersDashboard = () => {
             {/* Dealer Selector */}
             <div className="ords-sidebar-card">
               <h3 className="ords-sidebar-title">
-                <i className="ords-icon-filter"></i> Filter Orders
+                <i className="ords-icon-filter"></i> Filter by Dealer
               </h3>
               <div className="ords-dealer-selector">
                 <button 
                   className={`ords-dealer-filter-btn ${viewMode === "all" ? "active" : ""}`}
                   onClick={() => handleDealerSelect(null)}
                 >
-                  <i className="ords-icon-all"></i> All Orders
+                  <i className="ords-icon-all"></i> All Orders ({totalOrders})
                 </button>
                 
                 <div className="ords-dealer-list">
-                  <h4 className="ords-dealer-list-title">Select Dealer:</h4>
-                  {dealersList.map(dealer => (
-                    <button
-                      key={dealer._id}
-                      className={`ords-dealer-item ${selectedDealer?._id === dealer._id ? "active" : ""}`}
-                      onClick={() => handleDealerSelect(dealer)}
-                    >
-                      <i className="ords-icon-dealer-small"></i>
-                      <span className="ords-dealer-item-name">{dealer.name}</span>
-                      <span className="ords-dealer-item-address">{dealer.shopAddress}</span>
-                    </button>
-                  ))}
+                  <h4 className="ords-dealer-list-title">
+                    Dealers with Orders ({dealersList.length})
+                  </h4>
+                  {dealersList.length === 0 ? (
+                    <div className="ords-no-dealers">
+                      <i className="ords-icon-warning"></i>
+                      <p>No dealers have placed orders yet</p>
+                    </div>
+                  ) : (
+                    dealersList.map(dealer => (
+                      <button
+                        key={dealer._id}
+                        className={`ords-dealer-item ${selectedDealer?._id === dealer._id ? "active" : ""}`}
+                        onClick={() => handleDealerSelect(dealer)}
+                        title={`Click to view ${dealer.orderCount} order(s)`}
+                      >
+                        <div className="ords-dealer-item-header">
+                          <i className="ords-icon-dealer-small"></i>
+                          <span className="ords-dealer-item-name">{dealer.name}</span>
+                          <span className="ords-dealer-order-count">{dealer.orderCount} order(s)</span>
+                        </div>
+                        <div className="ords-dealer-item-details">
+                          <span className="ords-dealer-item-address">
+                            <i className="ords-icon-location"></i> {dealer.shopAddress}
+                          </span>
+                          <span className="ords-dealer-item-contact">
+                            <i className="ords-icon-phone"></i> {dealer.contact}
+                          </span>
+                          {dealer.gstNumber && dealer.gstNumber !== "GST not available" && (
+                            <span className="ords-dealer-item-gst">
+                              <i className="ords-icon-gst"></i> GST: {dealer.gstNumber}
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -1758,24 +2347,84 @@ const OrdersDashboard = () => {
               </h3>
               <div className="ords-stats-grid">
                 <div className="ords-stat-item">
-                  <div className="ords-stat-value">{totalOrders}</div>
+                  <div className="ords-stat-value">
+                    {selectedDealer ? dealerStats?.totalOrders || 0 : totalOrders}
+                  </div>
                   <div className="ords-stat-label">Total Orders</div>
                 </div>
                 <div className="ords-stat-item">
-                  <div className="ords-stat-value">{totalItems}</div>
+                  <div className="ords-stat-value">
+                    {selectedDealer ? dealerStats?.totalItems || 0 : totalItems}
+                  </div>
                   <div className="ords-stat-label">Items Sold</div>
                 </div>
                 <div className="ords-stat-item revenue-stat">
-                  <div className="ords-stat-value revenue-value">₹{totalRevenue.toFixed(2)}</div>
+                  <div className="ords-stat-value revenue-value">
+                    ₹{(selectedDealer ? dealerStats?.totalRevenue || 0 : totalRevenue).toFixed(2)}
+                  </div>
                   <div className="ords-stat-label">Revenue</div>
                 </div>
               </div>
+              
+              {/* Selected Dealer Info */}
               {selectedDealer && (
                 <div className="ords-current-dealer">
-                  <h4>Current Dealer:</h4>
-                  <p className="ords-current-dealer-name">{selectedDealer.name}</p>
-                  <p className="ords-current-dealer-address">{selectedDealer.shopAddress}</p>
-                  <p className="ords-current-dealer-contact">{dealer.contact}</p>
+                  <h4>
+                    <i className="ords-icon-dealer"></i> Current Dealer
+                  </h4>
+                  <div className="ords-dealer-full-info">
+                    <div className="ords-dealer-info-row">
+                      <i className="ords-icon-user"></i>
+                      <div className="ords-dealer-info-col">
+                        <span className="ords-info-label">Name</span>
+                        <span className="ords-info-value">{selectedDealer.name}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="ords-dealer-info-row">
+                      <i className="ords-icon-location"></i>
+                      <div className="ords-dealer-info-col">
+                        <span className="ords-info-label">Address</span>
+                        <span className="ords-info-value">{selectedDealer.shopAddress}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="ords-dealer-info-row">
+                      <i className="ords-icon-phone"></i>
+                      <div className="ords-dealer-info-col">
+                        <span className="ords-info-label">Contact</span>
+                        <span className="ords-info-value">{selectedDealer.contact}</span>
+                      </div>
+                    </div>
+                    
+                    {selectedDealer.gstNumber && selectedDealer.gstNumber !== "GST not available" && (
+                      <div className="ords-dealer-info-row">
+                        <i className="ords-icon-gst"></i>
+                        <div className="ords-dealer-info-col">
+                          <span className="ords-info-label">GST Number</span>
+                          <span className="ords-info-value">{selectedDealer.gstNumber}</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedDealer.email && selectedDealer.email !== "Email not available" && (
+                      <div className="ords-dealer-info-row">
+                        <i className="ords-icon-email"></i>
+                        <div className="ords-dealer-info-col">
+                          <span className="ords-info-label">Email</span>
+                          <span className="ords-info-value">{selectedDealer.email}</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="ords-dealer-info-row">
+                      <i className="ords-icon-orders"></i>
+                      <div className="ords-dealer-info-col">
+                        <span className="ords-info-label">Total Orders</span>
+                        <span className="ords-info-value">{dealerStats?.totalOrders || 0}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -1792,15 +2441,21 @@ const OrdersDashboard = () => {
             {/* Mobile Stats */}
             <div className="ords-mobile-stats">
               <div className="ords-mobile-stat">
-                <div className="ords-mobile-stat-value">{totalOrders}</div>
+                <div className="ords-mobile-stat-value">
+                  {selectedDealer ? dealerStats?.totalOrders || 0 : totalOrders}
+                </div>
                 <div className="ords-mobile-stat-label">Orders</div>
               </div>
               <div className="ords-mobile-stat">
-                <div className="ords-mobile-stat-value">{totalItems}</div>
+                <div className="ords-mobile-stat-value">
+                  {selectedDealer ? dealerStats?.totalItems || 0 : totalItems}
+                </div>
                 <div className="ords-mobile-stat-label">Items</div>
               </div>
               <div className="ords-mobile-stat revenue-stat-mobile">
-                <div className="ords-mobile-stat-value revenue-value-mobile">₹{totalRevenue.toFixed(2)}</div>
+                <div className="ords-mobile-stat-value revenue-value-mobile">
+                  ₹{(selectedDealer ? dealerStats?.totalRevenue || 0 : totalRevenue).toFixed(2)}
+                </div>
                 <div className="ords-mobile-stat-label">Revenue</div>
               </div>
             </div>
@@ -1815,31 +2470,58 @@ const OrdersDashboard = () => {
               </button>
               
               <div className="ords-mobile-dealers-scroll">
-                {dealersList.map(dealer => (
-                  <button
-                    key={dealer._id}
-                    className={`ords-mobile-dealer-btn ${selectedDealer?._id === dealer._id ? "active" : ""}`}
-                    onClick={() => handleDealerSelect(dealer)}
-                  >
-                    <i className="ords-icon-dealer-small"></i>
-                    <span className="ords-mobile-dealer-name">{dealer.name}</span>
-                  </button>
-                ))}
+                {dealersList.length === 0 ? (
+                  <div className="ords-mobile-no-dealers">
+                    <p>No dealers with orders</p>
+                  </div>
+                ) : (
+                  dealersList.map(dealer => (
+                    <button
+                      key={dealer._id}
+                      className={`ords-mobile-dealer-btn ${selectedDealer?._id === dealer._id ? "active" : ""}`}
+                      onClick={() => handleDealerSelect(dealer)}
+                    >
+                      <i className="ords-icon-dealer-small"></i>
+                      <span className="ords-mobile-dealer-name">{dealer.name}</span>
+                      <span className="ords-mobile-dealer-count">{dealer.orderCount}</span>
+                    </button>
+                  ))
+                )}
               </div>
             </div>
             
+            {/* Mobile Selected Dealer Info */}
             {selectedDealer && (
               <div className="ords-mobile-selected-dealer">
                 <div className="ords-mobile-dealer-info">
-                  <h4>Selected Dealer:</h4>
-                  <p className="ords-mobile-dealer-name">{selectedDealer.name}</p>
-                  <p className="ords-mobile-dealer-address">{selectedDealer.shopAddress}</p>
+                  <h4>
+                    <i className="ords-icon-dealer-small"></i> Selected Dealer
+                  </h4>
+                  <div className="ords-mobile-dealer-details">
+                    <p className="ords-mobile-dealer-name">
+                      <strong>{selectedDealer.name}</strong>
+                    </p>
+                    <p className="ords-mobile-dealer-address">
+                      <i className="ords-icon-location-small"></i> {selectedDealer.shopAddress}
+                    </p>
+                    <p className="ords-mobile-dealer-contact">
+                      <i className="ords-icon-phone-small"></i> {selectedDealer.contact}
+                    </p>
+                    {selectedDealer.gstNumber && selectedDealer.gstNumber !== "GST not available" && (
+                      <p className="ords-mobile-dealer-gst">
+                        <i className="ords-icon-gst-small"></i> GST: {selectedDealer.gstNumber}
+                      </p>
+                    )}
+                    <p className="ords-mobile-dealer-stats">
+                      <i className="ords-icon-orders-small"></i> {dealerStats?.totalOrders || 0} orders
+                    </p>
+                  </div>
                 </div>
                 <button 
                   className="ords-mobile-clear-filter"
                   onClick={() => handleDealerSelect(null)}
                 >
-                  Clear Filter
+                  <i className="ords-icon-clear"></i> Clear Filter
                 </button>
               </div>
             )}
@@ -1848,7 +2530,7 @@ const OrdersDashboard = () => {
 
         {/* Main Content */}
         <main className="ords-main-content">
-          {/* Info Stats Bar (Replaces Search Box) */}
+          {/* Info Stats Bar */}
           <div className="ords-info-stats">
             <i className="ords-icon-filter"></i>
             Showing {filteredOrders.length} of {totalOrders} orders
@@ -2019,11 +2701,6 @@ const OrdersDashboard = () => {
 };
 
 export default OrdersDashboard;
-
-
-
-
-
 
 
 
