@@ -930,15 +930,7 @@ function Agent() {
             <h5 className="agent-left-username">{username}</h5>
           </div>
 
-          {/* {isMobile && (
-            <button 
-              className="sidebar-close-btn"
-              onClick={() => setIsSidebarOpen(false)}
-              aria-label={t("closeMenu")}
-            >
-              <X size={20} />
-            </button>
-          )} */}
+
         </div>
 
         {/* Stats Section */}
@@ -1039,18 +1031,7 @@ function Agent() {
           </div>
           
           <div className="agent-header-right">
-            {/* <div className="notification-icon-container">
-              <button 
-                className="notification-icon"
-                onClick={() => setOpenNotifications(!openNotifications)}
-              >
-                <Bell size={20} />
-                {unseenCount > 0 && (
-                  <span className="notification-count">{unseenCount}</span>
-                )}
-              </button>
-            </div>
-             */}
+            
             {openNotifications && (
               <div className="notifications-dropdown">
                 <div className="notifications-header">
@@ -1112,7 +1093,7 @@ function Agent() {
                 <img
                   // src={getImageUrl(`/api/images/${u._id}/profile`)}
                   //  src={getImageUrl(userId, "profile")}
-                   src={getProfileImage(userId)}
+                   src={getProfileImage(u._id)}
                   alt={u.name}
                   className="agent-user-img"
                   onError={(e) => {

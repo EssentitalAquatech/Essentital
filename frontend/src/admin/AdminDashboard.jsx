@@ -6195,6 +6195,7 @@ const getFishFilesUrls = (fishFiles, pondId) => {
               {farmer.photo && (
                 <img 
                   src={getFarmerImageUrl(farmer)} 
+                  
                   alt="Farmer"
                   className="farmer-avatar"
                   onClick={() => openModal(getFarmerImageUrl(farmer))}
@@ -6204,6 +6205,7 @@ const getFishFilesUrls = (fishFiles, pondId) => {
                   }}
                 />
               )}
+
               <div>
                 <h4>{farmer.name} ({farmer.farmerId})</h4>
                 <p>{farmer.contact} • {farmer.village}</p>
@@ -6275,6 +6277,7 @@ const getFishFilesUrls = (fishFiles, pondId) => {
                               }}
                             />
                           )}
+      
                         </div>
                         <div className="pond-actions">
                           <button
