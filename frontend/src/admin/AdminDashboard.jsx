@@ -5505,10 +5505,143 @@ function AdminDashboard() {
 
 
 
-// ✅ FIXED: Smart image URL resolver for buffer images
+// // ✅ FIXED: Smart image URL resolver for buffer images
+// const getImageUrl = (imagePath, imageType = "profile", userId = null, pondId = null) => {
+//   try {
+//     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
+    
+//     // Handle null/undefined
+//     if (!imagePath || imagePath === "null" || imagePath === "undefined") {
+//       return "/no-image.png";
+//     }
+    
+//     // If imagePath is already a URL (like data:image or http), return as is
+//     if (typeof imagePath === 'string' && (imagePath.startsWith('data:') || imagePath.startsWith('http'))) {
+//       return imagePath;
+//     }
+    
+//     // If imagePath is an ObjectId or ID string
+//     if (typeof imagePath === 'string' && /^[0-9a-fA-F]{24}$/.test(imagePath)) {
+//       return `${API_URL}/api/images/${imagePath}/${imageType}`;
+//     }
+    
+//     // Handle buffer image IDs from database
+//     if (userId && typeof userId === 'string' && /^[0-9a-fA-F]{24}$/.test(userId)) {
+//       switch(imageType) {
+//         case "profile":
+//         case "aadharFront":
+//         case "aadharBack":
+//         case "pan":
+//         case "savingImg":
+//           return `${API_URL}/api/images/${userId}/${imageType}`;
+//         case "farmer":
+//           return `${API_URL}/api/images/farmer/photo/${userId}`;
+//         case "dealer":
+//           return `${API_URL}/api/images/dealer/image/${userId}`;
+//         case "pond":
+//           if (pondId) {
+//             return `${API_URL}/api/images/pond/image/${pondId}`;
+//           }
+//           return `${API_URL}/api/images/${userId}/pond`;
+//         default:
+//           return `${API_URL}/api/images/${userId}/${imageType}`;
+//       }
+//     }
+    
+//     // For pond files and fish files
+//     if (pondId && typeof imagePath === 'number') {
+//       if (imageType === "pondFiles") {
+//         return `${API_URL}/api/images/pond/file/${pondId}/${imagePath}`;
+//       } else if (imageType === "fishFiles") {
+//         return `${API_URL}/api/images/fish/file/${pondId}/${imagePath}`;
+//       }
+//     }
+    
+//     return "/no-image.png";
+    
+//   } catch (error) {
+//     console.error("Error in getImageUrl:", error, "Input:", imagePath);
+//     return "/no-image.png";
+//   }
+// };
+
+
+
+// // ✅ CORRECTED: Smart image URL resolver for buffer images
+// const getImageUrl = (imagePath, imageType = "profile", userId = null, pondId = null) => {
+//   try {
+//     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
+    
+//     console.log(`getImageUrl called:`, { imagePath, imageType, userId, pondId });
+    
+//     // Handle null/undefined
+//     if (!imagePath || imagePath === "null" || imagePath === "undefined") {
+//       return "/profile.png";
+//     }
+    
+//     // If imagePath is already a URL (like data:image or http), return as is
+//     if (typeof imagePath === 'string' && (imagePath.startsWith('data:') || imagePath.startsWith('http'))) {
+//       return imagePath;
+//     }
+    
+//     // If imagePath is an ObjectId or ID string
+//     if (typeof imagePath === 'string' && /^[0-9a-fA-F]{24}$/.test(imagePath)) {
+//       // Handle different types
+//       switch(imageType) {
+//         case "profile":
+//         case "aadharFront":
+//         case "aadharBack":
+//         case "pan":
+//         case "savingImg":
+//           return `${API_URL}/api/images/${imagePath}/${imageType}`;
+//         case "farmer":
+//           return `${API_URL}/api/images/farmer/photo/${imagePath}`;
+//         case "dealer":
+//           return `${API_URL}/api/images/dealer/image/${imagePath}`;
+//         case "pond":
+//           if (pondId) {
+//             return `${API_URL}/api/images/pond/image/${pondId}`;
+//           }
+//           // If imagePath is a pond ID format (like FAR-2026-00003-P1)
+//           if (imagePath.includes('FAR-') && imagePath.includes('-P')) {
+//             return `${API_URL}/api/images/pond/image/${imagePath}`;
+//           }
+//           return `${API_URL}/api/images/pond/image/${imagePath}`;
+//         default:
+//           return `${API_URL}/api/images/${imagePath}/${imageType}`;
+//       }
+//     }
+    
+//     // For pond ID formats (like FAR-2026-00003-P1)
+//     if (typeof imagePath === 'string' && imagePath.includes('FAR-') && imagePath.includes('-P')) {
+//       return `${API_URL}/api/images/pond/image/${imagePath}`;
+//     }
+    
+//     // For pond files and fish files
+//     if (pondId && typeof imagePath === 'number') {
+//       if (imageType === "pondFiles") {
+//         return `${API_URL}/api/images/pond/file/${pondId}/${imagePath}`;
+//       } else if (imageType === "fishFiles") {
+//         return `${API_URL}/api/images/fish/file/${pondId}/${imagePath}`;
+//       }
+//     }
+    
+//     console.warn(`Could not generate URL for:`, { imagePath, imageType });
+//     return "/profile.png";
+    
+//   } catch (error) {
+//     console.error("Error in getImageUrl:", error, "Input:", imagePath);
+//     return "/profile.png";
+//   }
+// };
+
+//ye uper vala sahi hai 
+// ✅ COMPLETELY FIXED: Smart image URL resolver for all types
 const getImageUrl = (imagePath, imageType = "profile", userId = null, pondId = null) => {
   try {
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
+    const API_URL = import.meta.env.VITE_API_URL || "https://essential-r440.onrender.com";
+    
+    console.log(`🔗 getImageUrl called:`, { imagePath, imageType, userId, pondId });
     
     // Handle null/undefined
     if (!imagePath || imagePath === "null" || imagePath === "undefined") {
@@ -5520,50 +5653,88 @@ const getImageUrl = (imagePath, imageType = "profile", userId = null, pondId = n
       return imagePath;
     }
     
-    // If imagePath is an ObjectId or ID string
-    if (typeof imagePath === 'string' && /^[0-9a-fA-F]{24}$/.test(imagePath)) {
-      return `${API_URL}/api/images/${imagePath}/${imageType}`;
-    }
-    
-    // Handle buffer image IDs from database
-    if (userId && typeof userId === 'string' && /^[0-9a-fA-F]{24}$/.test(userId)) {
-      switch(imageType) {
-        case "profile":
-        case "aadharFront":
-        case "aadharBack":
-        case "pan":
-        case "savingImg":
-          return `${API_URL}/api/images/${userId}/${imageType}`;
-        case "farmer":
-          return `${API_URL}/api/images/farmer/photo/${userId}`;
-        case "dealer":
-          return `${API_URL}/api/images/dealer/image/${userId}`;
-        case "pond":
-          if (pondId) {
+    // Handle different image types
+    switch(imageType) {
+      // Agent images
+      case "profile":
+      case "aadharFront":
+      case "aadharBack":
+      case "pan":
+      case "savingImg":
+        if (typeof imagePath === 'string' && /^[0-9a-fA-F]{24}$/.test(imagePath)) {
+          return `${API_URL}/api/images/${imagePath}/${imageType}`;
+        }
+        return "/profile.png";
+      
+      // Farmer image
+      case "farmer":
+        if (typeof imagePath === 'string' && /^[0-9a-fA-F]{24}$/.test(imagePath)) {
+          return `${API_URL}/api/images/farmer/photo/${imagePath}`;
+        }
+        return "/profile.png";
+      
+      // Dealer image
+      case "dealer":
+        if (typeof imagePath === 'string' && /^[0-9a-fA-F]{24}$/.test(imagePath)) {
+          return `${API_URL}/api/images/dealer/image/${imagePath}`;
+        }
+        return "/no-image.png";
+      
+      // Pond image
+      case "pond":
+        // If pondId is provided (for pond thumbnail)
+        if (pondId && typeof pondId === 'string') {
+          // Check if pondId is ObjectId or pond code
+          if (/^[0-9a-fA-F]{24}$/.test(pondId)) {
+            return `${API_URL}/api/images/pond/image/${pondId}`;
+          } else if (pondId.includes('FAR-') && pondId.includes('-P')) {
             return `${API_URL}/api/images/pond/image/${pondId}`;
           }
-          return `${API_URL}/api/images/${userId}/pond`;
-        default:
-          return `${API_URL}/api/images/${userId}/${imageType}`;
-      }
+        }
+        
+        // If imagePath is a pond ID
+        if (typeof imagePath === 'string') {
+          if (/^[0-9a-fA-F]{24}$/.test(imagePath)) {
+            return `${API_URL}/api/images/pond/image/${imagePath}`;
+          } else if (imagePath.includes('FAR-') && imagePath.includes('-P')) {
+            return `${API_URL}/api/images/pond/image/${imagePath}`;
+          }
+        }
+        return "/no-image.png";
+      
+      // Pond files
+      case "pondFiles":
+        if (pondId && typeof imagePath === 'number') {
+          if (/^[0-9a-fA-F]{24}$/.test(pondId)) {
+            return `${API_URL}/api/images/pond/file/${pondId}/${imagePath}`;
+          } else if (pondId.includes('FAR-') && pondId.includes('-P')) {
+            return `${API_URL}/api/images/pond/file/${pondId}/${imagePath}`;
+          }
+        }
+        return "/no-image.png";
+      
+      // Fish files
+      case "fishFiles":
+        if (pondId && typeof imagePath === 'number') {
+          if (/^[0-9a-fA-F]{24}$/.test(pondId)) {
+            return `${API_URL}/api/images/fish/file/${pondId}/${imagePath}`;
+          } else if (pondId.includes('FAR-') && pondId.includes('-P')) {
+            return `${API_URL}/api/images/fish/file/${pondId}/${imagePath}`;
+          }
+        }
+        return "/no-image.png";
+      
+      default:
+        console.warn(`Unknown imageType: ${imageType}`);
+        return "/no-image.png";
     }
-    
-    // For pond files and fish files
-    if (pondId && typeof imagePath === 'number') {
-      if (imageType === "pondFiles") {
-        return `${API_URL}/api/images/pond/file/${pondId}/${imagePath}`;
-      } else if (imageType === "fishFiles") {
-        return `${API_URL}/api/images/fish/file/${pondId}/${imagePath}`;
-      }
-    }
-    
-    return "/no-image.png";
     
   } catch (error) {
-    console.error("Error in getImageUrl:", error, "Input:", imagePath);
+    console.error("❌ Error in getImageUrl:", error, "Input:", imagePath);
     return "/no-image.png";
   }
 };
+
 
 // ✅ FIXED: Get agent image URL
 const getAgentImageUrl = (agent, type) => {
@@ -5573,57 +5744,254 @@ const getAgentImageUrl = (agent, type) => {
 };
 
 // ✅ FIXED: Get farmer image URL
-const getFarmerImageUrl = (farmer) => {
-  if (!farmer || !farmer._id) return "/profile.png";
+// const getFarmerImageUrl = (farmer) => {
+//   if (!farmer || !farmer._id) return "/profile.png";
   
-  return getImageUrl(farmer._id, "farmer");
+//   return getImageUrl(farmer._id, "farmer");
+// };
+
+// ✅ SIMPLIFIED: Get farmer image URL
+const getFarmerImageUrl = (farmer) => {
+  if (!farmer || !farmer._id) {
+    console.log("No farmer or farmer._id found");
+    return "/profile.png";
+  }
+  
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
+  const url = `${API_URL}/api/images/farmer/photo/${farmer._id}`;
+  
+  console.log(`Farmer image URL for ${farmer._id}:`, url);
+  return url;
 };
+
+
+// ✅ FIXED: Get pond image URL
+// const getPondImageUrl = (pond, pondId) => {
+//   if (!pond) return "/no-image.png";
+  
+//   // If pond has _id, use it
+//   if (pond._id) {
+//     return getImageUrl(pond._id, "pond", null, pond.pondId || pondId);
+//   }
+  
+//   // Use pondId directly
+//   if (pond.pondId) {
+//     return getImageUrl(pond.pondId, "pond", null, pond.pondId);
+//   }
+  
+//   return "/no-image.png";
+// };
+
 
 // ✅ FIXED: Get pond image URL
 const getPondImageUrl = (pond, pondId) => {
-  if (!pond) return "/no-image.png";
-  
-  // If pond has _id, use it
-  if (pond._id) {
-    return getImageUrl(pond._id, "pond", null, pond.pondId || pondId);
+  if (!pond) {
+    console.log("❌ No pond object provided");
+    return "/no-image.png";
   }
   
-  // Use pondId directly
-  if (pond.pondId) {
-    return getImageUrl(pond.pondId, "pond", null, pond.pondId);
+  const apiUrl = import.meta.env.VITE_API_URL || "https://essential-r440.onrender.com";
+  
+  // Debug logs
+  console.log("🔍 Pond object in getPondImageUrl:", {
+    pondId: pond._id,
+    pondPondId: pond.pondId,
+    passedPondId: pondId,
+    fullPond: pond
+  });
+  
+  // Priority 1: Use pond.pondId (like FAR-2026-00006-P2)
+  if (pond.pondId && typeof pond.pondId === 'string') {
+    const url = `${apiUrl}/api/images/pond/image/${pond.pondId}`;
+    console.log(`✅ Using pond.pondId URL:`, url);
+    return url;
   }
   
+  // Priority 2: Use pond._id (ObjectId)
+  if (pond._id && /^[0-9a-fA-F]{24}$/.test(pond._id)) {
+    const url = `${apiUrl}/api/images/pond/image/${pond._id}`;
+    console.log(`✅ Using pond._id URL:`, url);
+    return url;
+  }
+  
+  // Priority 3: Use passed pondId parameter
+  if (pondId) {
+    const url = `${apiUrl}/api/images/pond/image/${pondId}`;
+    console.log(`✅ Using passed pondId URL:`, url);
+    return url;
+  }
+  
+  // Priority 4: Try to extract from pond object
+  if (pond.pondImage && pond.pondImage._id) {
+    const url = `${apiUrl}/api/images/pond/image/${pond.pondImage._id}`;
+    console.log(`✅ Using pond.pondImage._id URL:`, url);
+    return url;
+  }
+  
+  console.log(`❌ No valid pond ID found, returning fallback`);
   return "/no-image.png";
 };
 
+
+
 // ✅ FIXED: Get dealer image URL
-const getDealerImageUrl = (dealer) => {
-  if (!dealer || !dealer._id) return "/no-image.png";
+// const getDealerImageUrl = (dealer) => {
+//   if (!dealer || !dealer._id) return "/no-image.png";
   
-  return getImageUrl(dealer._id, "dealer");
+//   return getImageUrl(dealer._id, "dealer");
+// };
+
+
+// ✅ FIXED: Get dealer image URL with multiple fallbacks
+const getDealerImageUrl = (dealer) => {
+  if (!dealer) {
+    console.log("❌ No dealer object provided");
+    return "/no-image.png";
+  }
+  
+  console.log(`🔍 Dealer object in getDealerImageUrl:`, {
+    _id: dealer._id,
+    name: dealer.name,
+    hasImage: !!dealer.image,
+    imageType: typeof dealer.image,
+    imageIsObject: dealer.image && typeof dealer.image === 'object'
+  });
+  
+  const apiUrl = import.meta.env.VITE_API_URL || "https://essential-r440.onrender.com";
+  
+  // Try multiple strategies
+  
+  // Strategy 1: Direct API endpoint
+  if (dealer._id && /^[0-9a-fA-F]{24}$/.test(dealer._id)) {
+    const url = `${apiUrl}/api/images/dealer/image/${dealer._id}`;
+    console.log(`✅ Strategy 1: Direct API URL:`, url);
+    return url;
+  }
+  
+  // Strategy 2: Check if image is an ObjectId string
+  if (dealer.image && typeof dealer.image === 'string' && /^[0-9a-fA-F]{24}$/.test(dealer.image)) {
+    const url = `${apiUrl}/api/images/dealer/image/${dealer.image}`;
+    console.log(`✅ Strategy 2: Using image field as ObjectId:`, url);
+    return url;
+  }
+  
+  // Strategy 3: Check if image is an object with _id
+  if (dealer.image && dealer.image._id && /^[0-9a-fA-F]{24}$/.test(dealer.image._id)) {
+    const url = `${apiUrl}/api/images/dealer/image/${dealer.image._id}`;
+    console.log(`✅ Strategy 3: Using image._id:`, url);
+    return url;
+  }
+  
+  // Strategy 4: Check if image has data field (Buffer data)
+  if (dealer.image && dealer.image.data) {
+    // Convert buffer to base64 data URL
+    try {
+      // If it's already a base64 string
+      if (typeof dealer.image.data === 'string') {
+        const base64 = dealer.image.data;
+        const contentType = dealer.image.contentType || 'image/png';
+        const dataUrl = `data:${contentType};base64,${base64}`;
+        console.log(`✅ Strategy 4: Converted buffer to data URL`);
+        return dataUrl;
+      }
+    } catch (error) {
+      console.error("❌ Error converting buffer to data URL:", error);
+    }
+  }
+  
+  console.log(`❌ No valid dealer image found, using fallback`);
+  return "/no-image.png";
 };
+
+
+
+// ✅ FIXED: Get pond files URLs
+// const getPondFilesUrls = (pondFiles, pondId) => {
+//   if (!pondFiles || !Array.isArray(pondFiles) || pondFiles.length === 0 || !pondId) {
+//     return [];
+//   }
+  
+//   return pondFiles.map((_, index) => 
+//     getImageUrl(index, "pondFiles", null, pondId)
+//   );
+// };
+
+// // ✅ FIXED: Get fish files URLs
+// const getFishFilesUrls = (fishFiles, pondId) => {
+//   if (!fishFiles || !Array.isArray(fishFiles) || fishFiles.length === 0 || !pondId) {
+//     return [];
+//   }
+  
+//   return fishFiles.map((_, index) => 
+//     getImageUrl(index, "fishFiles", null, pondId)
+//   );
+// };
+
+
+
+
 
 // ✅ FIXED: Get pond files URLs
 const getPondFilesUrls = (pondFiles, pondId) => {
+  console.log(`🔄 getPondFilesUrls called:`, { 
+    pondFilesCount: pondFiles?.length, 
+    pondId 
+  });
+  
   if (!pondFiles || !Array.isArray(pondFiles) || pondFiles.length === 0 || !pondId) {
+    console.log(`❌ No pond files or pondId`);
     return [];
   }
   
-  return pondFiles.map((_, index) => 
-    getImageUrl(index, "pondFiles", null, pondId)
-  );
+  const urls = pondFiles.map((file, index) => {
+    // If file is an ObjectId
+    if (typeof file === 'string' && /^[0-9a-fA-F]{24}$/.test(file)) {
+      const url = getImageUrl(file, "pondFiles", null, pondId);
+      console.log(`✅ Pond file ${index} URL:`, url);
+      return url;
+    }
+    // If we just have index
+    else {
+      const url = getImageUrl(index, "pondFiles", null, pondId);
+      console.log(`✅ Pond file ${index} URL (by index):`, url);
+      return url;
+    }
+  });
+  
+  return urls;
 };
 
 // ✅ FIXED: Get fish files URLs
 const getFishFilesUrls = (fishFiles, pondId) => {
+  console.log(`🔄 getFishFilesUrls called:`, { 
+    fishFilesCount: fishFiles?.length, 
+    pondId 
+  });
+  
   if (!fishFiles || !Array.isArray(fishFiles) || fishFiles.length === 0 || !pondId) {
+    console.log(`❌ No fish files or pondId`);
     return [];
   }
   
-  return fishFiles.map((_, index) => 
-    getImageUrl(index, "fishFiles", null, pondId)
-  );
+  const urls = fishFiles.map((file, index) => {
+    // If file is an ObjectId
+    if (typeof file === 'string' && /^[0-9a-fA-F]{24}$/.test(file)) {
+      const url = getImageUrl(file, "fishFiles", null, pondId);
+      console.log(`✅ Fish file ${index} URL:`, url);
+      return url;
+    }
+    // If we just have index
+    else {
+      const url = getImageUrl(index, "fishFiles", null, pondId);
+      console.log(`✅ Fish file ${index} URL (by index):`, url);
+      return url;
+    }
+  });
+  
+  return urls;
 };
+
+
 
 
 
@@ -6191,7 +6559,7 @@ const getFishFilesUrls = (fishFiles, pondId) => {
       {data.map((farmer) => (
         <div className="farmer-card" key={farmer._id}>
           <div className="farmer-card-header">
-            <div className="farmer-profile-header">
+            {/* <div className="farmer-profile-header">
               {farmer.photo && (
                 <img 
                   src={getFarmerImageUrl(farmer)} 
@@ -6210,7 +6578,47 @@ const getFishFilesUrls = (fishFiles, pondId) => {
                 <h4>{farmer.name} ({farmer.farmerId})</h4>
                 <p>{farmer.contact} • {farmer.village}</p>
               </div>
-            </div>
+            </div> */}
+
+
+
+{/* Farmer profile header section */}
+<div className="farmer-profile-header">
+  {/* Test URL directly */}
+  <img 
+    src={`https://essential-r440.onrender.com/api/images/farmer/photo/${farmer._id}`}
+    alt="Farmer"
+    className="farmer-avatar"
+    onClick={() => openModal(`https://essential-r440.onrender.com/api/images/farmer/photo/${farmer._id}`)}
+    onError={(e) => {
+      console.error(`❌ Image failed to load for farmer ${farmer._id}:`, e.target.src);
+      
+      // Try alternative URL
+      const altUrl = `http://localhost:2008/api/images/farmer/photo/${farmer._id}`;
+      console.log(`Trying alternative URL: ${altUrl}`);
+      e.target.src = altUrl;
+      
+      // If that also fails, use fallback
+      e.target.onerror = () => {
+        e.target.src = "/profile.png";
+        e.target.onerror = null;
+      };
+    }}
+    onLoad={(e) => {
+      console.log(`✅ Image loaded successfully for farmer ${farmer._id}:`, e.target.src);
+    }}
+  />
+
+  <div>
+    <h4>{farmer.name} ({farmer.farmerId})</h4>
+    <p>{farmer.contact} • {farmer.village}</p>
+    
+  </div>
+</div>
+
+
+
+
             <div className="farmer-actions">
               <button
                 onClick={() => downloadSingleFarmerData(farmer)}
@@ -6265,7 +6673,7 @@ const getFishFilesUrls = (fishFiles, pondId) => {
                       <div className="pond-card-header">
                         <div className="pond-header-info">
                           <h6>Pond {pond.pondNumber || index + 1}: {pond.pondId}</h6>
-                          {pond.pondImage && (
+                          {/* {pond.pondImage && (
                             <img 
                               src={getPondImageUrl(pond, pond._id)}
                               alt="Pond"
@@ -6276,7 +6684,49 @@ const getFishFilesUrls = (fishFiles, pondId) => {
                                 e.target.onerror = null;
                               }}
                             />
-                          )}
+                          )} */}
+
+
+{pond.pondImage && (
+  <img 
+    src={getPondImageUrl(pond, pond._id)}
+    alt="Pond"
+    className="pond-thumbnail"
+    onClick={() => openModal(getPondImageUrl(pond, pond._id))}
+    onError={(e) => {
+      console.error(`❌ Pond image failed to load for ${pond.pondId || pond._id}:`, {
+        currentSrc: e.target.src,
+        pondId: pond.pondId,
+        pond_Id: pond._id
+      });
+      
+      // Try multiple alternative URLs
+      const alternatives = [
+        `https://essential-r440.onrender.com/api/images/pond/image/${pond.pondId}`,
+        `https://essential-r440.onrender.com/api/images/pond/image/${pond._id}`,
+        `http://localhost:2008/api/images/pond/image/${pond.pondId}`,
+        `http://localhost:2008/api/images/pond/image/${pond._id}`
+      ];
+      
+      let currentIndex = alternatives.indexOf(e.target.src);
+      let nextIndex = currentIndex + 1;
+      
+      if (nextIndex < alternatives.length) {
+        console.log(`🔄 Trying alternative pond URL: ${alternatives[nextIndex]}`);
+        e.target.src = alternatives[nextIndex];
+      } else {
+        console.log(`❌ All alternatives failed, using fallback`);
+        e.target.src = "/no-image.png";
+        e.target.onerror = null;
+      }
+    }}
+    onLoad={(e) => {
+      console.log(`✅ Pond image loaded successfully: ${pond.pondId || pond._id}`);
+    }}
+  />
+)}
+
+
       
                         </div>
                         <div className="pond-actions">
@@ -6346,7 +6796,7 @@ const getFishFilesUrls = (fishFiles, pondId) => {
       {data.map((item) => (
         <div className="dealer-card" key={item._id}>
           <div className="dealer-card-header">
-            <div className="dealer-profile">
+            {/* <div className="dealer-profile">
               <img
                 src={getDealerImageUrl(item)}
                 alt="Dealer"
@@ -6361,7 +6811,93 @@ const getFishFilesUrls = (fishFiles, pondId) => {
                 <h4>{item.name || "N/A"}</h4>
                 <p>{item.contact || "N/A"}</p>
               </div>
-            </div>
+            </div> */}
+
+
+{/* Dealer card में यह code update करें */}
+<div className="dealer-profile">
+<img
+  src={getDealerImageUrl(item)}
+  alt="Dealer"
+  className="dealer-avatar"
+  onClick={() => openModal(getDealerImageUrl(item))}
+  onError={(e) => {
+    console.error(`❌ Dealer image failed to load:`, {
+      dealerId: item._id,
+      dealerName: item.name,
+      currentSrc: e.target.src,
+      imageField: item.image,
+      imageDataType: item.image?.data ? typeof item.image.data : 'no data'
+    });
+    
+    // Try alternative strategies
+    const alternatives = [];
+    
+    // Alternative 1: Different API endpoints
+    alternatives.push(`https://essential-r440.onrender.com/api/images/dealer/image/${item._id}`);
+    alternatives.push(`http://localhost:2008/api/images/dealer/image/${item._id}`);
+    
+    // Alternative 2: Try dealer API endpoint
+    alternatives.push(`https://essential-r440.onrender.com/api/dealers/${item._id}/image`);
+    alternatives.push(`http://localhost:2008/api/dealers/${item._id}/image`);
+    
+    // Alternative 3: If image has Buffer data, try to convert it
+    if (item.image && item.image.data) {
+      try {
+        // Check if data is already a base64 string
+        if (typeof item.image.data === 'string') {
+          const base64 = item.image.data;
+          const contentType = item.image.contentType || 'image/png';
+          const dataUrl = `data:${contentType};base64,${base64}`;
+          alternatives.push(dataUrl);
+          console.log(`🔄 Added base64 data URL as alternative`);
+        }
+      } catch (err) {
+        console.error("Failed to convert buffer:", err);
+      }
+    }
+    
+    let currentIndex = alternatives.indexOf(e.target.src);
+    let nextIndex = currentIndex + 1;
+    
+    if (nextIndex < alternatives.length) {
+      console.log(`🔄 Trying alternative dealer URL ${nextIndex + 1}/${alternatives.length}:`, alternatives[nextIndex]);
+      e.target.src = alternatives[nextIndex];
+      
+      // Set up another fallback for this new src
+      e.target.onerror = function() {
+        const nextNextIndex = nextIndex + 1;
+        if (nextNextIndex < alternatives.length) {
+          console.log(`🔄 Trying next alternative dealer URL ${nextNextIndex + 1}/${alternatives.length}:`, alternatives[nextNextIndex]);
+          this.src = alternatives[nextNextIndex];
+        } else {
+          console.log(`❌ All alternatives failed, using fallback`);
+          this.src = "/no-image.png";
+          this.onerror = null;
+        }
+      };
+    } else {
+      console.log(`❌ No more alternatives, using fallback`);
+      e.target.src = "/no-image.png";
+      e.target.onerror = null;
+    }
+  }}
+  onLoad={(e) => {
+    console.log(`✅ Dealer image loaded successfully:`, {
+      dealerId: item._id,
+      dealerName: item.name,
+      src: e.target.src.substring(0, 100) + '...'
+    });
+  }}
+/>
+  <div>
+    <h4>{item.name || "N/A"}</h4>
+    <p>{item.contact || "N/A"}</p>
+  </div>
+</div>
+
+
+
             <button
               onClick={() => downloadSingleExcel(item, `dealer_${item.name}`)}
               className="download-dealer-btn"
@@ -7093,3 +7629,21 @@ const getFishFilesUrls = (fishFiles, pondId) => {
 }
 
 export default AdminDashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
