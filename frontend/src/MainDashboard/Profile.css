@@ -12,18 +12,6 @@ body {
   line-height: 1.6;
 }
 
-/* ===============================
-   FIX FOR BODY SCROLL LOCK WHEN SIDEBAR IS OPEN
-================================ */
-
-/* When sidebar is open on mobile, lock the background scroll */
-body.sidebar-open {
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-}
-
 /* Main Container */
 .profile-page-container {
   display: flex;
@@ -117,12 +105,12 @@ body.sidebar-open {
   transform: translateX(4px);
 }
 
-/* .profile-menu-btn.active {
+.profile-menu-btn.active {
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: white;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
               0 2px 4px -1px rgba(0, 0, 0, 0.06);
-} */
+}
 
 /* Logout Button Styles in Sidebar */
 .profile-menu-btn.logout-btn {
@@ -177,33 +165,6 @@ body.sidebar-open {
   background-color: #f8fafc;
   transition: all 0.3s ease;
   overflow-x: hidden;
-}
-
-/* Main content area - prevent scroll when sidebar is open */
-.profile-content-area.mobile-view.sidebar-open {
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  pointer-events: none; /* Prevent interaction with background */
-}
-
-/* Restore pointer events for content when sidebar is closed */
-.profile-content-area.mobile-view:not(.sidebar-open) {
-  pointer-events: auto;
-}
-
-/* Mobile View Styles */
-.profile-content-area.mobile-view {
-  margin-left: 0;
-  margin-top: 60px;
-  padding: 20px;
-  min-height: calc(100vh - 60px);
-  width: 100%;
-  overflow-x: hidden;
-  position: relative;
-  z-index: 1;
-  background-color: #f8fafc;
-  overflow-y: auto;
 }
 
 /* Header - Modern Design with Logout Button */
@@ -564,7 +525,7 @@ body.sidebar-open {
 }
 
 /* ===============================
-   MOBILE SIDEBAR STYLES - FIXED
+   MOBILE SIDEBAR STYLES WITH SCROLL LOCK
 ================================ */
 .profile-sidebar.mobile-open {
   transform: translateX(0);
@@ -573,10 +534,36 @@ body.sidebar-open {
   overflow-y: auto;
   position: fixed;
   z-index: 1000;
+  top: 0;
+  left: 0;
 }
 
 .profile-sidebar.mobile-closed {
   transform: translateX(-100%);
+}
+
+/* ===============================
+   FIX FOR BACKGROUND SCROLL LOCK - PURE CSS SOLUTION
+================================ */
+
+/* When sidebar is open on mobile, prevent body scroll */
+body:has(.profile-sidebar.mobile-open) {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Prevent background content from scrolling when sidebar is open */
+.profile-content-area.mobile-view {
+  transition: filter 0.3s ease;
+}
+
+.profile-sidebar.mobile-open ~ .profile-content-area.mobile-view {
+  filter: brightness(0.95);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .sidebar-close-container {
@@ -618,11 +605,11 @@ body.sidebar-open {
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
   animation: fadeIn 0.3s ease;
-  display: none; /* Hidden by default */
+  display: none;
 }
 
 /* Show overlay only when sidebar is open */
-.sidebar-overlay.active {
+.profile-sidebar.mobile-open + .sidebar-overlay {
   display: block;
 }
 
@@ -744,6 +731,8 @@ body.sidebar-open {
     margin-top: 60px;
     padding: 20px;
     min-height: calc(100vh - 60px);
+    width: 100vw;
+    overflow-x: hidden;
   }
 
   .profile-cards-container {
@@ -765,10 +754,15 @@ body.sidebar-open {
     margin-top: auto;
   }
   
-  /* Ensure content area takes full width on mobile */
-  .profile-content-area {
-    width: 100vw;
-    margin-left: 0;
+  /* Prevent body scroll when sidebar is open - Mobile only */
+  .profile-sidebar.mobile-open {
+    overflow-y: auto;
+  }
+  
+  .profile-sidebar.mobile-open ~ .profile-content-area.mobile-view {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
   }
 }
 
@@ -782,8 +776,7 @@ body.sidebar-open {
     padding: 16px;
     margin-top: 60px;
     min-height: calc(100vh - 60px);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    width: 100vw;
   }
   
   .profile-cards-container {
@@ -918,7 +911,7 @@ body.sidebar-open {
 }
 
 /* ===============================
-   SCROLLBAR STYLING FOR MOBILE
+   SCROLLBAR STYLING
 ================================ */
 .profile-content-area.mobile-view::-webkit-scrollbar {
   width: 4px;
