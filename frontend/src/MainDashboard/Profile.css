@@ -10,6 +10,7 @@ body {
   background-color: #f5f7fa;
   color: #333;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 /* Main Container */
@@ -56,7 +57,7 @@ body {
   padding: 2px;
   margin-bottom: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-   margin-top: 50px;
+  margin-top: 50px;
 }
 
 .profile-sidebar-pic:hover {
@@ -112,17 +113,6 @@ body {
               0 2px 4px -1px rgba(0, 0, 0, 0.06);
 } */
 
-/* Logout Button Styles in Sidebar */
-.profile-menu-btn.logout-btn {
-  color: #dc2626;
-  margin-top: 10px;
-}
-
-.profile-menu-btn.logout-btn:hover {
-  background-color: #fef2f2;
-  color: #b91c1c;
-}
-
 /* LANGUAGE SECTION */
 .profile-language-section {
   margin-top: auto;
@@ -155,7 +145,7 @@ body {
 }
 
 /* ===============================
-   MAIN CONTENT AREA - IMPROVED
+   MAIN CONTENT AREA
 ================================ */
 .profile-content-area {
   flex: 1;
@@ -244,7 +234,6 @@ body {
   position: relative;
   overflow: hidden;
   max-width: 100%;
-  overflow: hidden;
   word-wrap: break-word;
 }
 
@@ -283,14 +272,6 @@ body {
 
 .mobile-logout-container::before {
   background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%) !important;
-}
-
-.mobile-logout-text {
-  color: #6b7280;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  text-align: center;
 }
 
 .profile-btn-logout-mobile {
@@ -546,24 +527,34 @@ body {
    FIX FOR BACKGROUND SCROLL LOCK - PURE CSS SOLUTION
 ================================ */
 
-/* When sidebar is open on mobile, prevent body scroll */
-body:has(.profile-sidebar.mobile-open) {
-  overflow: hidden;
-  height: 100vh;
+/* When sidebar is open, prevent body and background scrolling */
+body.profile-sidebar-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* Prevent background content from scrolling when sidebar is open */
 .profile-content-area.mobile-view {
-  transition: filter 0.3s ease;
+  transition: all 0.3s ease;
 }
 
+/* When sidebar is open, disable background scrolling */
 .profile-sidebar.mobile-open ~ .profile-content-area.mobile-view {
-  filter: brightness(0.95);
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  overflow: hidden !important;
+  touch-action: none !important;
+  -webkit-overflow-scrolling: none !important;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 60px; /* Mobile navbar height */
+}
+
+/* Allow only sidebar to scroll */
+.profile-sidebar.mobile-open {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-close-container {
@@ -683,7 +674,7 @@ body:has(.profile-sidebar.mobile-open) {
 }
 
 /* ===============================
-   RESPONSIVE DESIGN - IMPROVED
+   RESPONSIVE DESIGN
 ================================ */
 
 /* Tablet Landscape */
@@ -706,7 +697,7 @@ body:has(.profile-sidebar.mobile-open) {
   }
 }
 
-/* Tablet Portrait (Mobile) */
+/* Tablet Portrait (Mobile) - 992px and below */
 @media (max-width: 992px) {
   .mobile-navbar {
     display: flex;
@@ -727,12 +718,13 @@ body:has(.profile-sidebar.mobile-open) {
   }
 
   .profile-content-area.mobile-view {
-    margin-left: 0;
+    margin-left: 0 !important;
     margin-top: 60px;
     padding: 20px;
     min-height: calc(100vh - 60px);
     width: 100vw;
     overflow-x: hidden;
+    position: relative;
   }
 
   .profile-cards-container {
@@ -750,23 +742,27 @@ body:has(.profile-sidebar.mobile-open) {
   
   /* Ensure mobile logout button appears at bottom */
   .mobile-logout-container {
-    order: 999; /* Make it appear last */
+    order: 999;
     margin-top: auto;
   }
   
-  /* Prevent body scroll when sidebar is open - Mobile only */
-  .profile-sidebar.mobile-open {
-    overflow-y: auto;
+  /* IMPORTANT: When sidebar is open, lock background scrolling */
+  .profile-sidebar.mobile-open ~ .profile-content-area.mobile-view {
+    overflow: hidden !important;
+    height: calc(100vh - 60px) !important;
+    position: fixed !important;
+    width: 100% !important;
+    pointer-events: none !important;
   }
   
-  .profile-sidebar.mobile-open ~ .profile-content-area.mobile-view {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
+  /* Allow sidebar to scroll */
+  .profile-sidebar.mobile-open {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
-/* Mobile Large */
+/* Mobile Large - 767px and below */
 @media (max-width: 767px) {
   .profile-page-container {
     flex-direction: column;
@@ -836,7 +832,7 @@ body:has(.profile-sidebar.mobile-open) {
   }
 }
 
-/* Mobile Small */
+/* Mobile Small - 480px and below */
 @media (max-width: 480px) {
   .profile-content-area.mobile-view {
     padding: 12px;
@@ -893,18 +889,18 @@ body:has(.profile-sidebar.mobile-open) {
     font-size: 0.9rem;
     margin-bottom: 16px;
   }
-  
-  /* Mobile logout button */
-  .mobile-logout-text {
-    font-size: 0.9rem;
-  }
 }
 
 /* ===============================
-   FIX FOR IOS SAFARI 100vh ISSUE
+   FIX FOR IOS SAFARI
 ================================ */
 @supports (-webkit-touch-callout: none) {
   .profile-content-area.mobile-view {
+    min-height: -webkit-fill-available;
+    height: -webkit-fill-available;
+  }
+  
+  .profile-sidebar.mobile-open ~ .profile-content-area.mobile-view {
     min-height: -webkit-fill-available;
     height: -webkit-fill-available;
   }
@@ -963,11 +959,6 @@ body:has(.profile-sidebar.mobile-open) {
   animation: fadeInUp 0.5s ease-out;
 }
 
-/* Password field specific styling */
-.profile-form-group:has(input[type="password"])::before {
-  background: linear-gradient(180deg, #f97316 0%, #c2410c 100%);
-}
-
 /* SMOOTH TRANSITIONS */
 .profile-sidebar {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -975,25 +966,4 @@ body:has(.profile-sidebar.mobile-open) {
 
 .profile-content-area {
   transition: all 0.3s ease;
-}
-
-/* Print Styles */
-@media print {
-  .profile-sidebar,
-  .mobile-navbar,
-  .sidebar-overlay {
-    display: none;
-  }
-  
-  .profile-content-area {
-    margin-left: 0;
-    padding: 0;
-    width: 100%;
-  }
-  
-  .profile-form-group {
-    box-shadow: none;
-    border: 1px solid #ddd;
-    break-inside: avoid;
-  }
 }
