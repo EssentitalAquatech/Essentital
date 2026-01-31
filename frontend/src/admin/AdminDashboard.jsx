@@ -5842,7 +5842,67 @@ const getPondImageUrl = (pond, pondId) => {
 // };
 
 
-// ✅ FIXED: Get dealer image URL with multiple fallbacks
+// // ✅ FIXED: Get dealer image URL with multiple fallbacks
+// const getDealerImageUrl = (dealer) => {
+//   if (!dealer) {
+//     console.log("❌ No dealer object provided");
+//     return "/no-image.png";
+//   }
+  
+//   console.log(`🔍 Dealer object in getDealerImageUrl:`, {
+//     _id: dealer._id,
+//     name: dealer.name,
+//     hasImage: !!dealer.image,
+//     imageType: typeof dealer.image,
+//     imageIsObject: dealer.image && typeof dealer.image === 'object'
+//   });
+  
+//   const apiUrl = import.meta.env.VITE_API_URL || "https://essential-r440.onrender.com";
+  
+//   // Try multiple strategies
+  
+//   // Strategy 1: Direct API endpoint
+//   if (dealer._id && /^[0-9a-fA-F]{24}$/.test(dealer._id)) {
+//     const url = `${apiUrl}/api/images/dealer/image/${dealer._id}`;
+//     console.log(`✅ Strategy 1: Direct API URL:`, url);
+//     return url;
+//   }
+  
+//   // Strategy 2: Check if image is an ObjectId string
+//   if (dealer.image && typeof dealer.image === 'string' && /^[0-9a-fA-F]{24}$/.test(dealer.image)) {
+//     const url = `${apiUrl}/api/images/dealer/image/${dealer.image}`;
+//     console.log(`✅ Strategy 2: Using image field as ObjectId:`, url);
+//     return url;
+//   }
+  
+//   // Strategy 3: Check if image is an object with _id
+//   if (dealer.image && dealer.image._id && /^[0-9a-fA-F]{24}$/.test(dealer.image._id)) {
+//     const url = `${apiUrl}/api/images/dealer/image/${dealer.image._id}`;
+//     console.log(`✅ Strategy 3: Using image._id:`, url);
+//     return url;
+//   }
+  
+//   // Strategy 4: Check if image has data field (Buffer data)
+//   if (dealer.image && dealer.image.data) {
+//     // Convert buffer to base64 data URL
+//     try {
+//       // If it's already a base64 string
+//       if (typeof dealer.image.data === 'string') {
+//         const base64 = dealer.image.data;
+//         const contentType = dealer.image.contentType || 'image/png';
+//         const dataUrl = `data:${contentType};base64,${base64}`;
+//         console.log(`✅ Strategy 4: Converted buffer to data URL`);
+//         return dataUrl;
+//       }
+//     } catch (error) {
+//       console.error("❌ Error converting buffer to data URL:", error);
+//     }
+//   }
+  
+//   console.log(`❌ No valid dealer image found, using fallback`);
+//   return "/no-image.png";
+// };
+
 const getDealerImageUrl = (dealer) => {
   if (!dealer) {
     console.log("❌ No dealer object provided");
@@ -5853,57 +5913,58 @@ const getDealerImageUrl = (dealer) => {
     _id: dealer._id,
     name: dealer.name,
     hasImage: !!dealer.image,
-    imageType: typeof dealer.image,
-    imageIsObject: dealer.image && typeof dealer.image === 'object'
+    imageData: dealer.image?.data ? `Exists, type: ${typeof dealer.image.data}` : 'no data'
   });
   
-  const apiUrl = import.meta.env.VITE_API_URL || "https://essential-r440.onrender.com";
+  // ✅ FIXED: CORRECT API URL
+  const apiUrl = "https://essential-r440.onrender.com";
   
-  // Try multiple strategies
-  
-  // Strategy 1: Direct API endpoint
+  // Strategy 1: Try direct API endpoint first
   if (dealer._id && /^[0-9a-fA-F]{24}$/.test(dealer._id)) {
-    const url = `${apiUrl}/api/images/dealer/image/${dealer._id}`;
+    const url = `${apiUrl}/api/dealers/${dealer._id}/image`;
     console.log(`✅ Strategy 1: Direct API URL:`, url);
     return url;
   }
   
-  // Strategy 2: Check if image is an ObjectId string
-  if (dealer.image && typeof dealer.image === 'string' && /^[0-9a-fA-F]{24}$/.test(dealer.image)) {
-    const url = `${apiUrl}/api/images/dealer/image/${dealer.image}`;
-    console.log(`✅ Strategy 2: Using image field as ObjectId:`, url);
-    return url;
-  }
-  
-  // Strategy 3: Check if image is an object with _id
-  if (dealer.image && dealer.image._id && /^[0-9a-fA-F]{24}$/.test(dealer.image._id)) {
-    const url = `${apiUrl}/api/images/dealer/image/${dealer.image._id}`;
-    console.log(`✅ Strategy 3: Using image._id:`, url);
-    return url;
-  }
-  
-  // Strategy 4: Check if image has data field (Buffer data)
+  // Strategy 2: Handle MongoDB Binary data directly (fallback)
   if (dealer.image && dealer.image.data) {
-    // Convert buffer to base64 data URL
     try {
-      // If it's already a base64 string
-      if (typeof dealer.image.data === 'string') {
-        const base64 = dealer.image.data;
-        const contentType = dealer.image.contentType || 'image/png';
-        const dataUrl = `data:${contentType};base64,${base64}`;
-        console.log(`✅ Strategy 4: Converted buffer to data URL`);
-        return dataUrl;
+      console.log("🔄 Processing MongoDB Binary image data...");
+      
+      // Convert buffer to data URL
+      if (dealer.image.data && typeof dealer.image.data === 'object') {
+        let base64String;
+        
+        // Method 1: Already base64 string
+        if (typeof dealer.image.data === 'string') {
+          base64String = dealer.image.data;
+        }
+        // Method 2: Buffer to base64
+        else if (dealer.image.data.buffer) {
+          const uint8Array = new Uint8Array(dealer.image.data.buffer);
+          base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+        }
+        // Method 3: Direct array
+        else if (Array.isArray(dealer.image.data)) {
+          base64String = btoa(String.fromCharCode.apply(null, dealer.image.data));
+        }
+        
+        if (base64String) {
+          const contentType = dealer.image.contentType || 'image/png';
+          const dataUrl = `data:${contentType};base64,${base64String}`;
+          
+          console.log(`✅ Strategy 2: Converted Binary to data URL`);
+          return dataUrl;
+        }
       }
     } catch (error) {
-      console.error("❌ Error converting buffer to data URL:", error);
+      console.error("❌ Error converting Binary image:", error);
     }
   }
   
   console.log(`❌ No valid dealer image found, using fallback`);
   return "/no-image.png";
 };
-
-
 
 // ✅ FIXED: Get pond files URLs
 // const getPondFilesUrls = (pondFiles, pondId) => {
@@ -6813,83 +6874,82 @@ const getFishFilesUrls = (fishFiles, pondId) => {
               </div>
             </div> */}
 
-
-{/* Dealer card में यह code update करें */}
 <div className="dealer-profile">
-<img
-  src={getDealerImageUrl(item)}
-  alt="Dealer"
-  className="dealer-avatar"
-  onClick={() => openModal(getDealerImageUrl(item))}
-  onError={(e) => {
-    console.error(`❌ Dealer image failed to load:`, {
-      dealerId: item._id,
-      dealerName: item.name,
-      currentSrc: e.target.src,
-      imageField: item.image,
-      imageDataType: item.image?.data ? typeof item.image.data : 'no data'
-    });
-    
-    // Try alternative strategies
-    const alternatives = [];
-    
-    // Alternative 1: Different API endpoints
-    alternatives.push(`https://essential-r440.onrender.com/api/images/dealer/image/${item._id}`);
-    alternatives.push(`http://localhost:2008/api/images/dealer/image/${item._id}`);
-    
-    // Alternative 2: Try dealer API endpoint
-    alternatives.push(`https://essential-r440.onrender.com/api/dealers/${item._id}/image`);
-    alternatives.push(`http://localhost:2008/api/dealers/${item._id}/image`);
-    
-    // Alternative 3: If image has Buffer data, try to convert it
-    if (item.image && item.image.data) {
-      try {
-        // Check if data is already a base64 string
-        if (typeof item.image.data === 'string') {
-          const base64 = item.image.data;
-          const contentType = item.image.contentType || 'image/png';
-          const dataUrl = `data:${contentType};base64,${base64}`;
-          alternatives.push(dataUrl);
-          console.log(`🔄 Added base64 data URL as alternative`);
-        }
-      } catch (err) {
-        console.error("Failed to convert buffer:", err);
-      }
-    }
-    
-    let currentIndex = alternatives.indexOf(e.target.src);
-    let nextIndex = currentIndex + 1;
-    
-    if (nextIndex < alternatives.length) {
-      console.log(`🔄 Trying alternative dealer URL ${nextIndex + 1}/${alternatives.length}:`, alternatives[nextIndex]);
-      e.target.src = alternatives[nextIndex];
+  <img
+    src={getDealerImageUrl(item)}
+    alt="Dealer"
+    className="dealer-avatar"
+    onClick={() => openModal(getDealerImageUrl(item))}
+    onError={(e) => {
+      console.error(`❌ Image failed to load for dealer ${item._id}:`, {
+        src: e.target.src,
+        dealerId: item._id,
+        hasImage: !!item.image,
+        imageContentType: item.image?.contentType
+      });
       
-      // Set up another fallback for this new src
-      e.target.onerror = function() {
-        const nextNextIndex = nextIndex + 1;
-        if (nextNextIndex < alternatives.length) {
-          console.log(`🔄 Trying next alternative dealer URL ${nextNextIndex + 1}/${alternatives.length}:`, alternatives[nextNextIndex]);
-          this.src = alternatives[nextNextIndex];
-        } else {
-          console.log(`❌ All alternatives failed, using fallback`);
-          this.src = "/no-image.png";
-          this.onerror = null;
+      // Try multiple alternative approaches
+      
+      // 1. First check if we have buffer data
+      if (item.image && item.image.data) {
+        try {
+          console.log("🔄 Trying to convert buffer to data URL...");
+          
+          // Convert buffer to base64
+          let base64String;
+          
+          if (typeof item.image.data === 'string') {
+            base64String = item.image.data;
+          } else if (item.image.data.buffer) {
+            const uint8Array = new Uint8Array(item.image.data.buffer);
+            base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+          } else if (Array.isArray(item.image.data)) {
+            base64String = btoa(String.fromCharCode.apply(null, item.image.data));
+          }
+          
+          if (base64String) {
+            const dataUrl = `data:${item.image.contentType || 'image/png'};base64,${base64String}`;
+            console.log("✅ Converted buffer to data URL");
+            e.target.src = dataUrl;
+            return;
+          }
+        } catch (convertError) {
+          console.error("Buffer conversion failed:", convertError);
         }
-      };
-    } else {
-      console.log(`❌ No more alternatives, using fallback`);
-      e.target.src = "/no-image.png";
-      e.target.onerror = null;
-    }
-  }}
-  onLoad={(e) => {
-    console.log(`✅ Dealer image loaded successfully:`, {
-      dealerId: item._id,
-      dealerName: item.name,
-      src: e.target.src.substring(0, 100) + '...'
-    });
-  }}
-/>
+      }
+      
+      // 2. Try different API endpoints
+      const endpoints = [
+        `https://essential-r440.onrender.com/api/dealers/${item._id}/image`,
+        `https://essential-r440.onrender.com/api/images/dealer/image/${item._id}`,
+        `http://localhost:2008/api/dealers/${item._id}/image`
+      ];
+      
+      // Find which endpoint we already tried
+      const currentSrc = e.target.src;
+      let nextEndpointIndex = 0;
+      
+      for (let i = 0; i < endpoints.length; i++) {
+        if (currentSrc.includes(endpoints[i])) {
+          nextEndpointIndex = i + 1;
+          break;
+        }
+      }
+      
+      if (nextEndpointIndex < endpoints.length) {
+        console.log(`🔄 Trying alternative endpoint: ${endpoints[nextEndpointIndex]}`);
+        e.target.src = endpoints[nextEndpointIndex];
+      } else {
+        // Final fallback
+        console.log("❌ All endpoints failed, using fallback image");
+        e.target.src = "/no-image.png";
+        e.target.onerror = null;
+      }
+    }}
+    onLoad={(e) => {
+      console.log(`✅ Dealer image loaded successfully: ${item._id}, src: ${e.target.src}`);
+    }}
+  />
   <div>
     <h4>{item.name || "N/A"}</h4>
     <p>{item.contact || "N/A"}</p>
