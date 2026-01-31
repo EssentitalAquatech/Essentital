@@ -832,7 +832,7 @@ function Profile() {
           </div>
 
           {/* Close button inside sidebar for mobile */}
-          {isMobile && (
+          {/* {isMobile && (
             <button 
               className="sidebar-close-btn"
               onClick={closeSidebar}
@@ -840,7 +840,7 @@ function Profile() {
             >
               <X size={20} />
             </button>
-          )}
+          )} */}
         </div>
 
         <ul className="profile-menu">
