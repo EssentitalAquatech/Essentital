@@ -7,7 +7,11 @@
 
 
 
-// //buffer ke liye
+
+
+
+
+
 // // models/farmerModel.js
 // import mongoose from "mongoose";
 // import Counter from "./counterModel.js";
@@ -90,10 +94,32 @@
 //   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 
 //   name: { type: String, required: true },
-//   contact: { type: String, required: true },
+  
+//   contact: {
+//     type: String,
+//     required: true,
+//     validate: {
+//       validator: function (v) {
+//         return /^\d{10}$/.test(v); // exactly 10 digits
+//       },
+//       message: "Phone number must be exactly 10 digits and numeric only"
+//     }
+//   },
+  
 //   age: { type: String, required: true },
 //   gender: { type: String, required: true },
-//   adhar: { type: String, required: true },
+  
+//   adhar: {
+//     type: String,
+//     required: true,
+//     validate: {
+//       validator: function (v) {
+//         return /^\d{12}$/.test(v); // exactly 12 digits
+//       },
+//       message: "Aadhar number must be exactly 12 digits and numeric only"
+//     }
+//   },
+  
 //   familyMembers: { type: String, required: true },
 //   familyOccupation: { type: String, required: true },
 //   village: { type: String, required: true },
@@ -157,7 +183,6 @@
 
 
 
-// models/farmerModel.js
 import mongoose from "mongoose";
 import Counter from "./counterModel.js";
 
@@ -172,7 +197,21 @@ const PondSchema = new mongoose.Schema({
   pondAreaUnit: { type: String, default: "acre" },
   pondDepth: { type: String, required: true },
 
-  pondImage: { type: Buffer }, // ❌ removed required
+  pondImage: { type: Buffer },
+
+  // ✅ CORRECTED: Changed from String to Number with validation
+  latitude: { 
+    type: Number,
+    required: true,
+    min: -90,
+    max: 90
+  },
+  longitude: { 
+    type: Number,
+    required: true,
+    min: -180,
+    max: 180
+  },
 
   overflow: { type: String, default: "No" },
   receivesSunlight: { type: String, default: "Yes" },
@@ -227,72 +266,60 @@ const PondSchema = new mongoose.Schema({
 
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
-}, { _id: false });
+});
 
 /* ===============================
-   FARMER SCHEMA
+   FARMER SCHEMA (NO CHANGES NEEDED HERE)
 ================================ */
 const farmerSchema = new mongoose.Schema({
   farmerId: { type: String, unique: true, index: true },
-
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-
   name: { type: String, required: true },
-  
   contact: {
     type: String,
     required: true,
     validate: {
       validator: function (v) {
-        return /^\d{10}$/.test(v); // exactly 10 digits
+        return /^\d{10}$/.test(v);
       },
       message: "Phone number must be exactly 10 digits and numeric only"
     }
   },
-  
   age: { type: String, required: true },
   gender: { type: String, required: true },
-  
   adhar: {
     type: String,
     required: true,
     validate: {
       validator: function (v) {
-        return /^\d{12}$/.test(v); // exactly 12 digits
+        return /^\d{12}$/.test(v);
       },
       message: "Aadhar number must be exactly 12 digits and numeric only"
     }
   },
-  
   familyMembers: { type: String, required: true },
   familyOccupation: { type: String, required: true },
   village: { type: String, required: true },
-
   pondCount: { type: Number, default: 0 },
   photo: { type: Buffer, required: true },
-
   ponds: { type: [PondSchema], default: [] },
-
   pondFiles: { type: [Buffer], default: [] },
   fishFiles: { type: [Buffer], default: [] },
-
   updates: { type: Array, default: [] }
 }, { timestamps: true });
 
 /* ===============================
-   PRE SAVE – ID GENERATION (ONLY PLACE)
+   PRE SAVE – ID GENERATION
 ================================ */
 farmerSchema.pre("save", async function () {
   if (!this.farmerId) {
     const year = new Date().getFullYear();
-
     const counter = await Counter.findOneAndUpdate(
       { id: "farmer" },
       { $inc: { seq: 1 } },
       { new: true, upsert: true }
     );
-
     this.farmerId = `FAR-${year}-${String(counter.seq).padStart(5, "0")}`;
   }
 });
@@ -309,3 +336,7 @@ farmerSchema.statics.getFarmerByAnyId = async function (id) {
 };
 
 export default mongoose.model("Farmer", farmerSchema);
+
+
+
+
