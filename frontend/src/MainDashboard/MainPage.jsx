@@ -2254,7 +2254,7 @@ function MainPage() {
         setNewPond({ ...newPond, latitude: lat.toString(), longitude: lng.toString() });
         
         setIsGettingLocation(false);
-        alert("Location captured successfully!");
+        // alert("Location captured successfully!");
       },
       (error) => {
         setIsGettingLocation(false);
@@ -3451,19 +3451,19 @@ function MainPage() {
 
               {/* Location Section */}
               <div className="modal-section">
-                <h6>Location (Required - Click button to capture)</h6>
+                <h6>Location (Required)</h6>
                 <div className="row g-2">
                   <div className="col-md-12 mb-2">
-                    <button
+                    <button 
                       type="button"
-                      className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                      className="btn btn-primary w-45 d-flex align-items-center justify-content-center gap-2"
                       onClick={getLocation}
                       disabled={isGettingLocation || loading.addPond || loading.updatePond}
                     >
                       {isGettingLocation ? <ButtonLoader /> : <MapPin size={16} />}
                       {isGettingLocation ? "Getting Location..." : "📍 Open My Location"}
                     </button>
-                    <small className="text-muted">Click to capture your current GPS location</small>
+                    {/* <small className="text-muted">Click to capture your current GPS location</small> */}
                   </div>
 
                   <div className="col-md-6">
