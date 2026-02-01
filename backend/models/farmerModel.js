@@ -241,7 +241,7 @@ const farmerSchema = new mongoose.Schema({
   name: { type: String, required: true },
   
   contact: {
-    type: Number,
+    type: String,
     required: true,
     validate: {
       validator: function (v) {
@@ -255,7 +255,7 @@ const farmerSchema = new mongoose.Schema({
   gender: { type: String, required: true },
   
   adhar: {
-    type: Number,
+    type: String,
     required: true,
     validate: {
       validator: function (v) {
