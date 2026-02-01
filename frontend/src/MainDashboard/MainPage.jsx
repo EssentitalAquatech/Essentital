@@ -7108,7 +7108,7 @@ function MainPage() {
       setFarmers([...farmers, farmerWithPhoto]);
       setShowForm(false);
       setNewFarmer(emptyFarmer);
-      alert("Farmer added successfully!");
+      // alert("Farmer added successfully!");
     } catch (err) {
       console.error("Add Farmer Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
@@ -7161,7 +7161,7 @@ function MainPage() {
       setEditingFarmerId(null);
       setNewFarmer(emptyFarmer);
       setIsUpdateMode(false);
-      alert("Farmer updated successfully!");
+      // alert("Farmer updated successfully!");
     } catch (err) {
       console.error("Update Farmer Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
@@ -7268,7 +7268,7 @@ function MainPage() {
       setShowPondForm(false);
       setNewPond(emptyPond);
       setCurrentFarmerId(null);
-      alert("Pond added successfully!");
+      // alert("Pond added successfully!");
     } catch (err) {
       console.error("Add Pond Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
@@ -7352,7 +7352,7 @@ function MainPage() {
       setNewPond(emptyPond);
       setCurrentFarmerId(null);
       setEditingPondId(null);
-      alert("Pond updated successfully!");
+      // alert("Pond updated successfully!");
     } catch (err) {
       console.error("Update Pond Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
