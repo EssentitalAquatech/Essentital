@@ -61,7 +61,8 @@ function WeatherDashboard() {
     <div style={{ width: "100%", height: "100vh" }}>
       <iframe
         title="Admin Weather Dashboard"
-        src="https://d2o70d6w5dqxje.cloudfront.net/"
+        // src="https://d2o70d6w5dqxje.cloudfront.net/"
+        src="https://essentialaquatechweatherdashboard.netlify.app/"
         width="100%"
         height="100%"
         style={{ border: "none" }}
