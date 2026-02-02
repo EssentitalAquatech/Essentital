@@ -3146,7 +3146,7 @@ function MainPage() {
                   />
                 </div>
 
-                <div className="col-md-3">
+                {/* <div className="col-md-3">
                   <input 
                     className="form-control" 
                     placeholder="Gender *" 
@@ -3155,7 +3155,23 @@ function MainPage() {
                     disabled={loading.addFarmer || loading.updateFarmer}
                     required
                   />
-                </div>
+                </div> */}
+
+                  <div className="col-md-3">
+  <select 
+    className="form-control" 
+    value={newFarmer.gender} 
+    onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
+    disabled={loading.addFarmer || loading.updateFarmer}
+    required
+  >
+    <option value="">Select Gender *</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
 
                 <div className="col-md-3">
                   <input 
@@ -3193,7 +3209,7 @@ function MainPage() {
                 <div className="col-md-6">
                   <input 
                     className="form-control" 
-                    placeholder="Village *" 
+                    placeholder="Address *" 
                     value={newFarmer.village} 
                     onChange={e => setNewFarmer({ ...newFarmer, village: e.target.value })}
                     disabled={loading.addFarmer || loading.updateFarmer}
