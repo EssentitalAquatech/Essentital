@@ -5523,7 +5523,27 @@ const getFishFilesUrls = (fishFiles, pondId, pond = null) => {
 
   return (
     <div className="admin-dashboard">
-      <h2>All Agents</h2>
+      {/* <h2>All Agents</h2> */}
+      <div className="essential-aquatech-header">
+  <div className="company-logo-container">
+    <img 
+      src="/CompanyLogo.png" 
+      alt="Essential Aquatech Logo" 
+      className="company-logo"
+      onError={(e) => {
+        console.error("Logo failed to load, using fallback");
+        e.target.src = "/logo.png"; // Fallback if logo doesn't exist
+        e.target.onerror = null;
+      }}
+    />
+  </div>
+  <div className="company-title-container">
+    <h2 className="company-title">
+      Essential Aquatech
+      <span className="trademark-symbol">™</span>
+    </h2>
+  </div>
+</div>
 
       <button
         onClick={() => navigate("/weather-dashboard")}
