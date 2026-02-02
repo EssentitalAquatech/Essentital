@@ -5545,12 +5545,12 @@ const getFishFilesUrls = (fishFiles, pondId, pond = null) => {
   </div>
 </div>
 
-      <button
+      {/* <button
         onClick={() => navigate("/weather-dashboard")}
         className="weather-dashboard-btn"
       >
-        🌦️ Go to Weather Dashboard
-      </button>
+        🌦️ Weather Dashboard
+      </button> */}
 
       <button 
         onClick={() => navigate("/orders-dashboard")}
@@ -5590,16 +5590,17 @@ const getFishFilesUrls = (fishFiles, pondId, pond = null) => {
           e.target.style.transform = 'translateY(-3px)';
         }}
       >
-        📦 Go to Orders Dashboard
+        📦  Orders Dashboard
       </button>
 
-      <button
+      {/* <button
         onClick={() => navigate("/astronomical-dashboard")}
         style={{
           marginLeft: "15px",
           marginBottom: '25px',
           padding: '14px 28px',
-          background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+        
+          background: 'linear-gradient(135deg, #1E90FF 0%, #0066CC 100%)',
           color: 'white',
           border: 'none',
           borderRadius: '12px',
@@ -5613,7 +5614,152 @@ const getFishFilesUrls = (fishFiles, pondId, pond = null) => {
         }}
       >
         🌌 Astronomical Dashboard
+      </button> */}
+
+      <button
+  onClick={() => navigate("/astronomical-dashboard")}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "translateY(-2px)";
+    e.currentTarget.style.boxShadow =
+      "0 6px 20px rgba(30, 144, 255, 0.4)";
+    e.currentTarget.style.background =
+      "linear-gradient(135deg, #0066CC 0%, #004C99 100%)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "translateY(0)";
+    e.currentTarget.style.boxShadow =
+      "0 4px 15px rgba(99, 102, 241, 0.35)";
+    e.currentTarget.style.background =
+      "linear-gradient(135deg, #1E90FF 0%, #0066CC 100%)";
+  }}
+  style={{
+    marginLeft: "15px",
+    marginBottom: "25px",
+    padding: "14px 10px",
+    background: "linear-gradient(135deg, #1E90FF 0%, #0066CC 100%)",
+    color: "white",
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "600",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "10px",
+    boxShadow: "0 4px 15px rgba(99, 102, 241, 0.35)",
+    transition: "all 0.3s ease" // 🔥 smooth hover
+  }}
+>
+  🌌 Astronomical Dashboard
+</button>
+
+
+
+ <button
+        onClick={() => navigate("/satellite-dashboard")}
+        // style={{
+        //   marginLeft: "15px",
+        //   marginBottom: '25px',
+        //   padding: '14px 28px',
+        //   background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+        //   color: 'white',
+        //   border: 'none',
+        //   borderRadius: '12px',
+        //   cursor: 'pointer',
+        //   fontSize: '16px',
+        //   fontWeight: '600',
+        //   display: 'inline-flex',
+        //   alignItems: 'center',
+        //   gap: '10px',
+        //   boxShadow: '0 4px 15px rgba(99, 102, 241, 0.35)'
+        // }}
+        style={{
+          marginBottom: '25px',
+          marginLeft: "15px",
+          padding: '14px 24px',
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '12px',
+          cursor: 'pointer',
+          fontSize: '16px',
+          fontWeight: '600',
+          transition: 'all 0.3s ease',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '10px',
+          boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)',
+          position: 'relative',
+          overflow: 'hidden',
+          outline: 'none',
+          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif"
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.transform = 'translateY(-3px)';
+          e.target.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.35)';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'translateY(0)';
+          e.target.style.boxShadow = '0 4px 15px rgba(16, 185, 129, 0.25)';
+        }}
+        onMouseDown={(e) => {
+          e.target.style.transform = 'translateY(1px)';
+        }}
+        onMouseUp={(e) => {
+          e.target.style.transform = 'translateY(-3px)';
+        }}
+      >
+        🛰️ Satellite Dashboard
       </button>
+
+ {/* <button
+        onClick={() => navigate("/weather-dashboard")}
+        className="weather-dashboard-btn"
+      >
+        🌦️ Weather Dashboard
+      </button> */}
+
+
+
+
+         <button
+  onClick={() => navigate("/weather-dashboard")}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "translateY(-2px)";
+    e.currentTarget.style.boxShadow =
+      "0 6px 20px rgba(30, 144, 255, 0.4)";
+    e.currentTarget.style.background =
+      "linear-gradient(135deg, #0066CC 0%, #004C99 100%)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "translateY(0)";
+    e.currentTarget.style.boxShadow =
+      "0 4px 15px rgba(99, 102, 241, 0.35)";
+    e.currentTarget.style.background =
+      "linear-gradient(135deg, #1E90FF 0%, #0066CC 100%)";
+  }}
+  style={{
+    marginLeft: "15px",
+    marginBottom: "25px",
+    padding: "14px 28px",
+    background: "linear-gradient(135deg, #1E90FF 0%, #0066CC 100%)",
+    color: "white",
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "600",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "10px",
+    boxShadow: "0 4px 15px rgba(99, 102, 241, 0.35)",
+    transition: "all 0.3s ease" // 🔥 smooth hover
+  }}
+>
+  🌦️ Weather Dashboard
+</button>
+
+
 
       {/* Access Requests */}
       <div className="notification-box">

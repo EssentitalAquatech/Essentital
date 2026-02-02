@@ -132,6 +132,7 @@ import AdminLogin from "./start/AdminLogin";
 import Astronomical from "./admin/Astronomical_Dashboard";
 
 import History from './pages/History';
+import SatelliteDashboard from "./admin/SatelliteDashboard";
 
 function App() {
   return (
@@ -281,6 +282,7 @@ function App() {
 
         <Route path="/admin/adminDashboard" element={<AdminDashboard />} />
         <Route path="/astronomical-dashboard" element={<Astronomical />} />
+        <Route path ="/satellite-dashboard"  element={<SatelliteDashboard/>}/>
 
       </Routes>
     </BrowserRouter>
