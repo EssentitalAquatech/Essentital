@@ -4480,26 +4480,26 @@ const getPondImageUrl = (pond, pondId) => {
 // };
 
 // ✅ SIMPLE & CORRECT: Get dealer image URL
+
+// ✅ UPDATED: Correct dealer image URL
 const getDealerImageUrl = (dealer) => {
-  if (!dealer || !dealer._id) {
-    console.log("❌ No dealer object or ID provided");
-    return "/no-image.png";
-  }
+  if (!dealer || !dealer._id) return "/no-image.png";
   
   const API_URL = import.meta.env.VITE_API_URL || "https://essential-r440.onrender.com";
   
-  console.log(`🔍 Building image URL for dealer:`, {
-    _id: dealer._id,
-    name: dealer.name,
-    hasImageData: dealer.image?.data ? true : false
-  });
-  
-  // Strategy 1: Try API endpoint (THIS IS THE MAIN FIX)
-  const imageUrl = `${API_URL}/api/images/dealer/image/${dealer._id}`;
-  console.log(`✅ Using API URL:`, imageUrl);
-  
-  return imageUrl;
+  // CORRECT ROUTE: Use the images route, not dealers route
+  return `${API_URL}/api/images/dealer/image/${dealer._id}`;
 };
+
+
+
+
+
+
+
+
+
+
 
 
 // ✅ FIXED: Get pond files URLs
@@ -5424,68 +5424,51 @@ const getFishFilesUrls = (fishFiles, pondId, pond = null) => {
           <div className="dealer-card-header">
             <div className="dealer-profile">
        
+{/* // ✅ WORKING: Direct buffer conversion in img tag */}
 <img
-  src={getDealerImageUrl(item)}
+  src={`https://essential-r440.onrender.com/api/images/dealer/image/${item._id}`}
   alt={`Dealer ${item.name}`}
   className="dealer-avatar"
-  onClick={() => {
-    const imageUrl = getDealerImageUrl(item);
-    console.log(`📸 Opening dealer image modal:`, imageUrl);
-    openModal(imageUrl);
-  }}
   onError={(e) => {
-    console.warn(`⚠️ Dealer image failed to load: ${e.target.src}`, {
-      dealerId: item._id,
-      dealerName: item.name
-    });
+    console.error(`❌ API image failed for ${item.name}`);
     
-    // Strategy 2: Try direct data URL conversion if buffer exists
-    if (item.image && item.image.data) {
+    // Try buffer conversion
+    if (item.image?.data) {
       try {
-        console.log("🔄 Trying to convert Binary data to data URL...");
+        const buffer = item.image.data;
         
-        let base64String;
-        const bufferData = item.image.data;
-        
-        // Handle different buffer formats
-        if (typeof bufferData === 'string') {
-          // Already base64 string
-          base64String = bufferData;
-        } else if (bufferData.buffer) {
-          // Buffer object
-          const uint8Array = new Uint8Array(bufferData.buffer);
-          base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-        } else if (Array.isArray(bufferData)) {
-          // Array
-          base64String = btoa(String.fromCharCode.apply(null, bufferData));
-        } else if (bufferData instanceof ArrayBuffer) {
-          // ArrayBuffer
-          const uint8Array = new Uint8Array(bufferData);
-          base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-        }
-        
-        if (base64String) {
-          const contentType = item.image.contentType || 'image/png';
-          const dataUrl = `data:${contentType};base64,${base64String}`;
-          console.log(`✅ Converted Binary to data URL successfully`);
-          e.target.src = dataUrl;
+        // SIMPLE CONVERSION - Try all methods
+        if (buffer.buffer instanceof ArrayBuffer) {
+          const uint8Array = new Uint8Array(buffer.buffer);
+          let binary = '';
+          for (let i = 0; i < uint8Array.length; i++) {
+            binary += String.fromCharCode(uint8Array[i]);
+          }
+          const base64 = btoa(binary);
+          e.target.src = `data:${item.image.contentType || 'image/png'};base64,${base64}`;
           return;
         }
-      } catch (convertError) {
-        console.error("❌ Error converting Binary data:", convertError);
+        
+        // If buffer is already an array
+        if (Array.isArray(buffer)) {
+          let binary = '';
+          for (let i = 0; i < buffer.length; i++) {
+            binary += String.fromCharCode(buffer[i]);
+          }
+          const base64 = btoa(binary);
+          e.target.src = `data:${item.image.contentType || 'image/png'};base64,${base64}`;
+          return;
+        }
+      } catch (err) {
+        console.error("Buffer conversion failed:", err);
       }
     }
     
     // Final fallback
-    console.log(`❌ Using fallback image`);
     e.target.src = "/no-image.png";
-    e.target.onerror = null; // Prevent infinite loop
   }}
   onLoad={(e) => {
-    console.log(`✅ Dealer image loaded successfully: ${item._id}`, {
-      src: e.target.src,
-      name: item.name
-    });
+    console.log(`✅ Image loaded successfully for ${item.name}`);
   }}
 />
               <div>
