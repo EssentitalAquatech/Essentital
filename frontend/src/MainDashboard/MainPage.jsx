@@ -3851,7 +3851,7 @@ function MainPage() {
                     <input 
                       type="number" 
                       className="form-control" 
-                      placeholder="How many fish have died (cumulative)? *" 
+                      placeholder="How many fish have died last 15 days(cumulative)? *" 
                       value={newPond.fishDeaths} 
                       onChange={e => setNewPond({ ...newPond, fishDeaths: e.target.value })}
                       disabled={loading.addPond || loading.updatePond}
