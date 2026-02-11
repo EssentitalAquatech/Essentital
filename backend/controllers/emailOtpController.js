@@ -118,15 +118,11 @@
 //   }
 // };
 
-
-
-
-
-
 import axios from "axios";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
+// 🔐 Generate JWT Token
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, role: user.role },
@@ -153,41 +149,43 @@ export const sendEmailOtp = async (req, res) => {
     }
 
     user.emailOtp = otp;
-    user.emailOtpExpiry = Date.now() + 5 * 60 * 1000; // 5 min
+    user.emailOtpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
     await user.save();
 
-    // 🔥 SEND EMAIL USING MSG91
-  // 🔥 SEND EMAIL USING MSG91 TEMPLATE
-
-  const response = await axios.post(
-  "https://control.msg91.com/api/v5/email/send",
-  {
-    to: [{ email: user.email }],
-    from: {
-      email: "no-reply@ea-vle.in",
-      name: "EA VLE"
-    },
-    subject: "Your OTP Code",
-    html: `<h2>Your OTP is ${otp}</h2>`
-  },
-  {
-    headers: {
-      "Content-Type": "application/json",
-      authkey: process.env.MSG91_AUTH_KEY
-    }
-  }
-);
-
-
+    // 🔥 SEND EMAIL USING MSG91 TEMPLATE
+    await axios.post(
+      "https://control.msg91.com/api/v5/email/send",
+      {
+        recipients: [
+          {
+            to: [{ email: user.email }],
+            variables: {
+              company_name: "EA VLE",
+              otp: otp
+            }
+          }
+        ],
+        from: {
+          email: "support24x7@ea-vle.in"
+        },
+        template_id: "email_login_otp_2" // 👈 Your Template ID
+      },
+      {
+        headers: {
+          authkey: process.env.MSG91_AUTH_KEY,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }
+      }
+    );
 
     res.json({ success: true, message: "OTP sent successfully" });
 
   } catch (error) {
-    console.log(error.response?.data || error.message);
+    console.log("MSG91 ERROR:", error.response?.data || error.message);
     res.status(500).json({ message: "Failed to send OTP" });
   }
 };
-
 
 // ================= VERIFY OTP =================
 export const verifyEmailOtp = async (req, res) => {
@@ -208,7 +206,7 @@ export const verifyEmailOtp = async (req, res) => {
       return res.status(400).json({ message: "OTP expired" });
     }
 
-    // ✅ Clear OTP
+    // Clear OTP
     user.emailOtp = undefined;
     user.emailOtpExpiry = undefined;
     await user.save();
@@ -223,6 +221,7 @@ export const verifyEmailOtp = async (req, res) => {
     });
 
   } catch (error) {
+    console.log("VERIFY OTP ERROR:", error.message);
     res.status(500).json({ message: "OTP verification failed" });
   }
 };
