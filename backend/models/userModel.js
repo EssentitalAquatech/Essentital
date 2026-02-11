@@ -37,23 +37,31 @@
 
 import mongoose from "mongoose";
 
+const userSchema = new mongoose.Schema(
+  {
+    name: String,
+    mobile: String,
+    email: { type: String, unique: true },
+    age: Number,
+    address: String,
+    role: { type: String, default: "agent" },
 
-const userSchema = new mongoose.Schema({
-  name: String,
-  mobile: String,
- email: { type: String, unique: true },
-  age: Number,
-  address: String,
-  role: { type: String, default: "agent" },
-  profilePic: { data: Buffer, contentType: String },
-  aadharFront: { data: Buffer, contentType: String },
-  aadharBack: { data: Buffer, contentType: String },
-  panCard: { data: Buffer, contentType: String },
-  savingAccountImage: { data: Buffer, contentType: String },
-  accountNumber: String,
-  ifsc: String,
-  password: String,
-}, { timestamps: true });
+    profilePic: { data: Buffer, contentType: String },
+    aadharFront: { data: Buffer, contentType: String },
+    aadharBack: { data: Buffer, contentType: String },
+    panCard: { data: Buffer, contentType: String },
+    savingAccountImage: { data: Buffer, contentType: String },
+
+    accountNumber: String,
+    ifsc: String,
+    password: String,
+
+    // ✅ ADD THESE
+    emailOtp: String,
+    emailOtpExpiry: Date,
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model("User", userSchema);
 
