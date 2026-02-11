@@ -1,185 +1,4 @@
 
-
-
-// import React, { useState } from "react";
-// import { useNavigate, Link } from "react-router-dom";
-// import api from "../utils/api";
-// // import { googleLogin } from "../firebase";
-
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import "./Login.css";
-
-// function Login() {
-//   const navigate = useNavigate();
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [loading, setLoading] = useState(false);
-//   const [showPassword, setShowPassword] = useState(false);
-
- 
-
-
-
-// const handleLogin = async (e) => {
-//   e.preventDefault();
-//   setLoading(true);
-
-//   try {
-//     const res = await api.post("/api/user/login", {
-//       email,
-//       password,
-//     });
-
-//     localStorage.setItem("userId", res.data.user._id);
-//     localStorage.setItem("username", res.data.user.name);
-//     localStorage.setItem("photo", res.data.user.photo || "/profile.png");
-//     localStorage.setItem("isFirstLogin", String(res.data.isFirstLogin));
-
-//     navigate("/maindashboard"); // 🚀 direct redirect
-//   } catch (error) {
-//     alert(error.response?.data?.message || "Login failed");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-
-
-
-//   // const handleGoogleLogin = async () => {
-//   //   try {
-//   //     const token = await googleLogin();
-//   //     const res = await api.post("/api/user/google-login", {
-//   //       token: token,
-//   //     });
-
-//   //     const user = res.data.user;
-//   //     localStorage.setItem("userId", user._id);
-//   //     localStorage.setItem("username", user.name);
-//   //     localStorage.setItem("email", user.email);
-//   //     localStorage.setItem("photo", user.photo || "/profile.png");
-
-//   //     console.log("Google Login Success:", user);
-//   //     navigate("/maindashboard");
-
-//   //   } catch (err) {
-//   //     console.error("Google Login Error:", err);
-//   //     alert("Google login failed");
-//   //   }
-//   // };
-
-//   return (
-//     <div className="login-page-body">
-//       <div className="login-container-wrapper">
-//         <div className="login-logo-container">
-//           <img src="/CompanyLogo.png" alt="logo" />
-//         </div>
-
-//         <h2 className="login-company-name">
-//           Essential Aquatech <span className="login-tm-symbol">™</span>
-//         </h2>
-
-//         <div className="login-tabs-container">
-//           <button className="login-tab-button login-tab-active">Login</button>
-//           <Link to="/signup">
-//             <button className="login-tab-button">Sign Up</button>
-//           </Link>
-//         </div>
-
-//         <form onSubmit={handleLogin} className="login-form-container">
-//           <label className="login-form-label">Email Address</label>
-//           <div className="login-input-wrapper">
-//             <i className="bi bi-envelope-fill login-input-icon-left"></i>
-//             <input
-//               type="email"
-//               className="login-form-control"
-//               placeholder="Enter your email"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//               required
-//             />
-//           </div>
-
-//           <div className="login-label-row">
-//             <label className="login-form-label">Password</label>
-//             {/* <Link to="/reset" className="login-forgot-link">Forgot password?</Link> */}
-//           </div>
-
-//           <div className="login-input-wrapper">
-//             <i className="bi bi-lock-fill login-input-icon-left"></i>
-//             <input
-//               type={showPassword ? "text" : "password"}
-//               className="login-form-control"
-//               placeholder="Enter your password"
-//               value={password}
-//               onChange={(e) => setPassword(e.target.value)}
-//               required
-//             />
-//             <button 
-//               type="button"
-//               className="login-eye-toggle"
-//               onClick={() => setShowPassword(!showPassword)}
-//               aria-label={showPassword ? "Hide password" : "Show password"}
-//             >
-//               {showPassword ? <i className="bi bi-eye-fill"></i> : <i className="bi bi-eye-slash-fill"></i>}
-//             </button>
-//           </div>
-
-//           <button
-//   type="submit"
-//   className="login-submit-btn"
-//   disabled={loading}
-// >
-//   {loading ? (
-//     <>
-//       <span
-//         className="spinner-border spinner-border-sm me-2"
-//         role="status"
-//         aria-hidden="true"
-//       ></span>
-//       Login In...
-//     </>
-//   ) : (
-//     "Log In"
-//   )}
-// </button>
-
-//         </form>
-
-//         <div className="login-or-divider">
-//           <span>OR</span>
-//         </div>
-
-//         <button
-//           className="login-admin-btn"
-//           onClick={() => navigate("/admin/login")}
-//         >
-//           Login as Admin
-//         </button>
-
-        
-
-//         <p className="login-bottom-text">
-//           Don't have an account yet? <Link to="/signup" className="login-bottom-link">Sign up</Link>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Login;
-
-
-
-
-
-
-
-
-
-
-//login na karne pade 
-
 // import React, { useState, useEffect } from "react";
 // import { useNavigate, Link } from "react-router-dom";
 // import api from "../utils/api";
@@ -207,12 +26,9 @@
 //     setLoading(true);
 
 //     try {
-//       const res = await api.post("/api/user/login", {
-//         email,
-//         password,
-//       });
+//       const res = await api.post("/api/user/login", { email, password });
 
-//       // ⭐ SAVE TOKEN (MOST IMPORTANT)
+//       // ⭐ SAVE TOKEN
 //       localStorage.setItem("token", res.data.token);
 
 //       // ⭐ SAVE USER INFO
@@ -283,6 +99,16 @@
 
 //         </form>
 
+//         {/* ================= ADMIN LOGIN BUTTON ================= */}
+//         <div style={{ textAlign: "center", marginTop: "20px" }}>
+//           <button
+//             className="login-admin-btn"
+//             onClick={() => navigate("/admin/login")}
+//           >
+//             Login as Admin
+//           </button>
+//         </div>
+
 //       </div>
 //     </div>
 //   );
@@ -293,46 +119,200 @@
 
 
 
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import api from "../utils/api";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "./Login.css";
+
+// function Login() {
+//   const navigate = useNavigate();
+
+//   const [email, setEmail] = useState("");
+//   const [otp, setOtp] = useState("");
+//   const [step, setStep] = useState(1); // 1 = email, 2 = otp
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     if (token) navigate("/maindashboard");
+//   }, [navigate]);
+
+//   // ✅ SEND OTP
+//   const handleSendOtp = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+
+//     try {
+//       await api.post("/api/user/send-otp", { email });
+//       alert("OTP sent to your email");
+//       setStep(2);
+//     } catch (error) {
+//       alert(error.response?.data?.message || "Failed to send OTP");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ✅ VERIFY OTP
+//   const handleVerifyOtp = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+
+//     try {
+//       const res = await api.post("/api/user/verify-otp", {
+//         email,
+//         otp,
+//       });
+
+//       localStorage.setItem("token", res.data.token);
+//       localStorage.setItem("userId", res.data.user._id);
+
+//       navigate("/maindashboard");
+
+//     } catch (error) {
+//       alert(error.response?.data?.message || "Invalid OTP");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="login-page-body">
+//       <div className="login-container-wrapper">
+
+//         <h2>Email OTP Login</h2>
+
+//         {step === 1 && (
+//           <form onSubmit={handleSendOtp}>
+//             <label>Email Address</label>
+//             <input
+//               type="email"
+//               className="login-form-control"
+//               value={email}
+//               onChange={(e) => setEmail(e.target.value)}
+//               required
+//             />
+
+//             <button type="submit" disabled={loading}>
+//               {loading ? "Sending..." : "Send OTP"}
+//             </button>
+//           </form>
+//         )}
+
+//         {step === 2 && (
+//           <form onSubmit={handleVerifyOtp}>
+//             <label>Enter OTP</label>
+//             <input
+//               type="text"
+//               className="login-form-control"
+//               value={otp}
+//               onChange={(e) => setOtp(e.target.value)}
+//               required
+//             />
+
+//             <button type="submit" disabled={loading}>
+//               {loading ? "Verifying..." : "Verify OTP"}
+//             </button>
+//           </form>
+//         )}
+
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Login;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../utils/api";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
-  // ⭐ AUTO LOGIN CHECK
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState(1); // 1 = email, 2 = otp
+  const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(0);
+
+  // ✅ Auto Login Check
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/maindashboard");
-    }
+    if (token) navigate("/maindashboard");
   }, [navigate]);
 
-  const handleLogin = async (e) => {
+  // ✅ OTP Timer
+  useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  // ✅ Send OTP
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await api.post("/api/user/login", { email, password });
+      await api.post("/api/user/send-otp", { email });
+      setStep(2);
+      setTimer(60);
+      alert("OTP sent successfully to your email");
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to send OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      // ⭐ SAVE TOKEN
+  // ✅ Verify OTP
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await api.post("/api/user/verify-otp", { email, otp });
+
       localStorage.setItem("token", res.data.token);
-
-      // ⭐ SAVE USER INFO
       localStorage.setItem("userId", res.data.user._id);
-      localStorage.setItem("username", res.data.user.name);
+      localStorage.setItem("username", res.data.user.name || "");
 
       navigate("/maindashboard");
-
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
+      alert(error.response?.data?.message || "Invalid OTP");
     } finally {
       setLoading(false);
     }
@@ -351,49 +331,96 @@ function Login() {
         </h2>
 
         <div className="login-tabs-container">
-          <button className="login-tab-button login-tab-active">Login</button>
+          <button className="login-tab-button login-tab-active">
+            OTP Login
+          </button>
           <Link to="/signup">
             <button className="login-tab-button">Sign Up</button>
           </Link>
         </div>
 
-        <form onSubmit={handleLogin} className="login-form-container">
+        {/* STEP INDICATOR */}
+        <p style={{ marginBottom: "20px", fontWeight: "600" }}>
+          {step === 1 ? "Step 1: Enter Email" : "Step 2: Verify OTP"}
+        </p>
 
-          <label className="login-form-label">Email Address</label>
-          <div className="login-input-wrapper">
-            <input
-              type="email"
-              className="login-form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+        {/* ================= EMAIL STEP ================= */}
+        {step === 1 && (
+          <form onSubmit={handleSendOtp} className="login-form-container">
 
-          <label className="login-form-label">Password</label>
-          <div className="login-input-wrapper">
-            <input
-              type={showPassword ? "text" : "password"}
-              className="login-form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              👁
+            <label className="login-form-label">Email Address</label>
+            <div className="login-input-wrapper">
+              <input
+                type="email"
+                className="login-form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" disabled={loading}>
+              {loading ? "Sending..." : "Send OTP"}
             </button>
-          </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Log In"}
-          </button>
+          </form>
+        )}
 
-        </form>
+        {/* ================= OTP STEP ================= */}
+        {step === 2 && (
+          <form onSubmit={handleVerifyOtp} className="login-form-container">
 
-        {/* ================= ADMIN LOGIN BUTTON ================= */}
+            <label className="login-form-label">Enter OTP</label>
+            <div className="login-input-wrapper">
+              <input
+                type="text"
+                className="login-form-control"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" disabled={loading}>
+              {loading ? "Verifying..." : "Verify & Login"}
+            </button>
+
+            {/* RESEND + CHANGE EMAIL */}
+            <div style={{ marginTop: "15px", textAlign: "center" }}>
+              {timer > 0 ? (
+                <p style={{ fontSize: "14px", color: "#718096" }}>
+                  Resend OTP in {timer}s
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  className="login-bottom-link"
+                  style={{ background: "none", border: "none" }}
+                  onClick={handleSendOtp}
+                >
+                  Resend OTP
+                </button>
+              )}
+
+              <br />
+
+              <button
+                type="button"
+                className="login-bottom-link"
+                style={{ background: "none", border: "none", marginTop: "8px" }}
+                onClick={() => {
+                  setStep(1);
+                  setOtp("");
+                }}
+              >
+                Change Email
+              </button>
+            </div>
+
+          </form>
+        )}
+
+        {/* ================= ADMIN LOGIN ================= */}
         <div style={{ textAlign: "center", marginTop: "20px" }}>
           <button
             className="login-admin-btn"
