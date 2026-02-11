@@ -42,7 +42,7 @@ export const sendEmailOtp = async (req, res) => {
           {
             to: [{ email: user.email }],
             variables: {
-              company_name: "Essentital Aquatech",
+              company_name: "Essential Aquatech",
               otp: otp
             }
           }
