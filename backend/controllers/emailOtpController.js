@@ -157,30 +157,36 @@ export const sendEmailOtp = async (req, res) => {
     await user.save();
 
     // 🔥 SEND EMAIL USING MSG91
-    await axios.post(
-      "https://control.msg91.com/api/v5/email/send",
+  // 🔥 SEND EMAIL USING MSG91 TEMPLATE
+await axios.post(
+  "https://control.msg91.com/api/v5/email/send",
+  {
+    template_id: process.env.MSG91_EMAIL_TEMPLATE_ID, // ✅ add this
+
+    recipients: [
       {
-        recipients: [
-          {
-            to: [{ email }],
-            variables: {
-              company_name: "Essential Aquatech",
-              otp: otp,
-            },
-          },
-        ],
-        from: {
-          email: "YOUR_VERIFIED_EMAIL@yourdomain.com",
+        to: [{ email }],
+        variables: {
+          company_name: "Essential Aquatech",
+          otp: otp,
         },
-        domain: "YOUR_VERIFIED_DOMAIN"
       },
-      {
-        headers: {
-          authkey: process.env.MSG91_AUTH_KEY,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    ],
+
+    from: {
+      email: "noreply@mg.essentital.com",  // 👈 PUT YOUR VERIFIED EMAIL
+    },
+
+    domain: "mg.essentital.com", // 👈 PUT YOUR VERIFIED DOMAIN
+  },
+  {
+    headers: {
+      authkey: process.env.MSG91_AUTH_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
+
 
     res.json({ success: true, message: "OTP sent successfully" });
 
