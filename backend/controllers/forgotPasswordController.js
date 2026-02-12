@@ -25,10 +25,16 @@ export const sendForgotPasswordOtp = async (req, res) => {
     user.forgotPasswordOtpExpiry = expiry;
     await user.save();
 
-    // Send OTP via MSG91 using Forgot Password env variables
+    // ✅ Send OTP via MSG91 using POST body
     const msgResponse = await axios.post(
-      `https://api.msg91.com/api/v5/email/send?template_id=${process.env.MSG91_FORGOT_TEMPLATE_ID}&mobile=&email=${email}&otp=${otp}`,
-      {},
+      "https://api.msg91.com/api/v5/email/send",
+      {
+        template_id: process.env.MSG91_FORGOT_TEMPLATE_ID,
+        to: [email], // email array
+        variables_values: {
+          otp: otp, // template variable
+        },
+      },
       {
         headers: {
           "authkey": process.env.MSG91_FORGOT_AUTH_KEY,
@@ -37,10 +43,10 @@ export const sendForgotPasswordOtp = async (req, res) => {
       }
     );
 
-    res.status(200).json({ message: "OTP sent to email", otp }); // otp in response only for dev
+    res.status(200).json({ message: "OTP sent to email" }); // otp hidden for production
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error sending OTP", error: error.message });
+    console.error("MSG91 Error:", error.response?.data || error.message);
+    res.status(500).json({ message: "Error sending OTP", error: error.response?.data || error.message });
   }
 };
 
@@ -66,14 +72,11 @@ export const verifyForgotPasswordOtp = async (req, res) => {
     }
 
     // ✅ OTP verified
-    // Clear OTP fields
     user.forgotPasswordOtp = null;
     user.forgotPasswordOtpExpiry = null;
     await user.save();
 
-    // Optional: Auto-login by sending token or just send success
     res.status(200).json({ message: "OTP verified. You can now login." });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error verifying OTP", error: error.message });
