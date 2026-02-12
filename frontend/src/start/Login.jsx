@@ -146,9 +146,6 @@
 
 
 
-
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../utils/api";
@@ -201,10 +198,10 @@ function Login() {
   };
 
   // ✅ STEP 2 — API Functions Add Karo
-  // Send OTP
+  // Send OTP - 🔁 UPDATED ENDPOINT
   const handleSendOtp = async () => {
     try {
-      await api.post("/api/user/send-forgot-password-otp", { email });
+      await api.post("/api/user/forgot-password", { email });
       alert("OTP sent to your email");
       setStep(2);
     } catch (error) {
