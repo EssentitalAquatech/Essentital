@@ -106,6 +106,75 @@
 
 
 
+// import User from "../models/userModel.js";
+// import bcrypt from "bcryptjs";
+
+// export const signup = async (req, res) => {
+//   try {
+//     console.log("📨 SIGNUP REQUEST STARTED");
+//     console.log("Files received:", req.files ? Object.keys(req.files) : "No files");
+
+//     const { name, email, password, mobile, age, address, accountNumber, ifsc } = req.body;
+
+//     if (!name || !email || !password || !mobile) {
+//       return res.status(400).json({ message: "All required fields missing" });
+//     }
+
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     // Helper to get buffer object
+//     const getFileObject = (fileArray) => {
+//       if (!fileArray || !fileArray[0]) return null;
+//       const file = fileArray[0];
+//       return {
+//         data: file.buffer,
+//         contentType: file.mimetype,
+//         filename: file.originalname
+//       };
+//     };
+
+//     const user = new User({
+//       name,
+//       email,
+//       mobile,
+//       age: age ? parseInt(age) : null,
+//       address,
+//       accountNumber,
+//       ifsc,
+//       password: hashedPassword,
+//       profilePic: getFileObject(req.files?.profile),
+//       aadharFront: getFileObject(req.files?.aadharFront),
+//       aadharBack: getFileObject(req.files?.aadharBack),
+//       panCard: getFileObject(req.files?.pan),
+//       savingAccountImage: getFileObject(req.files?.savingImg),
+//     });
+
+//     await user.save();
+
+//     const userResponse = user.toObject();
+//     delete userResponse.password;
+//     delete userResponse.profilePic?.data;
+//     delete userResponse.aadharFront?.data;
+//     delete userResponse.aadharBack?.data;
+//     delete userResponse.panCard?.data;
+//     delete userResponse.savingAccountImage?.data;
+
+//     res.status(201).json({ message: "Signup successful", user: userResponse });
+
+//   } catch (error) {
+//     console.error("❌ SIGNUP ERROR:", error);
+//     res.status(500).json({ message: "Signup failed", error: error.message });
+//   }
+// };
+
+
+// ye otp vala sahi hai 
+
+
+
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
@@ -120,9 +189,6 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "All required fields missing" });
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Helper to get buffer object
@@ -136,21 +202,42 @@ export const signup = async (req, res) => {
       };
     };
 
-    const user = new User({
-      name,
-      email,
-      mobile,
-      age: age ? parseInt(age) : null,
-      address,
-      accountNumber,
-      ifsc,
-      password: hashedPassword,
-      profilePic: getFileObject(req.files?.profile),
-      aadharFront: getFileObject(req.files?.aadharFront),
-      aadharBack: getFileObject(req.files?.aadharBack),
-      panCard: getFileObject(req.files?.pan),
-      savingAccountImage: getFileObject(req.files?.savingImg),
-    });
+    let user = await User.findOne({ email });
+
+    if (user) {
+      // User already created during OTP verification
+      // Now update remaining fields
+      user.name = name;
+      user.mobile = mobile;
+      user.age = age ? parseInt(age) : null;
+      user.address = address;
+      user.accountNumber = accountNumber;
+      user.ifsc = ifsc;
+      user.password = hashedPassword;
+
+      user.profilePic = getFileObject(req.files?.profile);
+      user.aadharFront = getFileObject(req.files?.aadharFront);
+      user.aadharBack = getFileObject(req.files?.aadharBack);
+      user.panCard = getFileObject(req.files?.pan);
+      user.savingAccountImage = getFileObject(req.files?.savingImg);
+    } else {
+      // First time signup
+      user = new User({
+        name,
+        email,
+        mobile,
+        age: age ? parseInt(age) : null,
+        address,
+        accountNumber,
+        ifsc,
+        password: hashedPassword,
+        profilePic: getFileObject(req.files?.profile),
+        aadharFront: getFileObject(req.files?.aadharFront),
+        aadharBack: getFileObject(req.files?.aadharBack),
+        panCard: getFileObject(req.files?.pan),
+        savingAccountImage: getFileObject(req.files?.savingImg),
+      });
+    }
 
     await user.save();
 
