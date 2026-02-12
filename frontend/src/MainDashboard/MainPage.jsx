@@ -13,7 +13,7 @@
 // import api, { getImageUrl } from "../utils/api"; // path check kar le
 
 // // Import Lucide icons
-// import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2 } from "lucide-react";
+// import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2, MapPin } from "lucide-react";
 
 // function timeAgo(dateStr, t) {
 //   if (!dateStr) return t('notUpdated');
@@ -127,7 +127,12 @@
 //   const [currentFarmerId, setCurrentFarmerId] = useState(null);
 //   const [welcomeMsg, setWelcomeMsg] = useState("");
 //   const [isUpdateMode, setIsUpdateMode] = useState(false);
-  
+
+//   // Location states
+//   const [latitude, setLatitude] = useState("");
+//   const [longitude, setLongitude] = useState("");
+//   const [isGettingLocation, setIsGettingLocation] = useState(false);
+
 //   // Loading states
 //   const [loading, setLoading] = useState({
 //     fetchFarmers: false,
@@ -172,6 +177,9 @@
 //     // Disease & Symptoms
 //     diseaseSymptoms: "No", symptomsObserved: "", symptoms: [],
 //     symptomsAffect: "All", fishDeaths: "",
+//     // Location
+//     latitude: "",
+//     longitude: "",
 //     // Observation
 //     farmObservedDate: "", farmObservedTime: "",
 //     // History & Environment
@@ -261,6 +269,59 @@
 //       reader.onload = () => resolve(reader.result);
 //       reader.onerror = error => reject(error);
 //     });
+//   };
+
+//   // Get Location Function
+//   const getLocation = () => {
+//     if (!navigator.geolocation) {
+//       alert("Geolocation is not supported by your browser");
+//       return;
+//     }
+
+//     setIsGettingLocation(true);
+    
+//     navigator.geolocation.getCurrentPosition(
+//       (position) => {
+//         const lat = position.coords.latitude;
+//         const lng = position.coords.longitude;
+        
+//         setLatitude(lat.toString());
+//         setLongitude(lng.toString());
+//         setNewPond({ ...newPond, latitude: lat.toString(), longitude: lng.toString() });
+        
+//         setIsGettingLocation(false);
+//         // alert("Location captured successfully!");
+//       },
+//       (error) => {
+//         setIsGettingLocation(false);
+//         switch(error.code) {
+//           case error.PERMISSION_DENIED:
+//             alert("Location access denied. Please enable location permissions.");
+//             break;
+//           case error.POSITION_UNAVAILABLE:
+//             alert("Location information unavailable.");
+//             break;
+//           case error.TIMEOUT:
+//             alert("Location request timed out.");
+//             break;
+//           default:
+//             alert("An unknown error occurred.");
+//             break;
+//         }
+//       },
+//       {
+//         enableHighAccuracy: true,
+//         timeout: 15000,
+//         maximumAge: 0
+//       }
+//     );
+//   };
+
+//   // Clear Location
+//   const clearLocation = () => {
+//     setLatitude("");
+//     setLongitude("");
+//     setNewPond({ ...newPond, latitude: "", longitude: "" });
 //   };
 
 //   // Add Farmer
@@ -412,6 +473,11 @@
 //       }
 //     }
     
+//     // Validate location
+//     if (!newPond.latitude || !newPond.longitude) {
+//       return alert("Please capture location by clicking 'Open My Location' button");
+//     }
+    
 //     if (!newPond.pondImage) {
 //       return alert("Pond image is required");
 //     }
@@ -421,7 +487,7 @@
 //       ? newPond.symptoms.join(", ")
 //       : (newPond.symptomsObserved || "");
 
-//     // Add all pond fields
+//     // Add all pond fields including location
 //     const pondFields = [
 //       'pondArea', 'pondAreaUnit', 'pondDepth',
 //       'overflow', 'receivesSunlight', 'treesOnBanks', 'neighbourhood', 'wastewaterEnters',
@@ -431,6 +497,7 @@
 //       'waterTemperature', 'pH', 'DO', 'ammoniaLevel', 'phytoplanktonLevel', 
 //       'waterHardness', 'algaeBloom', 'pondWaterColor', 'sourceOfWater',
 //       'diseaseSymptoms', 'symptomsAffect', 'fishDeaths',
+//       'latitude', 'longitude', // Add location fields
 //       'farmObservedDate', 'farmObservedTime',
 //       'lastSpecies', 'lastHarvestComplete', 'recentRainFlood',
 //       'pesticideRunoff', 'constructionNear', 'suddenTempChange',
@@ -493,6 +560,9 @@
 //       setShowPondForm(false);
 //       setNewPond(emptyPond);
 //       setCurrentFarmerId(null);
+//       // Clear location states
+//       setLatitude("");
+//       setLongitude("");
 //       // alert("Pond added successfully!");
 //     } catch (err) {
 //       console.error("Add Pond Error:", err);
@@ -501,6 +571,8 @@
 //       setLoading(prev => ({ ...prev, addPond: false }));
 //     }
 //   };
+
+
 
 //   // Update Pond
 //   const updatePond = async () => {
@@ -511,7 +583,7 @@
 //       ? newPond.symptoms.join(", ")
 //       : (newPond.symptomsObserved || "");
 
-//     // Add all pond fields
+//     // Add all pond fields including location
 //     const pondFields = [
 //       'pondArea', 'pondAreaUnit', 'pondDepth',
 //       'overflow', 'receivesSunlight', 'treesOnBanks', 'neighbourhood', 'wastewaterEnters',
@@ -521,6 +593,7 @@
 //       'waterTemperature', 'pH', 'DO', 'ammoniaLevel', 'phytoplanktonLevel', 
 //       'waterHardness', 'algaeBloom', 'pondWaterColor', 'sourceOfWater',
 //       'diseaseSymptoms', 'symptomsAffect', 'fishDeaths',
+//       'latitude', 'longitude', // Add location fields
 //       'farmObservedDate', 'farmObservedTime',
 //       'lastSpecies', 'lastHarvestComplete', 'recentRainFlood',
 //       'pesticideRunoff', 'constructionNear', 'suddenTempChange',
@@ -577,6 +650,9 @@
 //       setNewPond(emptyPond);
 //       setCurrentFarmerId(null);
 //       setEditingPondId(null);
+//       // Clear location states
+//       setLatitude("");
+//       setLongitude("");
 //       // alert("Pond updated successfully!");
 //     } catch (err) {
 //       console.error("Update Pond Error:", err);
@@ -612,6 +688,9 @@
 //     setCurrentFarmerId(farmerId);
 //     setEditingPondId(null);
 //     setNewPond(emptyPond);
+//     // Clear location states when opening new form
+//     setLatitude("");
+//     setLongitude("");
 //     setShowPondForm(true);
 //   };
 
@@ -622,7 +701,7 @@
     
 //     const pre = { ...emptyPond };
     
-//     // Copy all pond data
+//     // Copy all pond data including location
 //     Object.keys(pre).forEach(k => {
 //       if (pond[k] !== undefined && pond[k] !== null && k !== 'pondImage') {
 //         pre[k] = pond[k];
@@ -641,6 +720,15 @@
     
 //     pre.pondFilesBuffers = pond.pondFiles || [];
 //     pre.fishFilesBuffers = pond.fishFiles || [];
+
+//     // Set location states
+//     if (pond.latitude && pond.longitude) {
+//       setLatitude(pond.latitude.toString());
+//       setLongitude(pond.longitude.toString());
+//     } else {
+//       setLatitude("");
+//       setLongitude("");
+//     }
 
 //     setNewPond(pre);
 //     setShowPondForm(true);
@@ -1094,7 +1182,7 @@
 //                   />
 //                 </div>
 
-//                 <div className="col-md-3">
+//                 {/* <div className="col-md-3">
 //                   <input 
 //                     className="form-control" 
 //                     placeholder="Gender *" 
@@ -1103,7 +1191,23 @@
 //                     disabled={loading.addFarmer || loading.updateFarmer}
 //                     required
 //                   />
-//                 </div>
+//                 </div> */}
+
+//                   <div className="col-md-3">
+//   <select 
+//     className="form-control" 
+//     value={newFarmer.gender} 
+//     onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
+//     disabled={loading.addFarmer || loading.updateFarmer}
+//     required
+//   >
+//     <option value="">Select Gender *</option>
+//     <option value="Male">Male</option>
+//     <option value="Female">Female</option>
+//     <option value="Other">Other</option>
+//   </select>
+// </div>
+
 
 //                 <div className="col-md-3">
 //                   <input 
@@ -1141,7 +1245,7 @@
 //                 <div className="col-md-6">
 //                   <input 
 //                     className="form-control" 
-//                     placeholder="Village *" 
+//                     placeholder="Address *" 
 //                     value={newFarmer.village} 
 //                     onChange={e => setNewFarmer({ ...newFarmer, village: e.target.value })}
 //                     disabled={loading.addFarmer || loading.updateFarmer}
@@ -1319,6 +1423,7 @@
 //                         <small>{newPond.pondFiles.length} file(s) selected</small>
 //                       </div>
 //                     )}
+
 //                   </div>
 
 //                   <div className="col-md-6">
@@ -1393,6 +1498,65 @@
 //                       <option>No</option>
 //                     </select>
 //                   </div>
+//                 </div>
+//               </div>
+
+//               {/* Location Section */}
+//               <div className="modal-section">
+//                 <h6>Location (Required)</h6>
+//                 <div className="row g-2">
+//                   <div className="col-md-12 mb-2">
+//                     <button 
+//                       type="button"
+//                       className="btn btn-primary w-45 d-flex align-items-center justify-content-center gap-2"
+//                       onClick={getLocation}
+//                       disabled={isGettingLocation || loading.addPond || loading.updatePond}
+//                     >
+//                       {isGettingLocation ? <ButtonLoader /> : <MapPin size={16} />}
+//                       {isGettingLocation ? "Getting Location..." : "📍 Open My Location"}
+//                     </button>
+//                     {/* <small className="text-muted">Click to capture your current GPS location</small> */}
+//                   </div>
+
+//                   <div className="col-md-6">
+//                     <label>Latitude *</label>
+//                     <input
+//                       type="text"
+//                       className="form-control"
+//                       value={newPond.latitude || ""}
+//                       readOnly
+//                       placeholder="Latitude will auto-fill"
+//                       required
+//                     />
+//                   </div>
+
+//                   <div className="col-md-6">
+//                     <label>Longitude *</label>
+//                     <input
+//                       type="text"
+//                       className="form-control"
+//                       value={newPond.longitude || ""}
+//                       readOnly
+//                       placeholder="Longitude will auto-fill"
+//                       required
+//                     />
+//                   </div>
+
+//                   {(newPond.latitude || newPond.longitude) && (
+//                     <div className="col-md-12">
+//                       <button
+//                         type="button"
+//                         className="btn btn-outline-secondary btn-sm"
+//                         onClick={clearLocation}
+//                         disabled={loading.addPond || loading.updatePond}
+//                       >
+//                         Clear Location
+//                       </button>
+//                       <small className="text-success ms-2">
+//                         ✓ Location captured: {newPond.latitude}, {newPond.longitude}
+//                       </small>
+//                     </div>
+//                   )}
 //                 </div>
 //               </div>
 
@@ -1723,7 +1887,7 @@
 //                     <input 
 //                       type="number" 
 //                       className="form-control" 
-//                       placeholder="How many fish have died (cumulative)? *" 
+//                       placeholder="How many fish have died last 15 days(cumulative)? *" 
 //                       value={newPond.fishDeaths} 
 //                       onChange={e => setNewPond({ ...newPond, fishDeaths: e.target.value })}
 //                       disabled={loading.addPond || loading.updatePond}
@@ -1899,6 +2063,9 @@
 //                       setNewPond(emptyPond);
 //                       setCurrentFarmerId(null);
 //                       setEditingPondId(null);
+//                       // Clear location states
+//                       setLatitude("");
+//                       setLongitude("");
 //                     }}
 //                     disabled={loading.updatePond}
 //                   >
@@ -1920,6 +2087,9 @@
 //                       setShowPondForm(false); 
 //                       setNewPond(emptyPond);
 //                       setCurrentFarmerId(null);
+//                       // Clear location states
+//                       setLatitude("");
+//                       setLongitude("");
 //                     }}
 //                     disabled={loading.addPond}
 //                   >
@@ -1936,20 +2106,6 @@
 // }
 
 // export default MainPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2097,6 +2253,10 @@ function MainPage() {
   const [longitude, setLongitude] = useState("");
   const [isGettingLocation, setIsGettingLocation] = useState(false);
 
+  // Selfie states
+  const [selfieFile, setSelfieFile] = useState(null);
+  const [selfiePreview, setSelfiePreview] = useState(null);
+
   // Loading states
   const [loading, setLoading] = useState({
     fetchFarmers: false,
@@ -2154,6 +2314,8 @@ function MainPage() {
     // Files
     pondFiles: [],
     fishFiles: [],
+    uploadSelfie: null,  // Add this line
+    uploadSelfieBuffer: null, // Add this line
     // Store existing buffers
     pondImageBuffer: null,
     pondFilesBuffers: [],
@@ -2446,6 +2608,8 @@ function MainPage() {
       return alert("Pond image is required");
     }
     
+    // ❌ REMOVED SELFIE VALIDATION - NO LONGER REQUIRED
+    
     const formData = new FormData();
     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
       ? newPond.symptoms.join(", ")
@@ -2500,6 +2664,15 @@ function MainPage() {
       });
     }
 
+    // Handle selfie (optional now)
+    if (selfieFile) {
+      formData.append("uploadSelfie", selfieFile);
+    } else if (newPond.uploadSelfie instanceof File) {
+      formData.append("uploadSelfie", newPond.uploadSelfie);
+    } else if (newPond.uploadSelfieBuffer) {
+      // If updating and we have existing buffer, don't append (server will keep existing)
+    }
+
     try {
       setLoading(prev => ({ ...prev, addPond: true }));
       const res = await api.post(`/api/farmers/add-pond/${currentFarmerId}`, formData, {
@@ -2527,6 +2700,9 @@ function MainPage() {
       // Clear location states
       setLatitude("");
       setLongitude("");
+      // Clear selfie state
+      setSelfieFile(null);
+      setSelfiePreview(null);
       // alert("Pond added successfully!");
     } catch (err) {
       console.error("Add Pond Error:", err);
@@ -2535,8 +2711,6 @@ function MainPage() {
       setLoading(prev => ({ ...prev, addPond: false }));
     }
   };
-
-
 
   // Update Pond
   const updatePond = async () => {
@@ -2589,6 +2763,11 @@ function MainPage() {
       });
     }
 
+    // Handle selfie - only append if new one is uploaded
+    if (selfieFile) {
+      formData.append("uploadSelfie", selfieFile);
+    }
+
     try {
       setLoading(prev => ({ ...prev, updatePond: true }));
       const res = await api.put(`/api/farmers/update-pond/${currentFarmerId}/${editingPondId}`, formData, {
@@ -2617,6 +2796,9 @@ function MainPage() {
       // Clear location states
       setLatitude("");
       setLongitude("");
+      // Clear selfie state
+      setSelfieFile(null);
+      setSelfiePreview(null);
       // alert("Pond updated successfully!");
     } catch (err) {
       console.error("Update Pond Error:", err);
@@ -2655,6 +2837,9 @@ function MainPage() {
     // Clear location states when opening new form
     setLatitude("");
     setLongitude("");
+    // Clear selfie states
+    setSelfieFile(null);
+    setSelfiePreview(null);
     setShowPondForm(true);
   };
 
@@ -2667,7 +2852,7 @@ function MainPage() {
     
     // Copy all pond data including location
     Object.keys(pre).forEach(k => {
-      if (pond[k] !== undefined && pond[k] !== null && k !== 'pondImage') {
+      if (pond[k] !== undefined && pond[k] !== null && k !== 'pondImage' && k !== 'uploadSelfie') {
         pre[k] = pond[k];
       }
     });
@@ -2684,6 +2869,13 @@ function MainPage() {
     
     pre.pondFilesBuffers = pond.pondFiles || [];
     pre.fishFilesBuffers = pond.fishFiles || [];
+
+    // Load existing selfie if available
+    if (pond.uploadSelfie) {
+      pre.uploadSelfieBuffer = pond.uploadSelfie;
+      pre.uploadSelfie = bufferToBase64(pond.uploadSelfie);
+      setSelfiePreview(bufferToBase64(pond.uploadSelfie));
+    }
 
     // Set location states
     if (pond.latitude && pond.longitude) {
@@ -2759,6 +2951,24 @@ function MainPage() {
     setNewPond({ ...newPond, fishFiles: files });
   };
 
+  // Handle selfie capture
+  const handleSelfieCapture = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const base64 = await fileToBase64(file);
+        setSelfiePreview(base64);
+        setSelfieFile(file);
+        setNewPond({ ...newPond, uploadSelfie: file });
+      } catch (error) {
+        console.error("Error converting selfie to base64:", error);
+        setSelfieFile(file);
+        setSelfiePreview(null);
+        setNewPond({ ...newPond, uploadSelfie: file });
+      }
+    }
+  };
+
   const totalFarmers = farmers.length;
   const totalPonds = farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0);
 
@@ -2812,9 +3022,7 @@ function MainPage() {
           
           <div className="mobile-profile">
             <img
-              // src={photo}
-                // src={getImageUrl(userId, "profile")}
-                src={getProfileImage(userId)}
+              src={getProfileImage(userId)}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -2831,9 +3039,7 @@ function MainPage() {
         <div className="sidebar-close-container">
           <div className="profile-section text-center mb-4">
             <img
-              // src={photo}
-                // src={getImageUrl(userId, "profile")}
-                src={getProfileImage(userId)}
+              src={getProfileImage(userId)}
               alt="User"
               className="profile-pic"
               onError={(e) => {
@@ -3011,6 +3217,7 @@ function MainPage() {
                             <th>Pond No.</th>
                             <th>Pond ID</th>
                             <th>Species</th>
+                            <th>Selfie</th>
                             <th>Last Updated</th>
                             <th>Actions</th>
                           </tr>
@@ -3021,6 +3228,17 @@ function MainPage() {
                               <td>{pond.pondNumber || index + 1}</td>
                               <td>{pond.pondId}</td>
                               <td>{pond.species || "Not specified"}</td>
+                              <td>
+                                {pond.uploadSelfie && (
+                                  <img
+                                    src={bufferToBase64(pond.uploadSelfie)}
+                                    alt="Selfie"
+                                    style={{ width: 40, height: 40, borderRadius: '50%', cursor: 'pointer' }}
+                                    onClick={() => window.open(bufferToBase64(pond.uploadSelfie), '_blank')}
+                                    title="Click to view selfie"
+                                  />
+                                )}
+                              </td>
                               <td>{timeAgo(pond.updatedAt || pond.createdAt, t)}</td>
                               <td>
                                 <button 
@@ -3052,6 +3270,20 @@ function MainPage() {
                           <div className="mobile-pond-row">
                             <span className="mobile-pond-label">Species</span>
                             <span className="mobile-pond-value">{pond.species || "Not specified"}</span>
+                          </div>
+                          <div className="mobile-pond-row">
+                            <span className="mobile-pond-label">Selfie</span>
+                            <span className="mobile-pond-value">
+                              {pond.uploadSelfie && (
+                                <img
+                                  src={bufferToBase64(pond.uploadSelfie)}
+                                  alt="Selfie"
+                                  style={{ width: 40, height: 40, borderRadius: '50%', cursor: 'pointer' }}
+                                  onClick={() => window.open(bufferToBase64(pond.uploadSelfie), '_blank')}
+                                  title="Click to view selfie"
+                                />
+                              )}
+                            </span>
                           </div>
                           <div className="mobile-pond-row">
                             <span className="mobile-pond-label">Last Updated</span>
@@ -3146,32 +3378,20 @@ function MainPage() {
                   />
                 </div>
 
-                {/* <div className="col-md-3">
-                  <input 
+                <div className="col-md-3">
+                  <select 
                     className="form-control" 
-                    placeholder="Gender *" 
                     value={newFarmer.gender} 
                     onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
                     disabled={loading.addFarmer || loading.updateFarmer}
                     required
-                  />
-                </div> */}
-
-                  <div className="col-md-3">
-  <select 
-    className="form-control" 
-    value={newFarmer.gender} 
-    onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
-    disabled={loading.addFarmer || loading.updateFarmer}
-    required
-  >
-    <option value="">Select Gender *</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Other">Other</option>
-  </select>
-</div>
-
+                  >
+                    <option value="">Select Gender *</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
 
                 <div className="col-md-3">
                   <input 
@@ -3892,6 +4112,63 @@ function MainPage() {
                 </div>
               </div>
 
+              {/* Selfie Upload Section - NOW OPTIONAL */}
+              <div className="modal-section">
+                <h6>Selfie with Fish/Pond (Optional)</h6>  {/* ← Changed text to Optional */}
+                <div className="row g-2">
+                  <div className="col-md-12">
+                    <label>Upload Your Selfie with Fish/Pond</label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      accept="image/*"
+                      capture="user"  // This opens front camera for selfie
+                      onChange={handleSelfieCapture}
+                      disabled={loading.addPond || loading.updatePond}
+                      // required={!editingPondId}  {/* ← COMMENTED OUT OR REMOVED THIS LINE */}
+                    />
+                    
+                    {selfiePreview && (
+                      <div style={{ marginTop: 10, textAlign: 'center' }}>
+                        <p>Selfie Preview:</p>
+                        <img
+                          src={selfiePreview}
+                          alt="Selfie preview"
+                          style={{ 
+                            width: 150, 
+                            height: 150, 
+                            borderRadius: '8px',
+                            objectFit: 'cover',
+                            border: '2px solid #28a745'
+                          }}
+                          onError={(e) => {
+                            e.target.src = "/profile.png";
+                            e.target.onerror = null;
+                          }}
+                        />
+                      </div>
+                    )}
+                    
+                    {!selfiePreview && newPond.uploadSelfieBuffer && editingPondId && (
+                      <div style={{ marginTop: 10, textAlign: 'center' }}>
+                        <p>Current Selfie:</p>
+                        <img
+                          src={bufferToBase64(newPond.uploadSelfieBuffer)}
+                          alt="Current selfie"
+                          style={{ 
+                            width: 150, 
+                            height: 150, 
+                            borderRadius: '8px',
+                            objectFit: 'cover',
+                            border: '2px solid #17a2b8'
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               {/* Observation & Misc */}
               <div className="modal-section">
                 <h6>Observation & Misc (All fields required)</h6>
@@ -4030,6 +4307,9 @@ function MainPage() {
                       // Clear location states
                       setLatitude("");
                       setLongitude("");
+                      // Clear selfie state
+                      setSelfieFile(null);
+                      setSelfiePreview(null);
                     }}
                     disabled={loading.updatePond}
                   >
@@ -4054,6 +4334,9 @@ function MainPage() {
                       // Clear location states
                       setLatitude("");
                       setLongitude("");
+                      // Clear selfie state
+                      setSelfieFile(null);
+                      setSelfiePreview(null);
                     }}
                     disabled={loading.addPond}
                   >
