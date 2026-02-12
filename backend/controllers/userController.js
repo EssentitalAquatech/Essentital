@@ -264,28 +264,33 @@ export const sendForgotPasswordOtp = async (req, res) => {
 
     // ✅ MSG91 Email API call
     await axios.post(
-      "https://control.msg91.com/api/v5/email/send",
+  "https://control.msg91.com/api/v5/email/send",
+  {
+    to: [
       {
-        to: [
-          {
-            email: email,
-            name: user.name || "User",
-          },
-        ],
-        from: "security@otp.ea-vle.in",
-        domain: "otp.ea-vle.in",
-        template_id: "template_11_02_2026_18_02_2",
-        variables: {
-          otp: otp,
-        },
+        email: email,
+        name: user.name || "User",
       },
-      {
-        headers: {
-          authkey: "478792AFpUGwdMg698c7320P1",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    ],
+    from: {
+      email: "security@otp.ea-vle.in",
+      name: "Essential Aquatech",
+    },
+    domain: "otp.ea-vle.in",
+    template_id: "template_11_02_2026_18_02_2",
+    variables: {
+      otp: otp,
+    },
+  },
+  {
+    headers: {
+      authkey: "478792AFpUGwdMg698c7320P1",
+      "Content-Type": "application/json",
+    },
+  }
+);
+
+  
 
     res.json({ message: "OTP sent successfully" });
   } catch (error) {
