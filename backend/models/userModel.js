@@ -108,8 +108,12 @@ const userSchema = new mongoose.Schema(
     emailOtpExpiry: Date,
 
     // Forgot Password OTP
-    forgotPasswordOtp: String,
-    forgotPasswordOtpExpiry: Number,
+    // forgotPasswordOtp: String,
+    // forgotPasswordOtpExpiry: Number,
+    // Forgot Password OTP
+forgotPasswordOtp: String,
+forgotPasswordOtpExpiry: Date,
+
   },
   { timestamps: true }
 );
