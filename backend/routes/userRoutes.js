@@ -325,7 +325,8 @@ router.post("/verify-otp", verifyEmailOtp);
 
 // Forgot Password Routes
 router.post("/forgot-password", sendForgotPasswordOtp);
-router.post("/verify-forgot-otp", verifyForgotPasswordOtp);
+// router.post("/verify-forgot-otp", verifyForgotPasswordOtp);
+router.post("/verify-forgot-password-otp", verifyForgotPasswordOtp);
 router.post("/reset-password", resetPassword);
 
 // Get all users

@@ -131,8 +131,6 @@
 
 
 
-
-
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import axios from "axios";
@@ -238,7 +236,7 @@ export const login = async (req, res) => {
   }
 };
 
-// Send forgot password OTP
+// Send forgot password OTP - FIXED: MSG91 "from.email required" error resolved
 export const sendForgotPasswordOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -259,7 +257,8 @@ export const sendForgotPasswordOtp = async (req, res) => {
     user.forgotPasswordOtpExpiry = new Date(Date.now() + 5 * 60 * 1000);
     await user.save();
 
-    // ✅ MSG91 Email API call - FIXED: from is now an object with email and name properties
+    // ✅ FIXED: from is now a proper object with email and name properties
+    // This resolves the "from.email required" error from MSG91
     await axios.post(
       "https://control.msg91.com/api/v5/email/send",
       {
@@ -267,9 +266,14 @@ export const sendForgotPasswordOtp = async (req, res) => {
         from: { email: "security@otp.ea-vle.in", name: "Essential Aquatech" },
         domain: "otp.ea-vle.in",
         template_id: "template_11_02_2026_18_02_2",
-        variables: { otp: otp },
+        variables: { otp: otp }
       },
-      { headers: { authkey: "478792AFpUGwdMg698c7320P1", "Content-Type": "application/json" } }
+      { 
+        headers: { 
+          authkey: "478792AFpUGwdMg698c7320P1", 
+          "Content-Type": "application/json" 
+        } 
+      }
     );
 
     res.json({ message: "OTP sent successfully" });
@@ -279,14 +283,15 @@ export const sendForgotPasswordOtp = async (req, res) => {
   }
 };
 
-// Verify forgot password OTP - UPDATED with string comparison fix
+// Verify forgot password OTP - FIXED: String conversion for type mismatch
 export const verifyForgotPasswordOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
     const user = await User.findOne({ email });
 
-    // FIXED: Convert both values to string for comparison to handle type mismatches
+    // ✅ FIXED: Convert both values to string for comparison
+    // This handles type mismatches (number vs string) between stored OTP and request OTP
     if (
       !user || 
       String(user.forgotPasswordOtp) !== String(otp) || 
@@ -326,7 +331,7 @@ export const resetPassword = async (req, res) => {
     res.json({
       message: "Password reset successful",
       token,
-      user,
+      user
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

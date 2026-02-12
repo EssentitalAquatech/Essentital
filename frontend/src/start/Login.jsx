@@ -207,10 +207,13 @@ function Login() {
     }
   };
 
-  // Verify OTP - 🔁 FIXED: OTP sent as string
+  // Verify OTP - 🔑 FIXED: OTP sent as string
   const handleVerifyOtp = async () => {
     try {
-      await api.post("/api/user/verify-forgot-password-otp", { email, otp: otp.toString() });
+      await api.post("/api/user/verify-forgot-password-otp", { 
+        email, 
+        otp: otp.toString() // 🔑 important - convert to string
+      });
       alert("OTP verified");
       setStep(3);
     } catch (error) {
