@@ -144,8 +144,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../utils/api";
@@ -209,10 +207,10 @@ function Login() {
     }
   };
 
-  // Verify OTP
+  // Verify OTP - 🔁 FIXED: OTP sent as string
   const handleVerifyOtp = async () => {
     try {
-      await api.post("/api/user/verify-forgot-password-otp", { email, otp });
+      await api.post("/api/user/verify-forgot-password-otp", { email, otp: otp.toString() });
       alert("OTP verified");
       setStep(3);
     } catch (error) {

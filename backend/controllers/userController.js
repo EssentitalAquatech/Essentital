@@ -133,9 +133,6 @@
 
 
 
-
-
-
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import axios from "axios";
@@ -262,35 +259,18 @@ export const sendForgotPasswordOtp = async (req, res) => {
     user.forgotPasswordOtpExpiry = new Date(Date.now() + 5 * 60 * 1000);
     await user.save();
 
-    // ✅ MSG91 Email API call
+    // ✅ MSG91 Email API call - FIXED: from is now an object with email and name properties
     await axios.post(
-  "https://control.msg91.com/api/v5/email/send",
-  {
-    to: [
+      "https://control.msg91.com/api/v5/email/send",
       {
-        email: email,
-        name: user.name || "User",
+        to: [{ email: email, name: user.name || "User" }],
+        from: { email: "security@otp.ea-vle.in", name: "Essential Aquatech" },
+        domain: "otp.ea-vle.in",
+        template_id: "template_11_02_2026_18_02_2",
+        variables: { otp: otp },
       },
-    ],
-    from: {
-      email: "security@otp.ea-vle.in",
-      name: "Essential Aquatech",
-    },
-    domain: "otp.ea-vle.in",
-    template_id: "template_11_02_2026_18_02_2",
-    variables: {
-      otp: otp,
-    },
-  },
-  {
-    headers: {
-      authkey: "478792AFpUGwdMg698c7320P1",
-      "Content-Type": "application/json",
-    },
-  }
-);
-
-  
+      { headers: { authkey: "478792AFpUGwdMg698c7320P1", "Content-Type": "application/json" } }
+    );
 
     res.json({ message: "OTP sent successfully" });
   } catch (error) {
@@ -299,16 +279,17 @@ export const sendForgotPasswordOtp = async (req, res) => {
   }
 };
 
-// Verify forgot password OTP
+// Verify forgot password OTP - UPDATED with string comparison fix
 export const verifyForgotPasswordOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
     const user = await User.findOne({ email });
 
+    // FIXED: Convert both values to string for comparison to handle type mismatches
     if (
-      !user ||
-      user.forgotPasswordOtp !== otp ||
+      !user || 
+      String(user.forgotPasswordOtp) !== String(otp) || 
       user.forgotPasswordOtpExpiry < new Date()
     ) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
