@@ -3,7 +3,7 @@ import axios from "axios";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
-dotenv.config(); // ✅ load .env variables
+dotenv.config(); // load env variables
 
 // ✅ Generate 6-digit OTP
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -20,30 +20,38 @@ export const sendForgotPasswordOtp = async (req, res) => {
     const otp = generateOtp();
     const expiry = new Date(Date.now() + 5 * 60 * 1000); // 5 min expiry
 
-    // Save OTP in user document (separate from signup OTP)
+    // Save OTP in user document
     user.forgotPasswordOtp = otp;
     user.forgotPasswordOtpExpiry = expiry;
     await user.save();
 
-    // ✅ Send OTP via MSG91 using POST body
+    // ✅ Send OTP via MSG91 with proper JSON
     const msgResponse = await axios.post(
       "https://api.msg91.com/api/v5/email/send",
       {
         template_id: process.env.MSG91_FORGOT_TEMPLATE_ID,
-        to: [email], // email array
-        variables_values: {
-          otp: otp, // template variable
+        from: {
+          email: process.env.MSG91_FROM_EMAIL, // must be verified in MSG91
+          name: "Essential Aquatech"
         },
+        to: [
+          { email: email }
+        ],
+        domain: process.env.MSG91_FROM_DOMAIN, // must match verified domain
+        variables_values: {
+          otp: otp
+        }
       },
       {
         headers: {
           "authkey": process.env.MSG91_FORGOT_AUTH_KEY,
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
 
-    res.status(200).json({ message: "OTP sent to email" }); // otp hidden for production
+    res.status(200).json({ message: "OTP sent to email" }); // don't send OTP in response in production
+
   } catch (error) {
     console.error("MSG91 Error:", error.response?.data || error.message);
     res.status(500).json({ message: "Error sending OTP", error: error.response?.data || error.message });
@@ -77,6 +85,7 @@ export const verifyForgotPasswordOtp = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "OTP verified. You can now login." });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error verifying OTP", error: error.message });
