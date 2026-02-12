@@ -179,6 +179,109 @@
 
 
 
+// // routes/userRoutes.js
+// import express from "express";
+// import upload from "../middlewares/uploads.js";
+// import authMiddleware from "../middlewares/authMiddleware.js";
+
+// import { signup } from "../controllers/signupController.js";
+// import { login } from "../controllers/loginController.js";
+// import { sendEmailOtp, verifyEmailOtp } from "../controllers/emailOtpController.js";
+
+// import {
+//   getUser,
+//   updateProfile,
+//   updatePassword,
+//   updatePhoto,
+//   getAllUsers,
+// } from "../controllers/userController.js";
+
+// const router = express.Router();
+
+// // ======================
+// // ✅ PUBLIC ROUTES (NO AUTH)
+// // ======================
+
+// // Signup
+// router.post(
+//   "/signup",
+//   upload.fields([
+//     { name: "profile", maxCount: 1 },
+//     { name: "aadharFront", maxCount: 1 },
+//     { name: "aadharBack", maxCount: 1 },
+//     { name: "pan", maxCount: 1 },
+//     { name: "savingImg", maxCount: 1 },
+//   ]),
+//   signup
+// );
+
+// // Normal Login (if still needed)
+// router.post("/login", login);
+
+// // OTP Routes (IMPORTANT: dynamic routes se upar)
+// router.post("/send-otp", sendEmailOtp);
+// router.post("/verify-otp", verifyEmailOtp);
+
+// // Get all users
+// router.get("/", getAllUsers);
+
+
+// // ======================
+// // 🔒 PROTECTED ROUTES
+// // ======================
+
+// // Update password (specific route first)
+// router.put("/password/:id", authMiddleware, updatePassword);
+
+// // Update photo
+// router.put(
+//   "/photo/:id",
+//   authMiddleware,
+//   upload.single("photo"),
+//   updatePhoto
+// );
+
+// // Dynamic routes LAST
+// router.get("/:id", authMiddleware, getUser);
+// router.put("/:id", authMiddleware, updateProfile);
+
+// export default router;
+
+
+
+
+//ye uper vala bhi sahi hai iske baad jo niche vala hai login page par otp ke through vala hai 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // routes/userRoutes.js
 import express from "express";
 import upload from "../middlewares/uploads.js";
@@ -187,6 +290,7 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 import { signup } from "../controllers/signupController.js";
 import { login } from "../controllers/loginController.js";
 import { sendEmailOtp, verifyEmailOtp } from "../controllers/emailOtpController.js";
+import { sendForgotPasswordOtp, verifyForgotPasswordOtp } from "../controllers/forgotPasswordController.js";
 
 import {
   getUser,
@@ -221,6 +325,10 @@ router.post("/login", login);
 // OTP Routes (IMPORTANT: dynamic routes se upar)
 router.post("/send-otp", sendEmailOtp);
 router.post("/verify-otp", verifyEmailOtp);
+
+// ================= FORGOT PASSWORD OTP ROUTES =================
+router.post("/forgot-password/send-otp", sendForgotPasswordOtp);
+router.post("/forgot-password/verify-otp", verifyForgotPasswordOtp);
 
 // Get all users
 router.get("/", getAllUsers);

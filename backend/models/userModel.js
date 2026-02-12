@@ -26,7 +26,7 @@
 
 
 
-//uper vala sahi hai 
+//uper vala sahi hai bina selfie add karne vala
 
 
 
@@ -67,3 +67,4 @@ export default mongoose.model("User", userSchema);
 
 
 
+//ye vala sahi hai selfie ko add karne vala

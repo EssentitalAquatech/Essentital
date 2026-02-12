@@ -429,7 +429,7 @@
 
 
 
-
+//bina  selfie vala code hai sahi hai 
 
 
 
@@ -862,3 +862,15 @@ router.put(
 );
 
 export default router;
+
+
+
+
+
+
+
+
+
+
+
+//selfie add karne vala code hai sahi hai 
