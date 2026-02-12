@@ -136,15 +136,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import axios from "axios";
@@ -257,18 +248,21 @@ export const sendForgotPasswordOtp = async (req, res) => {
 
     const user = await User.findOne({ email });
 
+    // Always return success message for security
     if (!user) {
       return res.json({
         message: "If this email is registered, OTP has been sent.",
       });
     }
 
+    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     user.forgotPasswordOtp = otp;
     user.forgotPasswordOtpExpiry = new Date(Date.now() + 5 * 60 * 1000);
     await user.save();
 
+    // ✅ MSG91 Email API call
     await axios.post(
       "https://control.msg91.com/api/v5/email/send",
       {
@@ -280,23 +274,22 @@ export const sendForgotPasswordOtp = async (req, res) => {
         ],
         from: "security@otp.ea-vle.in",
         domain: "otp.ea-vle.in",
-       template_id: process.env.MSG91_FORGOT_TEMPLATE_ID,
-
+        template_id: "template_11_02_2026_18_02_2",
         variables: {
           otp: otp,
         },
       },
       {
         headers: {
-  authkey: process.env.MSG91_FORGOT_AUTH_KEY,
-  "Content-Type": "application/json",
-},
-
+          authkey: "478792AFpUGwdMg698c7320P1",
+          "Content-Type": "application/json",
+        },
       }
     );
 
     res.json({ message: "OTP sent successfully" });
   } catch (error) {
+    console.log("Forgot Password Error:", error.response?.data || error.message);
     res.status(500).json({ message: error.message });
   }
 };
