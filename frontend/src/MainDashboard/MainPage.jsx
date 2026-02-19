@@ -6374,9 +6374,6 @@
 
 
 
-
-
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -6424,7 +6421,7 @@ function MainPage() {
   const username = localStorage.getItem("username") || "User";
   const userId = localStorage.getItem("userId");
 
-  // ✅ FORCE RE-RENDER WHEN PHOTO UPDATES (EXACTLY LIKE PROFILE.JSX)
+  // ✅ FORCE RE-RENDER WHEN PHOTO UPDATES
   const [photoKey, setPhotoKey] = useState(Date.now());
 
   const [farmers, setFarmers] = useState([]);
@@ -6496,38 +6493,54 @@ function MainPage() {
   const [newFarmer, setNewFarmer] = useState(emptyFarmer);
   const [newPond, setNewPond] = useState(emptyPond);
 
-  // ✅ CHECK FOR PHOTO UPDATES IN LOCALSTORAGE (EXACTLY LIKE PROFILE.JSX)
+  // ✅ FIX: Check for photo updates from localStorage and custom events
   useEffect(() => {
     // Function to update photo key when localStorage changes
     const handleStorageChange = (e) => {
       if (e.key === "photoUpdateTime") {
-        console.log("Photo update detected in MainPage, updating key");
+        console.log("Photo update detected in MainPage from storage event, updating key");
         setPhotoKey(Date.now());
       }
     };
 
-    // Check for existing photo update time
-    const photoUpdateTime = localStorage.getItem("photoUpdateTime");
-    if (photoUpdateTime) {
-      setPhotoKey(parseInt(photoUpdateTime));
-    }
+    // Check for existing photo update time on mount
+    const checkPhotoUpdate = () => {
+      const photoUpdateTime = localStorage.getItem("photoUpdateTime");
+      if (photoUpdateTime) {
+        console.log("Initial photo update time found:", photoUpdateTime);
+        setPhotoKey(parseInt(photoUpdateTime));
+      }
+    };
 
-    // Listen for storage events (when photo updates in another tab/component)
+    // Run initial check
+    checkPhotoUpdate();
+
+    // Listen for storage events (when photo updates in another tab)
     window.addEventListener("storage", handleStorageChange);
 
-    // Custom event listener for same-tab updates
-    const handlePhotoUpdate = () => {
-      console.log("Photo update event received in MainPage");
+    // Custom event listener for same-tab updates (this is the key part!)
+    const handlePhotoUpdate = (event) => {
+      console.log("Photo update event received in MainPage", event.detail);
       setPhotoKey(Date.now());
     };
 
     window.addEventListener("photoUpdate", handlePhotoUpdate);
 
+    // Also check periodically (backup mechanism)
+    const intervalId = setInterval(() => {
+      const currentPhotoTime = localStorage.getItem("photoUpdateTime");
+      if (currentPhotoTime && parseInt(currentPhotoTime) !== photoKey) {
+        console.log("Periodic check detected photo update");
+        setPhotoKey(parseInt(currentPhotoTime));
+      }
+    }, 1000); // Check every second
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("photoUpdate", handlePhotoUpdate);
+      clearInterval(intervalId);
     };
-  }, []);
+  }, [photoKey]);
 
   // Check if mobile view
   useEffect(() => {
@@ -7027,7 +7040,7 @@ function MainPage() {
 
   // ✅ DEBUG: Check what URL is being generated
   const imageUrl = getProfileImage(userId);
-  console.log("MainPage profile image URL:", imageUrl);
+  console.log("MainPage profile image URL:", imageUrl, "Photo key:", photoKey);
 
   return (
     <div className="dashboard-container">
@@ -7047,8 +7060,10 @@ function MainPage() {
           </div>
           <div className="mobile-profile">
             <img
-              key={photoKey} // ✅ Force re-render on photo update
-              src={getProfileImage(userId)}
+              // key={photoKey} // ✅ Force re-render on photo update
+              // src={getProfileImage(userId)}
+               key={photoKey}
+  src={`${getProfileImage(userId)}?t=${photoKey}`}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
@@ -7065,8 +7080,10 @@ function MainPage() {
         <div className="sidebar-close-container">
           <div className="profile-section text-center mb-4">
             <img
-              key={photoKey} // ✅ Force re-render on photo update
-              src={getProfileImage(userId)}
+              // key={photoKey} // ✅ Force re-render on photo update
+              // src={getProfileImage(userId)}
+               key={photoKey}
+  src={`${getProfileImage(userId)}?t=${photoKey}`}
               alt="User"
               className="profile-pic"
               onError={(e) => {
@@ -8362,7 +8379,7 @@ function MainPage() {
                     }}
                     disabled={loading.addPond}
                   >
-                    Cancel Button
+                    Cancel
                   </button>
                 </>
               )}
