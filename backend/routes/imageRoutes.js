@@ -250,6 +250,7 @@ const router = express.Router();
 
 // ✅ Route 1: For user images (with imageType)
 router.get("/:userId/:imageType", async (req, res) => {
+  
   try {
     const { userId, imageType } = req.params;
     
