@@ -523,12 +523,10 @@
 
 
 
-
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import api, { getImageUrl } from "../utils/api";
+import api from "../utils/api";
 import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Eye, EyeOff, LogOut } from "lucide-react";
 import { getProfileImage } from "../utils/profileImage";
 import "./Profile.css";
@@ -541,11 +539,7 @@ function Profile() {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [photo, setPhoto] = useState("/default-profile.png");
   const [newPhoto, setNewPhoto] = useState(null);
-
-  // ✅ ADD PHOTO TIMESTAMP STATE FOR CACHE BUSTING
-  const [photoTimestamp, setPhotoTimestamp] = useState(Date.now());
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -561,6 +555,9 @@ function Profile() {
   // Eye button states
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+
+  // ✅ FORCE RE-RENDER WHEN PHOTO UPDATES
+  const [photoKey, setPhotoKey] = useState(Date.now());
 
   // Check if mobile view
   useEffect(() => {
@@ -598,32 +595,12 @@ function Profile() {
         const data = res.data;
         setUsername(data.name || localStorage.getItem("username") || "");
         setEmail(data.email || localStorage.getItem("email") || "");
-        
-        // ✅ GET TIMESTAMP FROM LOCALSTORAGE IF EXISTS
-        const savedTimestamp = localStorage.getItem("photoUpdateTime");
-        if (savedTimestamp) {
-          setPhotoTimestamp(parseInt(savedTimestamp));
-        }
-        
-        // ✅ FIXED: Use getProfileImage instead of getImageUrl with userId
-        const photoUrl = data.photo ? 
-          `${getProfileImage(userId)}?t=${savedTimestamp || Date.now()}` : 
-          "/default-profile.png";
-        setPhoto(photoUrl);
-
         setIsManualLogin(data.password ? true : false);
       })
       .catch((err) => {
         console.log("Backend fetch failed, fallback to localStorage", err);
         setUsername(localStorage.getItem("username") || "");
         setEmail(localStorage.getItem("email") || "");
-        
-        // ✅ FIXED: Use getProfileImage
-        const savedTimestamp = localStorage.getItem("photoUpdateTime");
-        const photoUrl = localStorage.getItem("photo") ? 
-          `${localStorage.getItem("photo")}?t=${savedTimestamp || Date.now()}` : 
-          "/default-profile.png";
-        setPhoto(photoUrl);
       });
   }, [userId]);
 
@@ -642,7 +619,7 @@ function Profile() {
     navigate("/login");
   };
 
-  // ✅ FIXED: PHOTO CHANGE FUNCTION WITH CACHE BUSTING
+  // ✅ FIXED: PHOTO CHANGE FUNCTION
   const handlePhotoChange = async () => {
     if (!newPhoto) return;
 
@@ -651,26 +628,20 @@ function Profile() {
     formData.append("photo", newPhoto);
 
     try {
-      const res = await api.put(
+      await api.put(
         `/api/user/photo/${userId}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      // ✅ FORCE RELOAD BY CHANGING TIMESTAMP
+      // ✅ UPDATE TIMESTAMP IN LOCALSTORAGE
       const newTimestamp = Date.now();
-      setPhotoTimestamp(newTimestamp);
-      
-      // ✅ ALSO UPDATE LOCALSTORAGE WITH TIMESTAMP
       localStorage.setItem("photoUpdateTime", newTimestamp.toString());
       
-      // ✅ FIXED: Use getProfileImage for the updated photo URL
-      const newPhotoUrl = `${getProfileImage(userId)}?t=${newTimestamp}`;
-      setPhoto(newPhotoUrl);
+      // ✅ FORCE IMAGE RELOAD BY CHANGING KEY
+      setPhotoKey(newTimestamp);
       
       setNewPhoto(null);
-      
-      // ✅ SHOW SUCCESS MESSAGE
       alert("Profile image updated successfully!");
 
     } catch (err) {
@@ -721,11 +692,9 @@ function Profile() {
     }
   };
 
-  // ✅ FIXED: HELPER FUNCTION TO GET PHOTO URL WITH TIMESTAMP
-  const getPhotoWithTimestamp = () => {
-    const timestamp = localStorage.getItem("photoUpdateTime") || photoTimestamp;
-    return `${getProfileImage(userId)}?t=${timestamp}`;
-  };
+  // ✅ DEBUG: Check what URL is being generated
+  const imageUrl = getProfileImage(userId);
+  console.log("Profile image URL:", imageUrl);
 
   return (
     <div className="profile-page-container">
@@ -746,11 +715,12 @@ function Profile() {
           
           <div className="mobile-profile">
             <img
-              // ✅ FIXED: Use getProfileImage for mobile profile image
+              key={photoKey} // ✅ Force re-render on photo update
               src={getProfileImage(userId)}
               alt="User"
               className="mobile-profile-pic"
               onError={(e) => {
+                console.log("Mobile profile image error, using fallback");
                 e.target.src = "/profile.png";
               }}
             />
@@ -763,11 +733,12 @@ function Profile() {
         <div className="sidebar-close-container">
           <div className="profile-sidebar-section">
             <img
-              // ✅ FIXED: Use getProfileImage for sidebar profile image
+              key={photoKey} // ✅ Force re-render on photo update
               src={getProfileImage(userId)}
               alt="User"
               className="profile-sidebar-pic"
               onError={(e) => {
+                console.log("Sidebar profile image error, using fallback");
                 e.target.src = "/profile.png";
               }}
             />
@@ -834,10 +805,9 @@ function Profile() {
       {/* ================= RIGHT CONTENT ================= */}
       <div className={`profile-content-area ${isMobile ? 'mobile-view' : ''}`}>
         
-        {/* Profile Header WITHOUT Logout Button in Mobile */}
+        {/* Profile Header */}
         <div className="profile-header">
           <h3>{t("myProfile")}</h3>
-          {/* Show logout button in header only on desktop */}
           {!isMobile && (
             <button 
               className="logout-btn-header"
@@ -856,10 +826,11 @@ function Profile() {
             <h4>{t("profileImage")}</h4>
             <div className="profile-image-section">
               <img
-                // ✅ FIXED: Use getProfileImage for main profile image
+                key={photoKey} // ✅ Force re-render on photo update
                 src={getProfileImage(userId)}
                 alt="User"
                 onError={(e) => {
+                  console.log("Main profile image error, using fallback");
                   e.target.src = "/profile.png";
                 }}
               />
@@ -950,7 +921,6 @@ function Profile() {
                   className="password-toggle-btn"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                   disabled={isUpdatingPassword}
-                  aria-label={showCurrentPassword ? "Hide password" : "Show password"}
                 >
                   {showCurrentPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
@@ -972,7 +942,6 @@ function Profile() {
                   className="password-toggle-btn"
                   onClick={() => setShowNewPassword(!showNewPassword)}
                   disabled={isUpdatingPassword}
-                  aria-label={showNewPassword ? "Hide password" : "Show password"}
                 >
                   {showNewPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
@@ -995,7 +964,7 @@ function Profile() {
             </div>
           )}
 
-          {/* ================= MOBILE LOGOUT BUTTON AT BOTTOM ================= */}
+          {/* Mobile Logout Button */}
           {isMobile && (
             <div className="profile-form-group mobile-logout-container">
               <button 
@@ -1014,4 +983,3 @@ function Profile() {
 }
 
 export default Profile;
-
