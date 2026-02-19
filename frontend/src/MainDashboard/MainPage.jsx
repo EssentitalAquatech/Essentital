@@ -8159,10 +8159,10 @@ function MainPage() {
 
               {/* Selfie Upload Section - OPTIONAL */}
               <div className="modal-section">
-                <h6>Selfie with Fish/Pond (Optional)</h6>
+                <h6>Selfie with Farmer</h6>
                 <div className="row g-2">
                   <div className="col-md-12">
-                    <label>Upload Your Selfie with Fish/Pond</label>
+                    <label>Upload Your Selfie with Farmer</label>
                     <input
                       type="file"
                       className="form-control"
