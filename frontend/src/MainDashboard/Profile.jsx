@@ -511,6 +511,10 @@
 
 
 
+//uper vala sahi hai 
+
+
+
 
 
 
@@ -524,7 +528,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import api from "../utils/api";
+import api, { getImageUrl } from "../utils/api";
 import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Eye, EyeOff, LogOut } from "lucide-react";
 import { getProfileImage } from "../utils/profileImage";
 import "./Profile.css";
@@ -537,11 +541,11 @@ function Profile() {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [photo, setPhoto] = useState("/profile.png");
+  const [photo, setPhoto] = useState("/default-profile.png");
   const [newPhoto, setNewPhoto] = useState(null);
 
-  // ✅ FORCE RE-RENDER WHEN PHOTO UPDATES
-  const [photoKey, setPhotoKey] = useState(Date.now());
+  // ✅ ADD PHOTO TIMESTAMP STATE FOR CACHE BUSTING
+  const [photoTimestamp, setPhotoTimestamp] = useState(Date.now());
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -584,47 +588,44 @@ function Profile() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isMobile, isSidebarOpen]);
 
-  // ✅ FIXED: Fetch user data with proper image handling
+  // Fetch user data
   useEffect(() => {
     if (!userId) return;
 
-    const fetchUserData = async () => {
-      try {
-        const res = await api.get(`/api/user/${userId}`);
+    api
+      .get(`/api/user/${userId}`)
+      .then((res) => {
         const data = res.data;
         setUsername(data.name || localStorage.getItem("username") || "");
         setEmail(data.email || localStorage.getItem("email") || "");
         
-        // ✅ Get latest timestamp from localStorage
-        const timestamp = localStorage.getItem("profilePhotoTimestamp") || Date.now();
-        setPhotoKey(parseInt(timestamp));
+        // ✅ GET TIMESTAMP FROM LOCALSTORAGE IF EXISTS
+        const savedTimestamp = localStorage.getItem("photoUpdateTime");
+        if (savedTimestamp) {
+          setPhotoTimestamp(parseInt(savedTimestamp));
+        }
         
+        // ✅ FIXED: Use getProfileImage instead of getImageUrl with userId
+        const photoUrl = data.photo ? 
+          `${getProfileImage(userId)}?t=${savedTimestamp || Date.now()}` : 
+          "/default-profile.png";
+        setPhoto(photoUrl);
+
         setIsManualLogin(data.password ? true : false);
-      } catch (err) {
+      })
+      .catch((err) => {
         console.log("Backend fetch failed, fallback to localStorage", err);
         setUsername(localStorage.getItem("username") || "");
         setEmail(localStorage.getItem("email") || "");
         
-        // ✅ Get latest timestamp from localStorage
-        const timestamp = localStorage.getItem("profilePhotoTimestamp") || Date.now();
-        setPhotoKey(parseInt(timestamp));
-      }
-    };
-
-    fetchUserData();
+        // ✅ FIXED: Use getProfileImage
+        const savedTimestamp = localStorage.getItem("photoUpdateTime");
+        const photoUrl = localStorage.getItem("photo") ? 
+          `${localStorage.getItem("photo")}?t=${savedTimestamp || Date.now()}` : 
+          "/default-profile.png";
+        setPhoto(photoUrl);
+      });
   }, [userId]);
-
-  // ✅ Listen for photo updates from other tabs/windows
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === "profilePhotoTimestamp") {
-        setPhotoKey(parseInt(e.newValue) || Date.now());
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
 
   // Close sidebar when route changes
   useEffect(() => {
@@ -641,7 +642,7 @@ function Profile() {
     navigate("/login");
   };
 
-  // ✅ FIXED: Photo change with cache busting
+  // ✅ FIXED: PHOTO CHANGE FUNCTION WITH CACHE BUSTING
   const handlePhotoChange = async () => {
     if (!newPhoto) return;
 
@@ -656,12 +657,20 @@ function Profile() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      // ✅ Update timestamp to force image reload
+      // ✅ FORCE RELOAD BY CHANGING TIMESTAMP
       const newTimestamp = Date.now();
-      localStorage.setItem("profilePhotoTimestamp", newTimestamp.toString());
-      setPhotoKey(newTimestamp);
+      setPhotoTimestamp(newTimestamp);
+      
+      // ✅ ALSO UPDATE LOCALSTORAGE WITH TIMESTAMP
+      localStorage.setItem("photoUpdateTime", newTimestamp.toString());
+      
+      // ✅ FIXED: Use getProfileImage for the updated photo URL
+      const newPhotoUrl = `${getProfileImage(userId)}?t=${newTimestamp}`;
+      setPhoto(newPhotoUrl);
       
       setNewPhoto(null);
+      
+      // ✅ SHOW SUCCESS MESSAGE
       alert("Profile image updated successfully!");
 
     } catch (err) {
@@ -684,10 +693,8 @@ function Profile() {
 
       setUsername(res.data.name);
       localStorage.setItem("username", res.data.name);
-      alert("Username updated successfully!");
     } catch (err) {
       console.log("Username update failed", err);
-      alert("Failed to update username");
     } finally {
       setIsUpdatingUsername(false);
     }
@@ -714,6 +721,12 @@ function Profile() {
     }
   };
 
+  // ✅ FIXED: HELPER FUNCTION TO GET PHOTO URL WITH TIMESTAMP
+  const getPhotoWithTimestamp = () => {
+    const timestamp = localStorage.getItem("photoUpdateTime") || photoTimestamp;
+    return `${getProfileImage(userId)}?t=${timestamp}`;
+  };
+
   return (
     <div className="profile-page-container">
       {/* ================= MOBILE NAVBAR ================= */}
@@ -733,10 +746,10 @@ function Profile() {
           
           <div className="mobile-profile">
             <img
-              src={getProfileImage(userId) + `?t=${photoKey}`}
+              // ✅ FIXED: Use getProfileImage for mobile profile image
+              src={getProfileImage(userId)}
               alt="User"
               className="mobile-profile-pic"
-              key={photoKey}
               onError={(e) => {
                 e.target.src = "/profile.png";
               }}
@@ -750,14 +763,15 @@ function Profile() {
         <div className="sidebar-close-container">
           <div className="profile-sidebar-section">
             <img
-              src={getProfileImage(userId) + `?t=${photoKey}`}
+              // ✅ FIXED: Use getProfileImage for sidebar profile image
+              src={getProfileImage(userId)}
               alt="User"
               className="profile-sidebar-pic"
-              key={photoKey}
               onError={(e) => {
                 e.target.src = "/profile.png";
               }}
             />
+
             <h5>{username || "User"}</h5>
           </div>
         </div>
@@ -765,27 +779,27 @@ function Profile() {
         <ul className="profile-menu">
           <li>
             <Link to="/profile" className="profile-menu-btn active" onClick={() => setIsSidebarOpen(false)}>
-              <User size={18} /> {t("profile")}
+              <User size={18} />  {t("profile")}
             </Link>
           </li>
           <li>
             <Link to="/dashboard" className="profile-menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <Home size={18} /> {t("dashboard")}
+             <Home size={18} />   {t("dashboard")}
             </Link>
           </li>
           <li>
             <Link to="/helpcenter" className="profile-menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <HelpCircle size={18} /> {t("helpCenter")}
+           <HelpCircle size={18} />     {t("helpCenter")}
             </Link>
           </li>
           <li>
             <Link to="/dealers" className="profile-menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <ShoppingBag size={18} /> {t("dealers")}
+             <ShoppingBag size={18} />   {t("dealers")}
             </Link>
           </li>
           <li>
             <Link to="/agents" className="profile-menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <Users size={18} /> {t("agents")}
+           <Users size={18} />     {t("agents")}
             </Link>
           </li>
         </ul>
@@ -842,9 +856,9 @@ function Profile() {
             <h4>{t("profileImage")}</h4>
             <div className="profile-image-section">
               <img
-                src={getProfileImage(userId) + `?t=${photoKey}`}
+                // ✅ FIXED: Use getProfileImage for main profile image
+                src={getProfileImage(userId)}
                 alt="User"
-                key={photoKey}
                 onError={(e) => {
                   e.target.src = "/profile.png";
                 }}
@@ -1000,12 +1014,4 @@ function Profile() {
 }
 
 export default Profile;
-
-
-
-
-
-
-
-
 

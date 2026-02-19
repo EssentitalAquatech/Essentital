@@ -6345,7 +6345,7 @@ function MainPage() {
                     }}
                     disabled={loading.addPond}
                   >
-                    Cancel
+                    Cancel Button
                   </button>
                 </>
               )}
