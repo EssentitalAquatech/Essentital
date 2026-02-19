@@ -96,8 +96,6 @@
 
 
 
-
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -113,8 +111,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ===== IMPORT ROUTES =====
-import dbConnect from "./database/dbConnection.js";
-import { initGridFS } from "./config/gridfs.js"; // ✅ ADD THIS
 import accessRoutes from "./routes/accessRoutes.js";
 import adminLoginRoutes from "./routes/adminLoginRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -133,20 +129,57 @@ const PORT = process.env.PORT || 2008;
 
 // ===== MIDDLEWARE =====
 app.use(cors({ origin: "*" }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// ===== DATABASE =====
-dbConnect();
-
-// ✅ Initialize GridFS after DB connection
-mongoose.connection.once('open', () => {
-  initGridFS();
+// ===== TEST ROUTE (Bypass DB) =====
+app.get("/api/health", (req, res) => {
+  res.json({ 
+    status: "OK", 
+    message: "Server is running",
+    env: process.env.NODE_ENV,
+    mongodb: process.env.MONGODB_URI ? "Set" : "Not Set"
+  });
 });
 
+// ===== DATABASE CONNECTION =====
+console.log("📡 Connecting to MongoDB...");
+
+if (!process.env.MONGODB_URI) {
+  console.error("❌ MONGODB_URI is not set in environment variables!");
+} else {
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+    
+    // Initialize GridFS if available
+    try {
+      import("./config/gridfs.js").then(({ initGridFS }) => {
+        initGridFS();
+        console.log("✅ GridFS initialized");
+      }).catch(err => {
+        console.log("⚠️ GridFS not available:", err.message);
+      });
+    } catch (err) {
+      console.log("⚠️ GridFS import failed:", err.message);
+    }
+  })
+  .catch(err => {
+    console.error("❌ MongoDB connection error:", err.message);
+    console.error("Please check your MONGODB_URI in environment variables");
+  });
+}
+
 // ===== API ROUTES =====
-app.use("/api/user", userRoutes);
+console.log("📝 Registering routes...");
+
 app.use("/api/farmers", farmerRoutes);
+console.log("✅ /api/farmers registered");
+
+app.use("/api/user", userRoutes);
 app.use("/api/dealers", dealerRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/images", imageRoutes);
@@ -157,24 +190,29 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminLoginRoutes);
 
-// ===== FRONTEND =====
-if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../frontend/dist");
-  app.use(express.static(frontendPath));
-  app.use((req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
+// ===== 404 HANDLER =====
+app.use((req, res) => {
+  console.log(`❌ 404: ${req.method} ${req.url}`);
+  res.status(404).json({ 
+    error: "Route not found",
+    path: req.url,
+    method: req.method,
+    note: "If this is /api/farmers/all, check MongoDB connection"
   });
-}
+});
+
+// ===== ERROR HANDLER =====
+app.use((err, req, res, next) => {
+  console.error("🔥 Server error:", err);
+  res.status(500).json({ 
+    error: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+});
 
 // ===== START SERVER =====
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`📡 Test URL: https://essentital-r440.onrender.com/api/health`);
 });
-
-
-
-
-
-
-
-
