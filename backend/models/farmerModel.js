@@ -2,23 +2,11 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // import mongoose from "mongoose";
 // import Counter from "./counterModel.js";
 
 // /* ===============================
-//    POND SCHEMA
+//    POND SCHEMA - COMPLETELY FIXED
 // ================================ */
 // const PondSchema = new mongoose.Schema({
 //   pondId: { type: String, required: true },
@@ -29,8 +17,14 @@
 //   pondDepth: { type: String, required: true },
 
 //   pondImage: { type: Buffer },
+  
+//   // ✅ FIXED: uploadSelfie properly added with all configurations
+//   uploadSelfie: { 
+//     type: Buffer,
+//     required: false,
+//     default: null
+//   },
 
-//   // ✅ CORRECTED: Changed from String to Number with validation
 //   latitude: { 
 //     type: Number,
 //     required: true,
@@ -97,10 +91,13 @@
 
 //   createdAt: { type: Date, default: Date.now },
 //   updatedAt: { type: Date, default: Date.now }
+// }, { 
+//   strict: false,
+//   minimize: false
 // });
 
 // /* ===============================
-//    FARMER SCHEMA (NO CHANGES NEEDED HERE)
+//    FARMER SCHEMA
 // ================================ */
 // const farmerSchema = new mongoose.Schema({
 //   farmerId: { type: String, unique: true, index: true },
@@ -138,7 +135,11 @@
 //   pondFiles: { type: [Buffer], default: [] },
 //   fishFiles: { type: [Buffer], default: [] },
 //   updates: { type: Array, default: [] }
-// }, { timestamps: true });
+// }, { 
+//   timestamps: true,
+//   strict: false,
+//   minimize: false 
+// });
 
 // /* ===============================
 //    PRE SAVE – ID GENERATION
@@ -177,11 +178,23 @@
 
 
 
+
+//uper vala sahi hai -- import mongoose from "mongoose";
+
+
+
+
+
+
+
+
+
+
 import mongoose from "mongoose";
 import Counter from "./counterModel.js";
 
 /* ===============================
-   POND SCHEMA - COMPLETELY FIXED
+   POND SCHEMA - WITH GridFS IDs
 ================================ */
 const PondSchema = new mongoose.Schema({
   pondId: { type: String, required: true },
@@ -191,14 +204,13 @@ const PondSchema = new mongoose.Schema({
   pondAreaUnit: { type: String, default: "acre" },
   pondDepth: { type: String, required: true },
 
-  pondImage: { type: Buffer },
+  // GridFS IDs instead of Buffer
+  pondImageId: { type: mongoose.Schema.Types.ObjectId, ref: 'pondImages.files' },
+  uploadSelfieId: { type: mongoose.Schema.Types.ObjectId, ref: 'pondImages.files' },
   
-  // ✅ FIXED: uploadSelfie properly added with all configurations
-  uploadSelfie: { 
-    type: Buffer,
-    required: false,
-    default: null
-  },
+  // URLs for easy access
+  pondImageUrl: { type: String },
+  uploadSelfieUrl: { type: String },
 
   latitude: { 
     type: Number,
@@ -261,8 +273,9 @@ const PondSchema = new mongoose.Schema({
 
   notes: { type: String, default: "" },
 
-  pondFiles: { type: [Buffer], default: [] },
-  fishFiles: { type: [Buffer], default: [] },
+  // GridFS IDs for multiple files
+  pondFileIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'documents.files' }],
+  fishFileIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'documents.files' }],
 
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
@@ -305,10 +318,17 @@ const farmerSchema = new mongoose.Schema({
   familyOccupation: { type: String, required: true },
   village: { type: String, required: true },
   pondCount: { type: Number, default: 0 },
-  photo: { type: Buffer, required: true },
+  
+  // Farmer photo as GridFS ID
+  photoId: { type: mongoose.Schema.Types.ObjectId, ref: 'documents.files' },
+  photoUrl: { type: String },
+  
   ponds: { type: [PondSchema], default: [] },
+  
+  // These can be kept for backward compatibility
   pondFiles: { type: [Buffer], default: [] },
   fishFiles: { type: [Buffer], default: [] },
+  
   updates: { type: Array, default: [] }
 }, { 
   timestamps: true,
