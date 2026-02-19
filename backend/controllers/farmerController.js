@@ -630,12 +630,12 @@ export const updatePond = async (req, res) => {
       responseFarmer.photo = `data:image/jpeg;base64,${responseFarmer.photo.toString('base64')}`;
     }
 
-//     res.json({ success: true, farmer: responseFarmer });
-//   } catch (err) {
-//     console.error("UPDATE POND ERROR:", err);
-//     res.status(500).json({ error: err.message });
-//   }
-// };
+    res.json({ success: true, farmer: responseFarmer });
+  } catch (err) {
+    console.error("UPDATE POND ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
 
