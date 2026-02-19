@@ -94,8 +94,6 @@
 
 
 
-
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -132,26 +130,26 @@ app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// ===== TEST ROUTE (Bypass DB) =====
+// ===== TEST ROUTE =====
 app.get("/api/health", (req, res) => {
   res.json({ 
     status: "OK", 
     message: "Server is running",
     env: process.env.NODE_ENV,
-    mongodb: process.env.MONGODB_URI ? "Set" : "Not Set"
+    mongodb: process.env.MONGODB_URI || process.env.MONGO_URI ? "Set" : "Not Set"
   });
 });
 
-// ===== DATABASE CONNECTION =====
+// ===== DATABASE CONNECTION (FIXED) =====
 console.log("📡 Connecting to MongoDB...");
 
-if (!process.env.MONGODB_URI) {
-  console.error("❌ MONGODB_URI is not set in environment variables!");
+const DB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
+
+if (!DB_URI) {
+  console.error("❌ Database URI is not set in environment variables!");
 } else {
-  mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  // ✅ FIX: Naye Mongoose version mein options ki zaroorat nahi
+  mongoose.connect(DB_URI)
   .then(() => {
     console.log("✅ MongoDB connected successfully");
     
@@ -169,7 +167,6 @@ if (!process.env.MONGODB_URI) {
   })
   .catch(err => {
     console.error("❌ MongoDB connection error:", err.message);
-    console.error("Please check your MONGODB_URI in environment variables");
   });
 }
 
@@ -196,8 +193,7 @@ app.use((req, res) => {
   res.status(404).json({ 
     error: "Route not found",
     path: req.url,
-    method: req.method,
-    note: "If this is /api/farmers/all, check MongoDB connection"
+    method: req.method
   });
 });
 
@@ -214,5 +210,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📡 Test URL: https://essentital-r440.onrender.com/api/health`);
+  console.log(`📡 Test URL: http://localhost:${PORT}/api/health`);
 });
