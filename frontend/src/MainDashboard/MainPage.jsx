@@ -4559,20 +4559,49 @@ function MainPage() {
     localStorage.setItem("lang", lang);
   };
 
-  const fetchFarmers = async () => {
-    try {
-      setLoading(prev => ({ ...prev, fetchFarmers: true }));
-      const res = await api.get(`/api/farmers/all?userId=${userId}`);
+  // const fetchFarmers = async () => {
+  //   try {
+  //     setLoading(prev => ({ ...prev, fetchFarmers: true }));
+  //     const res = await api.get(`/api/farmers/all?userId=${userId}`);
       
-      console.log("Farmers data received:", res.data);
-      setFarmers(res.data || []);
-    } catch (err) {
-      console.error("Fetch Farmers Error:", err);
-      alert("Error fetching farmers: " + (err.response?.data?.error || err.message));
-    } finally {
-      setLoading(prev => ({ ...prev, fetchFarmers: false }));
-    }
-  };
+  //     console.log("Farmers data received:", res.data);
+  //     setFarmers(res.data || []);
+  //   } catch (err) {
+  //     console.error("Fetch Farmers Error:", err);
+  //     alert("Error fetching farmers: " + (err.response?.data?.error || err.message));
+  //   } finally {
+  //     setLoading(prev => ({ ...prev, fetchFarmers: false }));
+  //   }
+  // };
+  const fetchFarmers = async () => {
+  try {
+    setLoading(prev => ({ ...prev, fetchFarmers: true }));
+    const res = await api.get(`/api/farmers/all?userId=${userId}`);
+    
+    console.log("🔥 RAW FARMER DATA:", res.data);
+    
+    // Debug: Check photo URLs
+    res.data.forEach((farmer, index) => {
+      console.log(`=== Farmer ${index} ===`);
+      console.log("Photo URL:", farmer.photo);
+      console.log("Photo type:", typeof farmer.photo);
+      console.log("Photo starts with:", farmer.photo?.substring(0, 50));
+      
+      if (farmer.ponds) {
+        farmer.ponds.forEach((pond, pIndex) => {
+          console.log(`  Pond ${pIndex} selfie:`, pond.uploadSelfie);
+          console.log(`  Pond ${pIndex} image:`, pond.pondImage);
+        });
+      }
+    });
+    
+    setFarmers(res.data || []);
+  } catch (err) {
+    console.error("Fetch Farmers Error:", err);
+  } finally {
+    setLoading(prev => ({ ...prev, fetchFarmers: false }));
+  }
+};
 
   // Convert File to Base64 for preview ONLY
   const fileToBase64 = (file) => {
