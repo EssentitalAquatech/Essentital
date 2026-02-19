@@ -2285,7 +2285,17 @@
 
 
 
-// // AdminDashboard.jsx - COMPLETE FIXED VERSION
+
+
+
+
+
+
+
+
+
+
+// // AdminDashboard.jsx - COMPLETE FIXED VERSION WITH SELFIE SUPPORT
 // import React, { useEffect, useState } from "react";
 // import api from "../utils/api";
 // import { useNavigate } from "react-router-dom";
@@ -2355,6 +2365,8 @@
 //             return `${API_URL}/api/images/dealer/image/${imageData}`;
 //           case 'pond':
 //             return `${API_URL}/api/images/pond/image/${imageData}`;
+//           case 'pond-selfie':
+//             return `${API_URL}/api/images/pond/selfie/${imageData}`;
 //           case 'agent-profile':
 //             return `${API_URL}/api/images/${imageData}/profile`;
 //           case 'agent-aadharFront':
@@ -2447,6 +2459,42 @@
 //     // Case 4: Check pondImage field as ID
 //     if (pond.pondImage && typeof pond.pondImage === 'string' && /^[0-9a-fA-F]{24}$/.test(pond.pondImage)) {
 //       return `${API_URL}/api/images/pond/image/${pond.pondImage}`;
+//     }
+    
+//     return "/no-image.png";
+//   };
+
+//   // ✅ NEW: SELFIE IMAGE HELPER - Specifically for farmer/agent selfies with ponds
+//   const getSelfieImageUrl = (pond) => {
+//     if (!pond) return "/no-image.png";
+    
+//     console.log("📸 Getting selfie URL for pond:", pond.pondId, "Selfie data:", pond.uploadSelfie);
+    
+//     // Case 1: Direct Cloudinary URL in uploadSelfie
+//     if (pond.uploadSelfie) {
+//       if (typeof pond.uploadSelfie === 'string') {
+//         if (pond.uploadSelfie.includes('cloudinary.com')) {
+//           return pond.uploadSelfie;
+//         }
+//         // If it's MongoDB ObjectId
+//         if (/^[0-9a-fA-F]{24}$/.test(pond.uploadSelfie)) {
+//           return `${API_URL}/api/images/pond/selfie/${pond.uploadSelfie}`;
+//         }
+//       }
+//       // If uploadSelfie is object with url
+//       if (typeof pond.uploadSelfie === 'object' && pond.uploadSelfie.url) {
+//         return pond.uploadSelfie.url;
+//       }
+//     }
+    
+//     // Case 2: Use pondId for selfie (FAR-XXXX-PX format)
+//     if (pond.pondId && pond.pondId.includes('FAR-')) {
+//       return `${API_URL}/api/images/pond/selfie/${pond.pondId}`;
+//     }
+    
+//     // Case 3: Use MongoDB _id
+//     if (pond._id) {
+//       return `${API_URL}/api/images/pond/selfie/${pond._id}`;
 //     }
     
 //     return "/no-image.png";
@@ -2616,6 +2664,7 @@
 //     const enhancedPond = {
 //       ...pond,
 //       pondImageUrl: getPondImageUrl(pond),
+//       selfieImageUrl: getSelfieImageUrl(pond), // Add selfie URL
 //       pondFilesUrls: getPondFilesUrls(pond.pondFiles, pond),
 //       fishFilesUrls: getFishFilesUrls(pond.fishFiles, pond)
 //     };
@@ -2698,7 +2747,7 @@
 //         "Source of Water", "Disease Symptoms", "Symptoms Observed", "Fish Deaths", "Symptoms Affect",
 //         "Farm Observed Date", "Farm Observed Time", "Last Species", "Last Harvest Complete",
 //         "Recent Rain/Flood", "Pesticide Runoff", "Construction Near", "Sudden Temp Change",
-//         "Notes", "Pond Image Link", "Pond Files", "Fish Files", "Created At", "Updated At"
+//         "Notes", "Pond Image Link", "Selfie Image Link", "Pond Files", "Fish Files", "Created At", "Updated At"
 //       ];
       
 //       const allHeaders = [...farmerHeaders, ...pondHeaders.map(h => `Pond_${h}`)];
@@ -2726,6 +2775,7 @@
 //         if (farmer.ponds && farmer.ponds.length > 0) {
 //           farmer.ponds.forEach(pond => {
 //             const pondImageLink = getPondImageUrl(pond);
+//             const selfieImageLink = getSelfieImageUrl(pond);
             
 //             const pondData = [
 //               pond.pondId || "",
@@ -2775,6 +2825,7 @@
 //               pond.suddenTempChange || "",
 //               pond.notes || "",
 //               pondImageLink,
+//               selfieImageLink,
 //               Array.isArray(pond.pondFiles) ? pond.pondFiles.join("; ") : "",
 //               Array.isArray(pond.fishFiles) ? pond.fishFiles.join("; ") : "",
 //               pond.createdAt ? new Date(pond.createdAt).toLocaleString() : "",
@@ -2839,7 +2890,7 @@
 //         "Source of Water", "Disease Symptoms", "Symptoms Observed", "Fish Deaths", "Symptoms Affect",
 //         "Farm Observed Date", "Farm Observed Time", "Last Species", "Last Harvest Complete",
 //         "Recent Rain/Flood", "Pesticide Runoff", "Construction Near", "Sudden Temp Change",
-//         "Notes", "Pond Image Link", "Pond Files", "Fish Files", "Created At", "Updated At"
+//         "Notes", "Pond Image Link", "Selfie Image Link", "Pond Files", "Fish Files", "Created At", "Updated At"
 //       ];
       
 //       const allHeaders = [...farmerHeaders, ...pondHeaders.map(h => `Pond_${h}`)];
@@ -2866,6 +2917,7 @@
 //       if (farmer.ponds && farmer.ponds.length > 0) {
 //         farmer.ponds.forEach(pond => {
 //           const pondImageLink = getPondImageUrl(pond);
+//           const selfieImageLink = getSelfieImageUrl(pond);
           
 //           const pondData = [
 //             pond.pondId || "",
@@ -2915,6 +2967,7 @@
 //             pond.suddenTempChange || "",
 //             pond.notes || "",
 //             pondImageLink,
+//             selfieImageLink,
 //             Array.isArray(pond.pondFiles) ? pond.pondFiles.join("; ") : "",
 //             Array.isArray(pond.fishFiles) ? pond.fishFiles.join("; ") : "",
 //             pond.createdAt ? new Date(pond.createdAt).toLocaleString() : "",
@@ -3058,6 +3111,7 @@
 //     { label: "Sudden Temp Change", key: "suddenTempChange" },
 //     { label: "Notes", key: "notes" },
 //     { label: "Pond Image", key: "pondImage", isImage: true },
+//     { label: "Selfie Image", key: "uploadSelfie", isSelfie: true }, // Added selfie field
 //     { label: "Pond Files", key: "pondFiles", isFileArray: true },
 //     { label: "Fish Files", key: "fishFiles", isFileArray: true },
 //     { label: "Created At", key: "createdAt" },
@@ -3154,19 +3208,35 @@
 //                       <div className="pond-card-header">
 //                         <div className="pond-header-info">
 //                           <h6>Pond {pond.pondNumber || index + 1}: {pond.pondId}</h6>
-//                           {pond.pondImage && (
-//                             <img 
-//                               src={getPondImageUrl(pond)}
-//                               alt="Pond"
-//                               className="pond-thumbnail"
-//                               onClick={() => openModal(getPondImageUrl(pond))}
-//                               onError={(e) => {
-//                                 console.log(`❌ Pond image failed: ${pond.pondId}`);
-//                                 e.target.src = "/no-image.png";
-//                                 e.target.onerror = null;
-//                               }}
-//                             />
-//                           )}
+//                           <div className="pond-header-images">
+//                             {pond.pondImage && (
+//                               <img 
+//                                 src={getPondImageUrl(pond)}
+//                                 alt="Pond"
+//                                 className="pond-thumbnail"
+//                                 onClick={() => openModal(getPondImageUrl(pond))}
+//                                 onError={(e) => {
+//                                   console.log(`❌ Pond image failed: ${pond.pondId}`);
+//                                   e.target.src = "/no-image.png";
+//                                   e.target.onerror = null;
+//                                 }}
+//                               />
+//                             )}
+//                             {pond.uploadSelfie && (
+//                               <img 
+//                                 src={getSelfieImageUrl(pond)}
+//                                 alt="Selfie"
+//                                 className="pond-thumbnail selfie-thumbnail"
+//                                 onClick={() => openModal(getSelfieImageUrl(pond))}
+//                                 onError={(e) => {
+//                                   console.log(`❌ Selfie image failed: ${pond.pondId}`);
+//                                   e.target.src = "/no-image.png";
+//                                   e.target.onerror = null;
+//                                 }}
+//                                 style={{ border: '2px solid #10b981' }}
+//                               />
+//                             )}
+//                           </div>
 //                         </div>
 //                         <div className="pond-actions">
 //                           <button
@@ -3191,6 +3261,9 @@
 //                         <div><strong>Last Updated:</strong> {
 //                           pond.updatedAt ? new Date(pond.updatedAt).toLocaleDateString('en-IN') : "N/A"
 //                         }</div>
+//                         {pond.uploadSelfie && (
+//                           <div><strong>Selfie:</strong> ✓ Uploaded</div>
+//                         )}
 //                       </div>
                       
 //                       {/* Pond Files Preview */}
@@ -3779,7 +3852,7 @@
             
 //             <div className="modal-content">
 //               <div className="pond-details-grid">
-//                 {pondDetailFields.map(({ label, key, isImage, isFileArray }) => {
+//                 {pondDetailFields.map(({ label, key, isImage, isSelfie, isFileArray }) => {
 //                   const value = selectedPond[key];
                   
 //                   if (isImage && key === "pondImage" && value) {
@@ -3794,6 +3867,34 @@
 //                             onClick={() => openModal(imageUrl)}
 //                             className="clickable-image"
 //                             style={{ maxWidth: '200px', maxHeight: '150px', cursor: 'pointer' }}
+//                             onError={(e) => {
+//                               e.target.src = "/no-image.png";
+//                               e.target.onerror = null;
+//                             }}
+//                           />
+//                         </div>
+//                       </div>
+//                     );
+//                   }
+                  
+//                   if (isSelfie && key === "uploadSelfie" && value) {
+//                     const selfieUrl = getSelfieImageUrl(selectedPond);
+//                     return (
+//                       <div className="detail-row" key={key}>
+//                         <strong>{label}:</strong>
+//                         <div className="clickable-link-container">
+//                           <img 
+//                             src={selfieUrl}
+//                             alt="Selfie"
+//                             onClick={() => openModal(selfieUrl)}
+//                             className="clickable-image"
+//                             style={{ 
+//                               maxWidth: '200px', 
+//                               maxHeight: '150px', 
+//                               cursor: 'pointer',
+//                               border: '2px solid #10b981',
+//                               borderRadius: '8px'
+//                             }}
 //                             onError={(e) => {
 //                               e.target.src = "/no-image.png";
 //                               e.target.onerror = null;
@@ -3850,11 +3951,33 @@
 //                 })}
 //               </div>
 
+//               {/* Selfie Section (additional display if not caught above) */}
+//               {selectedPond.uploadSelfie && !pondDetailFields.some(f => f.key === "uploadSelfie" && f.isSelfie) && (
+//                 <div className="file-preview-section">
+//                   <strong>Selfie Image:</strong>
+//                   <div className="file-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+//                     <div className="file-item">
+//                       <img 
+//                         src={getSelfieImageUrl(selectedPond)}
+//                         alt="Selfie"
+//                         className="preview-img"
+//                         style={{ width: '150px', height: '150px', objectFit: 'cover', cursor: 'pointer', border: '2px solid #10b981' }}
+//                         onClick={() => openModal(getSelfieImageUrl(selectedPond))}
+//                         onError={(e) => {
+//                           e.target.src = "/no-image.png";
+//                           e.target.onerror = null;
+//                         }}
+//                       />
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+
 //               {/* Pond Files Section */}
 //               {selectedPond.pondFilesUrls && selectedPond.pondFilesUrls.length > 0 && (
 //                 <div className="file-preview-section">
 //                   <strong>Pond Files ({selectedPond.pondFilesUrls.length}):</strong>
-//                   <div className="file-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+//                   <div className="file-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
 //                     {selectedPond.pondFilesUrls.map((url, idx) => (
 //                       <div key={idx} className="file-item">
 //                         <img 
@@ -3878,7 +4001,7 @@
 //               {selectedPond.fishFilesUrls && selectedPond.fishFilesUrls.length > 0 && (
 //                 <div className="file-preview-section">
 //                   <strong>Fish Files ({selectedPond.fishFilesUrls.length}):</strong>
-//                   <div className="file-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+//                   <div className="file-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
 //                     {selectedPond.fishFilesUrls.map((url, idx) => (
 //                       <div key={idx} className="file-item">
 //                         <img 
@@ -3961,12 +4084,7 @@
 
 
 
-
-
-
-
-// ye sahi hai coludinary vala 
-
+//ye sahi hai coludinary vala image a rhi hai 
 
 
 
@@ -3983,7 +4101,12 @@
 
 
 
-// AdminDashboard.jsx - COMPLETE FIXED VERSION WITH SELFIE SUPPORT
+
+
+
+
+
+// AdminDashboard.jsx - COMPLETE FIXED VERSION WITH DOWNLOAD & HISTORY BUTTONS
 import React, { useEffect, useState } from "react";
 import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
@@ -4352,7 +4475,7 @@ function AdminDashboard() {
     const enhancedPond = {
       ...pond,
       pondImageUrl: getPondImageUrl(pond),
-      selfieImageUrl: getSelfieImageUrl(pond), // Add selfie URL
+      selfieImageUrl: getSelfieImageUrl(pond),
       pondFilesUrls: getPondFilesUrls(pond.pondFiles, pond),
       fishFilesUrls: getFishFilesUrls(pond.fishFiles, pond)
     };
@@ -4799,7 +4922,7 @@ function AdminDashboard() {
     { label: "Sudden Temp Change", key: "suddenTempChange" },
     { label: "Notes", key: "notes" },
     { label: "Pond Image", key: "pondImage", isImage: true },
-    { label: "Selfie Image", key: "uploadSelfie", isSelfie: true }, // Added selfie field
+    { label: "Selfie Image", key: "uploadSelfie", isSelfie: true },
     { label: "Pond Files", key: "pondFiles", isFileArray: true },
     { label: "Fish Files", key: "fishFiles", isFileArray: true },
     { label: "Created At", key: "createdAt" },
@@ -5527,7 +5650,7 @@ function AdminDashboard() {
         </div>
       )}
 
-      {/* Pond Details Modal */}
+      {/* Pond Details Modal with Download and History Buttons */}
       {pondDetailsModalOpen && selectedPond && (
         <div className="modal-overlay" onClick={closePondDetailsModal}>
           <div className="pond-details-modal" onClick={(e) => e.stopPropagation()}>
@@ -5710,9 +5833,134 @@ function AdminDashboard() {
               )}
             </div>
             
-            <div className="modal-footer" style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-              <button onClick={closePondDetailsModal} className="close-modal-btn">
-                Close
+            {/* Modal Footer with Download, History, and Close buttons */}
+            <div className="modal-footer" style={{ 
+              marginTop: '20px', 
+              display: 'flex', 
+              gap: '10px', 
+              justifyContent: 'flex-end',
+              padding: '15px 20px',
+              borderTop: '1px solid #e5e7eb',
+              backgroundColor: '#f9fafb'
+            }}>
+              <button 
+                onClick={() => {
+                  // Download all data as CSV
+                  const headers = ["Field", "Value"];
+                  const rows = [];
+                  
+                  pondDetailFields.forEach(({ label, key }) => {
+                    const value = selectedPond[key];
+                    let displayValue = value || "N/A";
+                    
+                    if (Array.isArray(value)) {
+                      displayValue = value.join("; ");
+                    }
+                    
+                    if (key === "pondImage" && value) {
+                      displayValue = getPondImageUrl(selectedPond);
+                    }
+                    
+                    if (key === "uploadSelfie" && value) {
+                      displayValue = getSelfieImageUrl(selectedPond);
+                    }
+                    
+                    if ((key === "pondFiles" || key === "fishFiles") && value) {
+                      const urls = key === "pondFiles" 
+                        ? selectedPond.pondFilesUrls 
+                        : selectedPond.fishFilesUrls;
+                      displayValue = urls ? urls.join("; ") : "No files";
+                    }
+                    
+                    rows.push([label, displayValue]);
+                  });
+                  
+                  // Add farmer information
+                  if (selectedFarmer) {
+                    rows.push(["", ""]);
+                    rows.push(["FARMER INFORMATION", ""]);
+                    farmerBasicFields.forEach(({ label, key }) => {
+                      rows.push([label, selectedFarmer[key] || "N/A"]);
+                    });
+                  }
+                  
+                  // Add agent information
+                  if (selectedAgent) {
+                    rows.push(["", ""]);
+                    rows.push(["AGENT INFORMATION", ""]);
+                    rows.push(["Agent Name", selectedAgent.name]);
+                    rows.push(["Agent Mobile", selectedAgent.mobile]);
+                    rows.push(["Agent Email", selectedAgent.email]);
+                  }
+                  
+                  const csvContent = [
+                    headers.join(","),
+                    ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+                  ].join("\n");
+                  
+                  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.setAttribute("href", url);
+                  link.setAttribute("download", `${selectedPond.pondId || 'pond'}_full_details.csv`);
+                  link.style.visibility = "hidden";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="download-all-btn"
+                style={{
+                  padding: '10px 20px',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px'
+                }}
+              >
+                ⬇️ Download All Data (CSV)
+              </button>
+              
+              <button 
+                onClick={() => openHistoryModal(selectedPond.pondId, "pond", selectedPond.pondId)}
+                className="history-btn"
+                style={{
+                  padding: '10px 20px',
+                  background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px'
+                }}
+              >
+                📜 View History
+              </button>
+              
+              <button 
+                onClick={closePondDetailsModal} 
+                className="close-modal-btn"
+                style={{
+                  padding: '10px 20px',
+                  background: '#6b7280',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+              >
+                ✕ Close
               </button>
             </div>
           </div>
@@ -5767,4 +6015,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
-
