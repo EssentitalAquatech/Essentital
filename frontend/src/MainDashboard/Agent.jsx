@@ -908,8 +908,8 @@ function Agent() {
           
           <div className="mobile-profile">
             <img
-              // src={getImageUrl(`/api/images/${userId}/profile`)}
-              src={getImageUrl(userId, "profile")}
+               src={getProfileImage(userId)}
+              // src={getImageUrl(userId, "profile")}
               alt={username}
               className="mobile-profile-pic"
               onError={(e) => {
