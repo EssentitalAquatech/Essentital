@@ -8417,10 +8417,6 @@
 
 
 
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -8565,7 +8561,7 @@ function MainPage() {
     // Listen for storage events (when photo updates in another tab)
     window.addEventListener("storage", handleStorageChange);
 
-    // Custom event listener for same-tab updates (this is the key part!)
+    // Custom event listener for same-tab updates
     const handlePhotoUpdate = (event) => {
       console.log("Photo update event received in MainPage", event.detail);
       setPhotoKey(Date.now());
@@ -8580,7 +8576,7 @@ function MainPage() {
         console.log("Periodic check detected photo update");
         setPhotoKey(parseInt(currentPhotoTime));
       }
-    }, 1000); // Check every second
+    }, 1000);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -8633,14 +8629,37 @@ function MainPage() {
     localStorage.setItem("lang", lang);
   };
 
+  // ✅ FIXED fetchFarmers function with better error handling
   const fetchFarmers = async () => {
     try {
       setLoading(prev => ({ ...prev, fetchFarmers: true }));
-      const res = await api.get(`/api/farmers/all?userId=${userId}`);
+      
+      const storedUserId = localStorage.getItem("userId");
+      console.log("Fetching farmers for userId:", storedUserId);
+      console.log("userId length:", storedUserId?.length);
+      
+      if (!storedUserId) {
+        console.error("No userId found in localStorage");
+        setFarmers([]);
+        return;
+      }
+      
+      const res = await api.get(`/api/farmers/all?userId=${storedUserId}`);
       console.log("Farmers data received:", res.data);
       setFarmers(res.data || []);
     } catch (err) {
-      console.error("Fetch Farmers Error:", err);
+      console.error("Fetch Farmers Error Details:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+        userId: localStorage.getItem("userId")
+      });
+      
+      // Show user-friendly error message
+      alert(`Failed to fetch farmers: ${err.response?.data?.error || err.message}`);
+      
+      // Set empty farmers array to prevent UI errors
+      setFarmers([]);
     } finally {
       setLoading(prev => ({ ...prev, fetchFarmers: false }));
     }
@@ -8700,7 +8719,7 @@ function MainPage() {
     setNewPond({ ...newPond, latitude: "", longitude: "" });
   };
 
-  // Add Farmer - Updated validation to make Aadhar optional
+  // ✅ FIXED Add Farmer - Updated validation to make Aadhar optional
   const addFarmer = async () => {
     // Required fields - Aadhar is now optional, so removed from validation
     if (!newFarmer.name || !newFarmer.contact || !newFarmer.age || 
@@ -8720,6 +8739,11 @@ function MainPage() {
       return alert("Farmer photo is required");
     }
     
+    const storedUserId = localStorage.getItem("userId");
+    if (!storedUserId) {
+      return alert("User ID not found. Please log in again.");
+    }
+    
     const formData = new FormData();
     const farmerFields = ['name', 'contact', 'age', 'gender', 'adhar', 
                          'familyMembers', 'familyOccupation', 'village', 'pondCount'];
@@ -8730,8 +8754,8 @@ function MainPage() {
       }
     });
     
-    formData.append("userId", userId);
-    formData.append("createdBy", userId);
+    formData.append("userId", storedUserId);
+    formData.append("createdBy", storedUserId);
     
     if (newFarmer.photo instanceof File) {
       formData.append("photo", newFarmer.photo);
@@ -8745,6 +8769,7 @@ function MainPage() {
       setFarmers([...farmers, res.data]);
       setShowForm(false);
       setNewFarmer(emptyFarmer);
+      alert("Farmer added successfully!");
     } catch (err) {
       console.error("Add Farmer Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
@@ -8753,7 +8778,7 @@ function MainPage() {
     }
   };
 
-  // Update Farmer - Updated validation to make Aadhar optional
+  // ✅ FIXED Update Farmer - Updated validation to make Aadhar optional
   const updateFarmer = async () => {
     if (!editingFarmerId) return;
     
@@ -8764,6 +8789,7 @@ function MainPage() {
       }
     }
     
+    const storedUserId = localStorage.getItem("userId");
     const formData = new FormData();
     const farmerFields = ['name', 'contact', 'age', 'gender', 'adhar', 
                          'familyMembers', 'familyOccupation', 'village', 'pondCount'];
@@ -8774,7 +8800,7 @@ function MainPage() {
       }
     });
     
-    formData.append("userId", userId);
+    formData.append("userId", storedUserId);
     
     if (newFarmer.photo instanceof File) {
       formData.append("photo", newFarmer.photo);
@@ -8791,6 +8817,7 @@ function MainPage() {
       setEditingFarmerId(null);
       setNewFarmer(emptyFarmer);
       setIsUpdateMode(false);
+      alert("Farmer updated successfully!");
     } catch (err) {
       console.error("Update Farmer Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
@@ -8886,6 +8913,7 @@ function MainPage() {
       setLongitude("");
       setSelfieFile(null);
       setSelfiePreview(null);
+      alert("Pond added successfully!");
     } catch (err) {
       console.error("Add Pond Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
@@ -8962,6 +8990,7 @@ function MainPage() {
       setLongitude("");
       setSelfieFile(null);
       setSelfiePreview(null);
+      alert("Pond updated successfully!");
     } catch (err) {
       console.error("Update Pond Error:", err);
       alert("Server error: " + (err.response?.data?.error || err.message));
@@ -9083,7 +9112,7 @@ function MainPage() {
     setLoading(prev => ({ ...prev, search: true }));
     try {
       const filtered = farmers.filter(f =>
-        f.farmerId.toLowerCase().includes(searchId.toLowerCase())
+        f.farmerId && f.farmerId.toLowerCase().includes(searchId.toLowerCase())
       );
       if (filtered.length > 0) {
         const remaining = farmers.filter(f => !filtered.includes(f));
@@ -9099,10 +9128,6 @@ function MainPage() {
   const ButtonLoader = () => (
     <Loader2 className="spin-loader" size={16} />
   );
-
-  // ✅ DEBUG: Check what URL is being generated
-  const imageUrl = getProfileImage(userId);
-  console.log("MainPage profile image URL:", imageUrl, "Photo key:", photoKey);
 
   return (
     <div className="dashboard-container">

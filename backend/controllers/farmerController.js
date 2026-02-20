@@ -788,11 +788,10 @@
 
 
 
-
-
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 import { uploadToCloudinary, deleteFromCloudinary, extractPublicId } from "../config/cloudinary.js";
+import mongoose from "mongoose";
 
 // ---------------------------
 // GET FARMERS BY AGENT
@@ -842,7 +841,7 @@ export const addFarmer = async (req, res) => {
     const { name, contact, age, gender, village, pondCount, adhar, familyMembers, familyOccupation, userId } = req.body;
 
     // Validation - Aadhar is now optional
-    const requiredFields = ['name','contact','age','gender','village','familyMembers','familyOccupation'];
+    const requiredFields = ['name','contact','age','gender','village','familyMembers','familyOccupation', 'userId'];
     const missingFields = requiredFields.filter(f => !req.body[f]);
     if (missingFields.length) return res.status(400).json({ error: `Missing fields: ${missingFields.join(', ')}` });
 
@@ -1081,17 +1080,38 @@ export const addFarmer = async (req, res) => {
 };
 
 // ---------------------------
-// GET FARMERS
+// GET FARMERS - FIXED VERSION
 // ---------------------------
 export const getFarmers = async (req, res) => {
   try {
-    const farmers = await Farmer.find({ createdBy: req.query.userId });
+    const { userId } = req.query;
     
-    // Cloudinary URLs are already stored, no conversion needed
+    if (!userId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
+
+    console.log("Fetching farmers for userId:", userId);
+    console.log("userId length:", userId.length);
+    
+    let farmers = [];
+    
+    // Try to find by string ID first (in case userId is stored as string)
+    farmers = await Farmer.find({ createdBy: userId });
+    
+    // If no farmers found and userId might be a valid ObjectId, try that too
+    if (farmers.length === 0 && mongoose.Types.ObjectId.isValid(userId)) {
+      console.log("Trying to find by ObjectId");
+      farmers = await Farmer.find({ createdBy: new mongoose.Types.ObjectId(userId) });
+    }
+    
+    console.log(`Found ${farmers.length} farmers for user ${userId}`);
+    
     res.json(farmers);
   } catch (err) {
     console.error("🔥 GET FARMERS ERROR:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ 
+      error: err.message
+    });
   }
 };
 
