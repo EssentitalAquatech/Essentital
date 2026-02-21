@@ -1,14 +1,3 @@
-// import mongoose from "mongoose";
-
-// const accessRequestSchema = new mongoose.Schema({
-//   requesterId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-//   targetAgentId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-//   status: { type: String, default: "pending" } // pending, approved, rejected
-// }, { timestamps: true });
-
-// export default mongoose.model("AccessRequest", accessRequestSchema);
-
-
 
 
 
