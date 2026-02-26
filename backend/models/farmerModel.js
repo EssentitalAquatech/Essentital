@@ -242,7 +242,7 @@ const PondSchema = new mongoose.Schema({
   dateOfStocking: { type: Date, required: true },
   qtySeedInitially: { type: String, required: true },
   currentQty: { type: String, required: true },
-  avgSize: { type: String, default: ">200gram" },
+  avgSize: { type: String, default: "<200gram" },
 
   feedType: { type: String, default: "Market Feed" },
   feedOther: { type: String, default: "" },

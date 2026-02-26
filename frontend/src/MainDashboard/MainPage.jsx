@@ -9689,7 +9689,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Pond image (GPS) - required *</label>
+                    <label>Pond image (GPS) </label>
                     <input 
                       type="file"
                       className="form-control"
