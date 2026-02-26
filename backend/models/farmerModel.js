@@ -258,7 +258,12 @@ const PondSchema = new mongoose.Schema({
 
   ammoniaLevel: { type: String, default: "Medium" },
   phytoplanktonLevel: { type: String, default: "Medium" },
-  waterHardness: { type: String, default: "1" },
+  // waterHardness: { type: String, default: "1" },
+  waterHardness: {
+  type: Number,
+  required: true,
+  min: 0
+},
   algaeBloom: { type: String, default: "No" },
   pondWaterColor: { type: String, default: "Light Green" },
   sourceOfWater: { type: String, default: "Rainwater" },

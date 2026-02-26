@@ -9721,7 +9721,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Upload Pond Picture/Video (required) *</label>
+                    <label>Upload Pond Picture/Video</label>
                     <input 
                       type="file"
                       className="form-control"
@@ -9740,7 +9740,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Overflow from somewhere in pond? *</label>
+                    <label>Overflow from somewhere in pond? </label>
                     <select 
                       className="form-control" 
                       value={newPond.overflow} 
@@ -9754,7 +9754,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Pond receives proper Sunlight? *</label>
+                    <label>Pond receives proper Sunlight? </label>
                     <select 
                       className="form-control" 
                       value={newPond.receivesSunlight} 
@@ -9768,7 +9768,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Trees present on banks? *</label>
+                    <label>Trees present on banks? </label>
                     <select 
                       className="form-control" 
                       value={newPond.treesOnBanks} 
@@ -9782,7 +9782,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Neighbourhood *</label>
+                    <label>Neighbourhood </label>
                     <select 
                       className="form-control" 
                       value={newPond.neighbourhood} 
@@ -9799,7 +9799,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Does wastewater enter pond? *</label>
+                    <label>Does wastewater enter pond? </label>
                     <select 
                       className="form-control" 
                       value={newPond.wastewaterEnters} 
@@ -9922,7 +9922,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Average size of fishes *</label>
+                    <label>Average size of fishes </label>
                     <select 
                       className="form-control" 
                       value={newPond.avgSize} 
@@ -9944,7 +9944,7 @@ function MainPage() {
                 <h6>Feed Details (All fields required)</h6>
                 <div className="row g-2">
                   <div className="col-md-6">
-                    <label>Feed Type Used *</label>
+                    <label>Feed Type Used </label>
                     <select 
                       className="form-control" 
                       value={newPond.feedType} 
@@ -9969,7 +9969,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Feed frequency *</label>
+                    <label>Feed frequency </label>
                     <select 
                       className="form-control" 
                       value={newPond.feedFreq} 
@@ -10019,7 +10019,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Do fish show reduced appetite? *</label>
+                    <label>Do fish show reduced appetite? </label>
                     <select 
                       className="form-control" 
                       value={newPond.reducedAppetite} 
@@ -10069,7 +10069,7 @@ function MainPage() {
                     />
                   </div>
                   <div className="col-md-3">
-                    <label>Ammonia (NH₃) Level *</label>
+                    <label>Ammonia (NH₃) Level </label>
                     <select 
                       className="form-control" 
                       value={newPond.ammoniaLevel} 
@@ -10082,7 +10082,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-3">
-                    <label>Phytoplankton Levels *</label>
+                    <label>Phytoplankton Levels </label>
                     <select 
                       className="form-control" 
                       value={newPond.phytoplanktonLevel} 
@@ -10094,8 +10094,8 @@ function MainPage() {
                     </select>
                   </div>
 
-                  <div className="col-md-3">
-                    <label>Water Hardness *</label>
+                  {/* <div className="col-md-3">
+                    <label>Water Hardness </label>
                     <select 
                       className="form-control" 
                       value={newPond.waterHardness} 
@@ -10105,10 +10105,32 @@ function MainPage() {
                     >
                       <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
                     </select>
-                  </div>
+                  </div> */}
 
                   <div className="col-md-3">
-                    <label>Any visible algae bloom? *</label>
+  <label>Water Hardness </label>
+
+  <input
+    type="number"
+    step="any"
+    min="0"
+    className="form-control"
+    value={newPond.waterHardness}
+    onChange={e =>
+      setNewPond({
+        ...newPond,
+        waterHardness:
+          e.target.value === "" ? "" : Number(e.target.value)
+      })
+    }
+    disabled={loading.addPond || loading.updatePond}
+    required
+  />
+
+</div>
+
+                  <div className="col-md-3">
+                    <label>Any visible algae bloom? </label>
                     <select 
                       className="form-control" 
                       value={newPond.algaeBloom} 
@@ -10121,7 +10143,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-3">
-                    <label>Pond Water Colour *</label>
+                    <label>Pond Water Colour </label>
                     <select 
                       className="form-control" 
                       value={newPond.pondWaterColor} 
@@ -10136,7 +10158,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Source of Water *</label>
+                    <label>Source of Water </label>
                     <select 
                       className="form-control" 
                       value={newPond.sourceOfWater} 
@@ -10155,7 +10177,7 @@ function MainPage() {
                 <h6>Disease & Symptoms (All fields required)</h6>
                 <div className="row g-2">
                   <div className="col-md-3">
-                    <label>Any disease symptoms? *</label>
+                    <label>Any disease symptoms? </label>
                     <select 
                       className="form-control" 
                       value={newPond.diseaseSymptoms} 
@@ -10208,7 +10230,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Are symptoms affecting all fish or only a few? *</label>
+                    <label>Are symptoms affecting all fish or only a few? </label>
                     <select 
                       className="form-control" 
                       value={newPond.symptomsAffect} 
@@ -10221,7 +10243,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Upload fish images/videos (required) *</label>
+                    <label>Upload fish images/videos (required) </label>
                     <input
                       type="file"
                       accept="image/*,video/*"
@@ -10297,10 +10319,10 @@ function MainPage() {
 
               {/* Observation & Misc */}
               <div className="modal-section">
-                <h6>Observation & Misc (All fields required)</h6>
+                <h6>Observation & Misc</h6>
                 <div className="row g-2">
                   <div className="col-md-4">
-                    <label>Date of Farm Observed *</label>
+                    <label>Date of Farm Observed * </label>
                     <input 
                       type="date" 
                       className="form-control" 
@@ -10334,7 +10356,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-4">
-                    <label>Does farmer completely harvest the last crop? *</label>
+                    <label>Does farmer completely harvest the last crop? </label>
                     <select 
                       className="form-control" 
                       value={newPond.lastHarvestComplete} 
@@ -10347,7 +10369,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-4">
-                    <label>Any recent heavy rains or floods? *</label>
+                    <label>Any recent heavy rains or floods? </label>
                     <select 
                       className="form-control" 
                       value={newPond.recentRainFlood} 
@@ -10360,7 +10382,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-4">
-                    <label>Any pesticide/chemical runoff near pond? *</label>
+                    <label>Any pesticide/chemical runoff near pond? </label>
                     <select 
                       className="form-control" 
                       value={newPond.pesticideRunoff} 
@@ -10373,7 +10395,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-4">
-                    <label>Any construction/activity near pond? *</label>
+                    <label>Any construction/activity near pond? </label>
                     <select 
                       className="form-control" 
                       value={newPond.constructionNear} 
@@ -10386,7 +10408,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-4">
-                    <label>Any sudden temperature change recently? *</label>
+                    <label>Any sudden temperature change recently? </label>
                     <select 
                       className="form-control" 
                       value={newPond.suddenTempChange} 
