@@ -788,10 +788,10 @@
 
 
 
-import Farmer from "../models/farmerModel.js";
-import AccessRequest from "../models/accessRequestModel.js";
-import { uploadToCloudinary, deleteFromCloudinary, extractPublicId } from "../config/cloudinary.js";
 import mongoose from "mongoose";
+import { deleteFromCloudinary, uploadToCloudinary } from "../config/cloudinary.js";
+import AccessRequest from "../models/accessRequestModel.js";
+import Farmer from "../models/farmerModel.js";
 
 // ---------------------------
 // GET FARMERS BY AGENT
@@ -979,7 +979,7 @@ export const addFarmer = async (req, res) => {
           dateOfStocking: req.body[`dateOfStocking${i}`] || new Date(),
           qtySeedInitially: req.body[`qtySeedInitially${i}`] || "",
           currentQty: req.body[`currentQty${i}`] || "",
-          avgSize: req.body[`avgSize${i}`] || ">200gram",
+          avgSize: req.body[`avgSize${i}`] || "<200gram",
           
           feedType: req.body[`feedType${i}`] || "Market Feed",
           feedOther: req.body[`feedOther${i}`] || "",

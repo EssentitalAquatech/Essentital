@@ -8514,7 +8514,7 @@ function MainPage() {
     overflow: "No", receivesSunlight: "Yes", treesOnBanks: "No",
     neighbourhood: "Agriculture Farm", wastewaterEnters: "No",
     species: "", dateOfStocking: "", qtySeedInitially: "", 
-    currentQty: "", avgSize: ">200gram",
+    currentQty: "", avgSize: "<200gram",
     feedType: "Market Feed", feedOther: "", feedFreq: "Once a day", 
     feedQtyPerDay: "", feedTime: "6:00 am-10:00am",
     recentFeedChanges: "", reducedAppetite: "No",
@@ -9689,7 +9689,7 @@ function MainPage() {
                   </div>
 
                   <div className="col-md-6">
-                    <label>Pond image (GPS) </label>
+                    <label>Pond image (GPS) (required)* </label>
                     <input 
                       type="file"
                       className="form-control"
@@ -9930,10 +9930,10 @@ function MainPage() {
                       disabled={loading.addPond || loading.updatePond}
                       required
                     >
-                      <option>&gt;200gram</option>
+                      <option>&lt;200gram</option>
                       <option>200-500 gram</option>
                       <option>500-750 gram</option>
-                      <option>&lt;750gram</option>
+                      <option>&gt;750gram</option>
                     </select>
                   </div>
                 </div>
@@ -10108,7 +10108,7 @@ function MainPage() {
                   </div> */}
 
                   <div className="col-md-3">
-  <label>Water Hardness </label>
+  <label>Water Hardness in ppm or mg/L </label>
 
   <input
     type="number"
