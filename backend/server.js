@@ -229,6 +229,150 @@
 
 
 
+// import express from "express";
+// import cors from "cors";
+// import dotenv from "dotenv";
+// import path from "path";
+// import { fileURLToPath } from "url";
+
+// // ===== LOAD ENV =====
+// dotenv.config();
+
+// // ===== FIX __dirname =====
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// // ===== IMPORT ROUTES =====
+// import dbConnect from "./database/dbConnection.js";
+// import accessRoutes from "./routes/accessRoutes.js";
+// import adminLoginRoutes from "./routes/adminLoginRoutes.js";
+// import adminRoutes from "./routes/adminRoutes.js";
+// import dealerRoutes from "./routes/dealerRoutes.js";
+// import farmerRoutes from "./routes/farmerRoutes.js";
+// import historyRoutes from "./routes/historyRoutes.js";
+// import imageRoutes from "./routes/imageRoutes.js";
+// import notificationRoutes from "./routes/notificationRoutes.js";
+// import orderRoutes from "./routes/orderRoutes.js";
+// import productRoutes from "./routes/productRoutes.js";
+// import userRoutes from "./routes/userRoutes.js";
+
+// // ===== APP INIT =====
+// const app = express();
+// const PORT = process.env.PORT || 2008;
+
+// // ===== CORS CONFIG =====
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://www.ea-vle.in",
+//   "https://ea-vle.in"
+// ];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // allow requests with no origin (postman, mobile apps)
+//       if (!origin) return callback(null, true);
+
+//       if (!allowedOrigins.includes(origin)) {
+//         return callback(new Error("CORS not allowed from this origin"), false);
+//       }
+
+//       return callback(null, true);
+//     },
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+//   })
+// );
+
+// // ===== BODY PARSER =====
+// app.use(express.json({ limit: "50mb" }));
+// app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// // ===== CLOUDINARY CONFIG CHECK =====
+// console.log("\n☁️ Cloudinary Configuration Status:");
+// console.log(
+//   "Cloud Name:",
+//   process.env.CLOUDINARY_CLOUD_NAME ? "✅ Set" : "❌ Missing"
+// );
+// console.log(
+//   "API Key:",
+//   process.env.CLOUDINARY_API_KEY ? "✅ Set" : "❌ Missing"
+// );
+// console.log(
+//   "API Secret:",
+//   process.env.CLOUDINARY_API_SECRET ? "✅ Set" : "❌ Missing"
+// );
+
+// // ===== DATABASE CONNECTION =====
+// dbConnect();
+
+// // ===== API ROUTES =====
+// app.use("/api/user", userRoutes);
+// app.use("/api/farmers", farmerRoutes);
+// app.use("/api/dealers", dealerRoutes);
+// app.use("/api/admin", adminRoutes);
+// app.use("/api/images", imageRoutes);
+// app.use("/api/access", accessRoutes);
+// app.use("/api/notification", notificationRoutes);
+// app.use("/api/history", historyRoutes);
+// app.use("/api/products", productRoutes);
+// app.use("/api/orders", orderRoutes);
+// app.use("/api/admin", adminLoginRoutes);
+
+// // ===== HEALTH CHECK =====
+// app.get("/health", (req, res) => {
+//   res.json({
+//     status: "OK",
+//     message: "Server running",
+//     time: new Date(),
+//   });
+// });
+
+// // ===== FRONTEND SERVE (PRODUCTION) =====
+// if (process.env.NODE_ENV === "production") {
+//   const frontendPath = path.join(__dirname, "../frontend/dist");
+
+//   app.use(express.static(frontendPath));
+
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.join(frontendPath, "index.html"));
+//   });
+// }
+
+// // ===== GLOBAL ERROR HANDLER =====
+// app.use((err, req, res, next) => {
+//   console.error("🔥 Error:", err.message);
+
+//   res.status(500).json({
+//     message: err.message || "Internal Server Error",
+//   });
+// });
+
+// // ===== START SERVER =====
+// app.listen(PORT, "0.0.0.0", () => {
+//   console.log(`\n🚀 Server running on port ${PORT}`);
+//   console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
+//   console.log(`📎 Health check: http://localhost:${PORT}/health\n`);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -260,27 +404,27 @@ import userRoutes from "./routes/userRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 2008;
 
+// ===== DATABASE =====
+dbConnect();
+
 // ===== CORS CONFIG =====
 const allowedOrigins = [
   "http://localhost:5173",
   "https://www.ea-vle.in",
-  "https://ea-vle.in"
+  "https://ea-vle.in",
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (postman, mobile apps)
-      if (!origin) return callback(null, true);
+      if (!origin) return callback(null, true); // Postman / server requests
 
       if (!allowedOrigins.includes(origin)) {
-        return callback(new Error("CORS not allowed from this origin"), false);
+        return callback(new Error("CORS not allowed from this origin"));
       }
 
       return callback(null, true);
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
@@ -289,7 +433,7 @@ app.use(
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// ===== CLOUDINARY CONFIG CHECK =====
+// ===== CLOUDINARY CHECK =====
 console.log("\n☁️ Cloudinary Configuration Status:");
 console.log(
   "Cloud Name:",
@@ -304,21 +448,18 @@ console.log(
   process.env.CLOUDINARY_API_SECRET ? "✅ Set" : "❌ Missing"
 );
 
-// ===== DATABASE CONNECTION =====
-dbConnect();
-
 // ===== API ROUTES =====
 app.use("/api/user", userRoutes);
 app.use("/api/farmers", farmerRoutes);
 app.use("/api/dealers", dealerRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminLoginRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/access", accessRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/admin", adminLoginRoutes);
 
 // ===== HEALTH CHECK =====
 app.get("/health", (req, res) => {
@@ -335,14 +476,14 @@ if (process.env.NODE_ENV === "production") {
 
   app.use(express.static(frontendPath));
 
-  app.get("*", (req, res) => {
+  app.use((req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
 // ===== GLOBAL ERROR HANDLER =====
 app.use((err, req, res, next) => {
-  console.error("🔥 Error:", err.message);
+  console.error("🔥 Server Error:", err);
 
   res.status(500).json({
     message: err.message || "Internal Server Error",
