@@ -202,7 +202,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ===== START SERVER =====
+// ===== START SERVER comment =====
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`\n🚀 Server running on port ${PORT}`);
   console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
