@@ -100,115 +100,115 @@
 
 
 
-// import express from "express";
-// import cors from "cors";
-// import dotenv from "dotenv";
-// import path from "path";
-// import { fileURLToPath } from "url";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// // ===== ENV (TOP PE) =====
-// dotenv.config();
+// ===== ENV (TOP PE) =====
+dotenv.config();
 
-// // ===== FIX __dirname =====
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+// ===== FIX __dirname =====
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// // ===== IMPORT ROUTES =====
-// import dbConnect from "./database/dbConnection.js";
-// import accessRoutes from "./routes/accessRoutes.js";
-// import adminLoginRoutes from "./routes/adminLoginRoutes.js";
-// import adminRoutes from "./routes/adminRoutes.js";
-// import dealerRoutes from "./routes/dealerRoutes.js";
-// import farmerRoutes from "./routes/farmerRoutes.js";
-// import historyRoutes from "./routes/historyRoutes.js";
-// import imageRoutes from "./routes/imageRoutes.js";
-// import notificationRoutes from "./routes/notificationRoutes.js";
-// import orderRoutes from "./routes/orderRoutes.js";
-// import productRoutes from "./routes/productRoutes.js";
-// import userRoutes from "./routes/userRoutes.js";
+// ===== IMPORT ROUTES =====
+import dbConnect from "./database/dbConnection.js";
+import accessRoutes from "./routes/accessRoutes.js";
+import adminLoginRoutes from "./routes/adminLoginRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import dealerRoutes from "./routes/dealerRoutes.js";
+import farmerRoutes from "./routes/farmerRoutes.js";
+import historyRoutes from "./routes/historyRoutes.js";
+import imageRoutes from "./routes/imageRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
-// // ===== APP INIT =====
-// const app = express();
-// const PORT = process.env.PORT || 2008;
+// ===== APP INIT =====
+const app = express();
+const PORT = process.env.PORT || 2008;
 
-// // ===== MIDDLEWARE =====
-// app.use(cors({ origin: "*" }));
-// app.use(express.json({ limit: '50mb' })); // Increased limit for file uploads
-// app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+// ===== MIDDLEWARE =====
+app.use(cors({ origin: "*" }));
+app.use(express.json({ limit: '50mb' })); // Increased limit for file uploads
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// // ===== STATIC UPLOADS =====
-// // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// ===== STATIC UPLOADS =====
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// // ===== CLOUDINARY CONFIG VERIFICATION =====
-// console.log("\n☁️ Cloudinary Configuration Status:");
-// console.log("   Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME ? "✅ Set" : "❌ Missing");
-// console.log("   API Key:", process.env.CLOUDINARY_API_KEY ? "✅ Set" : "❌ Missing");
-// console.log("   API Secret:", process.env.CLOUDINARY_API_SECRET ? "✅ Set" : "❌ Missing");
+// ===== CLOUDINARY CONFIG VERIFICATION =====
+console.log("\n☁️ Cloudinary Configuration Status:");
+console.log("   Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME ? "✅ Set" : "❌ Missing");
+console.log("   API Key:", process.env.CLOUDINARY_API_KEY ? "✅ Set" : "❌ Missing");
+console.log("   API Secret:", process.env.CLOUDINARY_API_SECRET ? "✅ Set" : "❌ Missing");
 
-// if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-//   console.log("⚠️  Warning: Cloudinary credentials are missing! Image uploads will fail.");
-// }
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+  console.log("⚠️  Warning: Cloudinary credentials are missing! Image uploads will fail.");
+}
 
-// // ===== DATABASE =====
-// dbConnect();
+// ===== DATABASE =====
+dbConnect();
 
-// // ===== API ROUTES =====
-// app.use("/api/user", userRoutes);
-// app.use("/api/farmers", farmerRoutes);
-// app.use("/api/dealers", dealerRoutes);
-// app.use("/api/admin", adminRoutes);
-// app.use("/api/images", imageRoutes);
-// app.use("/api/access", accessRoutes);
-// app.use("/api/notification", notificationRoutes);
-// app.use("/api/history", historyRoutes);
-// app.use("/api/products", productRoutes);
-// app.use("/api/orders", orderRoutes);
-// app.use("/api/admin", adminLoginRoutes);
+// ===== API ROUTES =====
+app.use("/api/user", userRoutes);
+app.use("/api/farmers", farmerRoutes);
+app.use("/api/dealers", dealerRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/images", imageRoutes);
+app.use("/api/access", accessRoutes);
+app.use("/api/notification", notificationRoutes);
+app.use("/api/history", historyRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/admin", adminLoginRoutes);
 
-// // ===== HEALTH CHECK ENDPOINT =====
-// app.get("/health", (req, res) => {
-//   res.json({ 
-//     status: "OK", 
-//     message: "Server is running",
-//     timestamp: new Date().toISOString(),
-//     cloudinary: process.env.CLOUDINARY_CLOUD_NAME ? "configured" : "not configured"
-//   });
-// });
+// ===== HEALTH CHECK ENDPOINT =====
+app.get("/health", (req, res) => {
+  res.json({ 
+    status: "OK", 
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+    cloudinary: process.env.CLOUDINARY_CLOUD_NAME ? "configured" : "not configured"
+  });
+});
 
-// // ===== FRONTEND =====
-// if (process.env.NODE_ENV === "production") {
-//   const frontendPath = path.join(__dirname, "../frontend/dist");
-//   app.use(express.static(frontendPath));
-//   app.use((req, res) => {
-//     res.sendFile(path.join(frontendPath, "index.html"));
-//   });
-// }
+// ===== FRONTEND =====
+if (process.env.NODE_ENV === "production") {
+  const frontendPath = path.join(__dirname, "../frontend/dist");
+  app.use(express.static(frontendPath));
+  app.use((req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+}
 
-// // ===== ERROR HANDLING MIDDLEWARE =====
-// app.use((err, req, res, next) => {
-//   console.error("🔥 Server Error:", err);
+// ===== ERROR HANDLING MIDDLEWARE =====
+app.use((err, req, res, next) => {
+  console.error("🔥 Server Error:", err);
   
-//   // Handle multer errors
-//   if (err.code === 'LIMIT_FILE_SIZE') {
-//     return res.status(400).json({ error: "File too large. Max size is 10MB" });
-//   }
-//   if (err.code === 'LIMIT_UNEXPECTED_FILE') {
-//     return res.status(400).json({ error: "Too many files uploaded" });
-//   }
+  // Handle multer errors
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ error: "File too large. Max size is 10MB" });
+  }
+  if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+    return res.status(400).json({ error: "Too many files uploaded" });
+  }
   
-//   res.status(500).json({ 
-//     error: err.message || "Internal server error",
-//     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-//   });
-// });
+  res.status(500).json({ 
+    error: err.message || "Internal server error",
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+});
 
-// // ===== START SERVER comment =====
-// app.listen(PORT, "0.0.0.0", () => {
-//   console.log(`\n🚀 Server running on port ${PORT}`);
-//   console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-//   console.log(`☁️ Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME ? 'Connected ✓' : 'Not configured ✗'}`);
-//   console.log(`📎 Health check: http://localhost:${PORT}/health\n`);
-// }); 
+// ===== START SERVER comment =====
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`\n🚀 Server running on port ${PORT}`);
+  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`☁️ Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME ? 'Connected ✓' : 'Not configured ✗'}`);
+  console.log(`📎 Health check: http://localhost:${PORT}/health\n`);
+}); 
 
 
 
@@ -217,6 +217,20 @@
 
 
 //ye bilkul sahi hai 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -260,6 +274,16 @@
 // const app = express();
 // const PORT = process.env.PORT || 2008;
 
+// // ===== DATABASE CONNECTION =====
+// (async () => {
+//   try {
+//     await dbConnect();
+//     console.log("✅ Database connected");
+//   } catch (error) {
+//     console.error("❌ Database connection failed:", error);
+//   }
+// })();
+
 // // ===== CORS CONFIG =====
 // const allowedOrigins = [
 //   "http://localhost:5173",
@@ -269,19 +293,16 @@
 
 // app.use(
 //   cors({
-//     origin: function (origin, callback) {
-//       // allow requests with no origin (postman, mobile apps)
+//     origin: (origin, callback) => {
 //       if (!origin) return callback(null, true);
 
-//       if (!allowedOrigins.includes(origin)) {
-//         return callback(new Error("CORS not allowed from this origin"), false);
+//       if (allowedOrigins.includes(origin)) {
+//         return callback(null, true);
 //       }
 
-//       return callback(null, true);
+//       return callback(new Error("CORS not allowed"), false);
 //     },
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//     credentials: true,
+//     credentials: true
 //   })
 // );
 
@@ -304,28 +325,25 @@
 //   process.env.CLOUDINARY_API_SECRET ? "✅ Set" : "❌ Missing"
 // );
 
-// // ===== DATABASE CONNECTION =====
-// dbConnect();
-
 // // ===== API ROUTES =====
 // app.use("/api/user", userRoutes);
 // app.use("/api/farmers", farmerRoutes);
 // app.use("/api/dealers", dealerRoutes);
 // app.use("/api/admin", adminRoutes);
+// app.use("/api/admin", adminLoginRoutes);
 // app.use("/api/images", imageRoutes);
 // app.use("/api/access", accessRoutes);
 // app.use("/api/notification", notificationRoutes);
 // app.use("/api/history", historyRoutes);
 // app.use("/api/products", productRoutes);
 // app.use("/api/orders", orderRoutes);
-// app.use("/api/admin", adminLoginRoutes);
 
 // // ===== HEALTH CHECK =====
 // app.get("/health", (req, res) => {
 //   res.json({
 //     status: "OK",
 //     message: "Server running",
-//     time: new Date(),
+//     time: new Date()
 //   });
 // });
 
@@ -335,164 +353,23 @@
 
 //   app.use(express.static(frontendPath));
 
-//   app.get("*", (req, res) => {
+//   app.get("/*", (req, res) => {
 //     res.sendFile(path.join(frontendPath, "index.html"));
 //   });
 // }
 
 // // ===== GLOBAL ERROR HANDLER =====
 // app.use((err, req, res, next) => {
-//   console.error("🔥 Error:", err.message);
+//   console.error("🔥 Server Error:", err.message);
 
 //   res.status(500).json({
-//     message: err.message || "Internal Server Error",
+//     message: err.message || "Internal Server Error"
 //   });
 // });
 
 // // ===== START SERVER =====
-// app.listen(PORT, "0.0.0.0", () => {
+// app.listen(PORT, () => {
 //   console.log(`\n🚀 Server running on port ${PORT}`);
 //   console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
 //   console.log(`📎 Health check: http://localhost:${PORT}/health\n`);
 // });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-// ===== LOAD ENV =====
-dotenv.config();
-
-// ===== FIX __dirname =====
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// ===== IMPORT ROUTES =====
-import dbConnect from "./database/dbConnection.js";
-import accessRoutes from "./routes/accessRoutes.js";
-import adminLoginRoutes from "./routes/adminLoginRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
-import dealerRoutes from "./routes/dealerRoutes.js";
-import farmerRoutes from "./routes/farmerRoutes.js";
-import historyRoutes from "./routes/historyRoutes.js";
-import imageRoutes from "./routes/imageRoutes.js";
-import notificationRoutes from "./routes/notificationRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
-import productRoutes from "./routes/productRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-
-// ===== APP INIT =====
-const app = express();
-const PORT = process.env.PORT || 2008;
-
-// ===== DATABASE =====
-dbConnect();
-
-// ===== CORS CONFIG =====
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://www.ea-vle.in",
-  "https://ea-vle.in",
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // Postman / server requests
-
-      if (!allowedOrigins.includes(origin)) {
-        return callback(new Error("CORS not allowed from this origin"));
-      }
-
-      return callback(null, true);
-    },
-    credentials: true,
-  })
-);
-
-// ===== BODY PARSER =====
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-
-// ===== CLOUDINARY CHECK =====
-console.log("\n☁️ Cloudinary Configuration Status:");
-console.log(
-  "Cloud Name:",
-  process.env.CLOUDINARY_CLOUD_NAME ? "✅ Set" : "❌ Missing"
-);
-console.log(
-  "API Key:",
-  process.env.CLOUDINARY_API_KEY ? "✅ Set" : "❌ Missing"
-);
-console.log(
-  "API Secret:",
-  process.env.CLOUDINARY_API_SECRET ? "✅ Set" : "❌ Missing"
-);
-
-// ===== API ROUTES =====
-app.use("/api/user", userRoutes);
-app.use("/api/farmers", farmerRoutes);
-app.use("/api/dealers", dealerRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/admin", adminLoginRoutes);
-app.use("/api/images", imageRoutes);
-app.use("/api/access", accessRoutes);
-app.use("/api/notification", notificationRoutes);
-app.use("/api/history", historyRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/orders", orderRoutes);
-
-// ===== HEALTH CHECK =====
-app.get("/health", (req, res) => {
-  res.json({
-    status: "OK",
-    message: "Server running",
-    time: new Date(),
-  });
-});
-
-// ===== FRONTEND SERVE (PRODUCTION) =====
-if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../frontend/dist");
-
-  app.use(express.static(frontendPath));
-
-  app.use((req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-}
-
-// ===== GLOBAL ERROR HANDLER =====
-app.use((err, req, res, next) => {
-  console.error("🔥 Server Error:", err);
-
-  res.status(500).json({
-    message: err.message || "Internal Server Error",
-  });
-});
-
-// ===== START SERVER =====
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`\n🚀 Server running on port ${PORT}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`📎 Health check: http://localhost:${PORT}/health\n`);
-});
