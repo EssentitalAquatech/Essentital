@@ -229,7 +229,6 @@
 
 
 
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -261,7 +260,7 @@ import userRoutes from "./routes/userRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 2008;
 
-// ===== CORS CONFIGURATION =====
+// ===== CORS CONFIG =====
 const allowedOrigins = [
   "http://localhost:5173",
   "https://www.ea-vle.in",
@@ -271,22 +270,20 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
+      // allow requests with no origin (postman, mobile apps)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) === -1) {
+      if (!allowedOrigins.includes(origin)) {
         return callback(new Error("CORS not allowed from this origin"), false);
       }
 
       return callback(null, true);
     },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
-
-// Handle preflight requests
-app.options("*", cors());
 
 // ===== BODY PARSER =====
 app.use(express.json({ limit: "50mb" }));
@@ -295,27 +292,19 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // ===== CLOUDINARY CONFIG CHECK =====
 console.log("\n☁️ Cloudinary Configuration Status:");
 console.log(
-  "   Cloud Name:",
+  "Cloud Name:",
   process.env.CLOUDINARY_CLOUD_NAME ? "✅ Set" : "❌ Missing"
 );
 console.log(
-  "   API Key:",
+  "API Key:",
   process.env.CLOUDINARY_API_KEY ? "✅ Set" : "❌ Missing"
 );
 console.log(
-  "   API Secret:",
+  "API Secret:",
   process.env.CLOUDINARY_API_SECRET ? "✅ Set" : "❌ Missing"
 );
 
-if (
-  !process.env.CLOUDINARY_CLOUD_NAME ||
-  !process.env.CLOUDINARY_API_KEY ||
-  !process.env.CLOUDINARY_API_SECRET
-) {
-  console.log("⚠️  Warning: Cloudinary credentials missing.");
-}
-
-// ===== DATABASE =====
+// ===== DATABASE CONNECTION =====
 dbConnect();
 
 // ===== API ROUTES =====
@@ -335,8 +324,8 @@ app.use("/api/admin", adminLoginRoutes);
 app.get("/health", (req, res) => {
   res.json({
     status: "OK",
-    message: "Server is running",
-    timestamp: new Date().toISOString(),
+    message: "Server running",
+    time: new Date(),
   });
 });
 
@@ -353,16 +342,10 @@ if (process.env.NODE_ENV === "production") {
 
 // ===== GLOBAL ERROR HANDLER =====
 app.use((err, req, res, next) => {
-  console.error("🔥 Server Error:", err.message);
-
-  if (err.code === "LIMIT_FILE_SIZE") {
-    return res.status(400).json({
-      error: "File too large (Max 10MB)",
-    });
-  }
+  console.error("🔥 Error:", err.message);
 
   res.status(500).json({
-    error: err.message || "Internal Server Error",
+    message: err.message || "Internal Server Error",
   });
 });
 
@@ -370,10 +353,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`\n🚀 Server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(
-    `☁️ Cloudinary: ${
-      process.env.CLOUDINARY_CLOUD_NAME ? "Connected ✓" : "Not configured ✗"
-    }`
-  );
   console.log(`📎 Health check: http://localhost:${PORT}/health\n`);
 });
