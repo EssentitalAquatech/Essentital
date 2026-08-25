@@ -54,6 +54,39 @@
 
 
 
+// import React from "react";
+
+// function WeatherDashboard() {
+//   return (
+//     <div style={{ width: "100%", height: "100vh" }}>
+//       <iframe
+//         title="Admin Weather Dashboard"
+//         // src="https://d2o70d6w5dqxje.cloudfront.net/"
+//         src="https://essentialaquatechweatherdashboard.netlify.app/"
+//         width="100%"
+//         height="100%"
+//         style={{ border: "none" }}
+//         allow="geolocation"
+//         allowFullScreen
+//       />
+//     </div>
+//   );
+// }
+
+// export default WeatherDashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React from "react";
 
 function WeatherDashboard() {
@@ -61,8 +94,7 @@ function WeatherDashboard() {
     <div style={{ width: "100%", height: "100vh" }}>
       <iframe
         title="Admin Weather Dashboard"
-        // src="https://d2o70d6w5dqxje.cloudfront.net/"
-        src="https://essentialaquatechweatherdashboard.netlify.app/"
+        src="https://chimerical-bunny-bcb3a7.netlify.app/"
         width="100%"
         height="100%"
         style={{ border: "none" }}
@@ -74,10 +106,6 @@ function WeatherDashboard() {
 }
 
 export default WeatherDashboard;
-
-
-
-
 
 
 
