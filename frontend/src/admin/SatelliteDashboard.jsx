@@ -36,9 +36,7 @@ function SatelliteDashboard() {
     <div style={{ width: "100%", height: "100vh" }}>
       <iframe
         title="Admin Satellite Dashboard"
-        // src="https://d2o70d6w5dqxje.cloudfront.net/"
         src="https://peaceful-brioche-8990ae.netlify.app/"
-       
         width="100%"
         height="100%"
         style={{ border: "none" }}
@@ -49,4 +47,4 @@ function SatelliteDashboard() {
   );
 }
 
-export default SatelliteDashboard;  
+export default SatelliteDashboard;
