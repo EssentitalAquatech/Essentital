@@ -94,7 +94,8 @@ function WeatherDashboard() {
     <div style={{ width: "100%", height: "100vh" }}>
       <iframe
         title="Admin Weather Dashboard"
-        src="https://chimerical-bunny-bcb3a7.netlify.app/"
+       
+        src="https://tranquil-lokum-8ba809.netlify.app/"
         width="100%"
         height="100%"
         style={{ border: "none" }}
