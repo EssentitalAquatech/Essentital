@@ -95,7 +95,7 @@ function Astronomical() {
     <div style={{ width: "100%", height: "100vh" }}>
       <iframe
         // src="https://d2vy9m5vkf9fe2.cloudfront.net/"
-        src="https://merry-cheesecake-09025d.netlify.app/"
+        src="https://jade-centaur-bec3db.netlify.app/"
         title="Astronomical Dashboard"
         style={{
           width: "100%",
